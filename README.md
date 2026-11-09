@@ -4,11 +4,13 @@
 
 **在线学习：[https://oyldegit.github.io/little-leaf-english/](https://oyldegit.github.io/little-leaf-english/)**
 
-## v2.0：300 个词，25 个生活主题
+## v2.1：实拍词卡 · 300 个词，25 个生活主题
 
 保留最初 96 个词条的全部 ID 和 v1 进度格式，新增 204 个带图片、单词音频和英文例句的词条。
 
 主题包括水果、蔬菜、农场、野生动物、食物、饮料、交通、海洋、运动、颜色、小小生物、形状，以及新增的服饰、家居、校园、自然、天气、身体、职业、音乐、数字、城市地点、玩具、工具和心情。
+
+170 个适合实物认知的词条改用已核实授权的真实照片，覆盖水果、蔬菜、动物、食物和生活用品等；颜色、形状及缺少清晰照片的词条保留图形。照片本地保存、等比显示，加载失败时自动回退到原 SVG。设置内可查看和搜索每张照片的作者、来源与许可。
 
 ## 学习功能
 
@@ -39,7 +41,7 @@ npm run build      # 生成 dist/，检查完整媒体与版本化模块依赖
 npm run dev        # 构建后在 http://localhost:4173 预览
 ```
 
-`vocabulary.js` 保存词库内容；`assets/images/` 和 `assets/audio/` 保存原始单词资源；`media.js` 保存资源索引。仅维护词库时保留已有 ID，避免丢失进度关联。
+`vocabulary.js` 保存词库内容；`assets/images/`、`assets/photos/` 和 `assets/audio/` 保存原始单词资源；`media.js` 保存资源索引。仅维护词库时保留已有 ID，避免丢失进度关联。
 
 新增词条并准备资源时，可在 macOS 上运行 `npm run prepare:assets`。该辅助脚本使用公开的 Twemoji 插图和系统 Samantha 语音（需 `say`/`afconvert`），会复用已有资源；其他系统可手动放入对应 SVG 和 M4A 文件。日常开发、测试、构建、部署不需要 macOS。
 
@@ -55,4 +57,6 @@ GitHub Pages 的 Source 设为 **GitHub Actions**。`.github/workflows/pages.yml
 
 浏览器模拟检查覆盖小屏手机、常见手机与平板，包含搜索、完整十题练习、错题重练、刷新续接及关闭预览服务器后的离线使用。真实 iOS/Android 软键盘、扬声器和麦克风体验仍需真机验证。
 
-插图与语音来源见 [ATTRIBUTION.md](ATTRIBUTION.md)。
+图片与语音来源见 [ATTRIBUTION.md](ATTRIBUTION.md)，逐词照片署名见 [photo-credits.html](photo-credits.html) 和 [photo-credits.json](photo-credits.json)。照片沿用各自的 CC BY、CC BY-SA 或公共领域许可，不能将其整体改授为代码许可。
+
+更换照片时同时维护 `photo-credits.json` 与可读的来源页，运行 `npm run prepare:assets` 更新索引；测试会检查照片许可、SVG 回退及听音选项的图片唯一性。完整离线下载也包含照片和来源说明。

@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { words, categories, wordMap, imagePath } from './data.js';
-import { audioSources } from './media.js';
+import { audioSources, fallbackSources } from './media.js';
 import {
   emptyState,
   answer,
@@ -24,8 +24,19 @@ test('300 unique bilingual words across 25 themes have usable local illustration
   assert.equal(new Set(words.map((w) => w.id)).size, 300);
   for (const w of words) {
     assert.ok(w.word && w.zh && w.sentence && w.category);
-    const svg = readFileSync(new URL(imagePath(w), import.meta.url), 'utf8');
-    assert.ok(svg.includes('<svg') && !svg.includes('undefined'));
+    const picture = readFileSync(new URL(imagePath(w), import.meta.url));
+    if (imagePath(w).endsWith('.svg')) {
+      const svg = picture.toString('utf8');
+      assert.ok(svg.includes('<svg') && !svg.includes('undefined'));
+    } else {
+      assert.ok(picture.length > 5000);
+      assert.ok(
+        picture[0] === 0xff ||
+          picture.subarray(1, 4).toString() === 'PNG' ||
+          picture.subarray(0, 4).toString() === 'RIFF',
+      );
+      assert.ok(fallbackSources[w.id]);
+    }
     const audio = readFileSync(new URL(audioSources[w.id], import.meta.url));
     assert.ok(audio.length > 1000);
     assert.ok(audio.subarray(0, 40).includes(Buffer.from('ftyp')));
@@ -127,6 +138,7 @@ test('every listening question has four distinct pictures and only one spoken an
     const options = quizOptions(w, categories.find((c) => c.id === w.category).words);
     assert.equal(options.length, 4, w.id);
     assert.equal(new Set(options.map((o) => o.emoji)).size, 4, w.id);
+    assert.equal(new Set(options.map(imagePath)).size, 4, w.id);
     assert.equal(options.filter((o) => matchesSpelling(w, o.word)).length, 1, w.id);
     assert.equal(options.filter((o) => o.id === w.id).length, 1, w.id);
   }
@@ -184,18 +196,81 @@ test('all 96 original IDs remain valid, preserving every existing word record', 
   for (const id of ids) assert.ok(wordMap.has(id), id);
 });
 
-test('cached audio serves exact, open-ended and suffix byte ranges and rejects invalid ones',async()=>{
- const {runInNewContext}=await import('node:vm');const context={self:{location:{href:'https://example.com/english/sw.js'},addEventListener(){}},URL,Response,Headers,Request};runInNewContext(readFileSync(new URL('./sw.js',import.meta.url),'utf8'),context);
- const response=()=>new Response('0123456789',{headers:{'Content-Type':'audio/mp4'}});
- const partial=await context.responseForRange(response(),'bytes=2-5');assert.equal(partial.status,206);assert.equal(partial.headers.get('Content-Range'),'bytes 2-5/10');assert.equal(partial.headers.get('Content-Length'),'4');assert.equal(await partial.text(),'2345');
- assert.equal(await(await context.responseForRange(response(),'bytes=7-')).text(),'789');assert.equal(await(await context.responseForRange(response(),'bytes=-3')).text(),'789');assert.equal((await context.responseForRange(response(),'bytes=20-')).status,416);assert.equal((await context.responseForRange(response(),'bytes=-0')).status,416);
+test('cached audio serves exact, open-ended and suffix byte ranges and rejects invalid ones', async () => {
+  const { runInNewContext } = await import('node:vm');
+  const context = {
+    self: { location: { href: 'https://example.com/english/sw.js' }, addEventListener() {} },
+    URL,
+    Response,
+    Headers,
+    Request,
+  };
+  runInNewContext(readFileSync(new URL('./sw.js', import.meta.url), 'utf8'), context);
+  const response = () => new Response('0123456789', { headers: { 'Content-Type': 'audio/mp4' } });
+  const partial = await context.responseForRange(response(), 'bytes=2-5');
+  assert.equal(partial.status, 206);
+  assert.equal(partial.headers.get('Content-Range'), 'bytes 2-5/10');
+  assert.equal(partial.headers.get('Content-Length'), '4');
+  assert.equal(await partial.text(), '2345');
+  assert.equal(await (await context.responseForRange(response(), 'bytes=7-')).text(), '789');
+  assert.equal(await (await context.responseForRange(response(), 'bytes=-3')).text(), '789');
+  assert.equal((await context.responseForRange(response(), 'bytes=20-')).status, 416);
+  assert.equal((await context.responseForRange(response(), 'bytes=-0')).status, 416);
 });
-test('range playback fetches and caches a full 200 response before returning a partial response',async()=>{
- const {runInNewContext}=await import('node:vm');let cachedStatus,requestRange;const context={self:{location:{href:'https://example.com/english/sw.js'},addEventListener(){}},URL,Response,Headers,Request,fetch:async request=>{requestRange=request.headers.get('range');return new Response('abcdefghij',{headers:{'Content-Type':'audio/mp4'}});}};
- runInNewContext(readFileSync(new URL('./sw.js',import.meta.url),'utf8'),context);
- const cache={match:async()=>undefined,put:async(_request,response)=>{cachedStatus=response.status;}};
- const response=await context.assetResponse(new Request('https://example.com/english/assets/audio/sample.m4a',{headers:{Range:'bytes=3-6'}}),cache);
- assert.equal(requestRange,null);assert.equal(cachedStatus,200);assert.equal(response.status,206);assert.equal(await response.text(),'defg');
- const fullCache={match:async()=>new Response('cached-audio',{headers:{'Content-Type':'audio/mp4'}})};
- assert.equal(await(await context.assetResponse(new Request('https://example.com/english/assets/audio/sample.m4a',{headers:{Range:'bytes=0-5'}}),fullCache)).text(),'cached');
+test('range playback fetches and caches a full 200 response before returning a partial response', async () => {
+  const { runInNewContext } = await import('node:vm');
+  let cachedStatus, requestRange;
+  const context = {
+    self: { location: { href: 'https://example.com/english/sw.js' }, addEventListener() {} },
+    URL,
+    Response,
+    Headers,
+    Request,
+    fetch: async (request) => {
+      requestRange = request.headers.get('range');
+      return new Response('abcdefghij', { headers: { 'Content-Type': 'audio/mp4' } });
+    },
+  };
+  runInNewContext(readFileSync(new URL('./sw.js', import.meta.url), 'utf8'), context);
+  const cache = {
+    match: async () => undefined,
+    put: async (_request, response) => {
+      cachedStatus = response.status;
+    },
+  };
+  const response = await context.assetResponse(
+    new Request('https://example.com/english/assets/audio/sample.m4a', { headers: { Range: 'bytes=3-6' } }),
+    cache,
+  );
+  assert.equal(requestRange, null);
+  assert.equal(cachedStatus, 200);
+  assert.equal(response.status, 206);
+  assert.equal(await response.text(), 'defg');
+  const fullCache = {
+    match: async () => new Response('cached-audio', { headers: { 'Content-Type': 'audio/mp4' } }),
+  };
+  assert.equal(
+    await (
+      await context.assetResponse(
+        new Request('https://example.com/english/assets/audio/sample.m4a', {
+          headers: { Range: 'bytes=0-5' },
+        }),
+        fullCache,
+      )
+    ).text(),
+    'cached',
+  );
+});
+
+test('every photograph has a local SVG fallback and an attributable free license', () => {
+  const credits = JSON.parse(readFileSync(new URL('./photo-credits.json', import.meta.url), 'utf8'));
+  assert.ok(Object.keys(credits).length >= 100);
+  for (const [id, item] of Object.entries(credits)) {
+    assert.ok(wordMap.has(id));
+    assert.equal(imagePath(wordMap.get(id)), item.file);
+    assert.ok(item.author && item.title && item.source && item.licenseUrl);
+    assert.match(item.source, /^https:\/\/commons\.wikimedia\.org\/wiki\/File:/);
+    assert.match(item.license, /^CC BY(?:-SA)?(?: \d+(?:\.\d+)?)?$|public domain|CC0|PDM/i);
+    assert.ok(readFileSync(new URL(fallbackSources[id], import.meta.url), 'utf8').includes('<svg'));
+  }
 });

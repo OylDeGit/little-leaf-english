@@ -1,5 +1,5 @@
 import { audioSources } from './media.js';
-import { categories, words, wordMap, categoryMap, imagePath } from './data.js';
+import { categories, words, wordMap, categoryMap, imagePath, isPhoto, imageFallbackPath } from './data.js';
 import {
   KEY,
   emptyState,
@@ -74,7 +74,7 @@ const icons = {
 const icon = (n) =>
   `<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${icons[n] || icons.star}</svg>`;
 const img = (w, cls = '', alt = '') =>
-  `<img class="${cls}" src="${imagePath(w)}" alt="${alt}" draggable="false" loading="lazy" decoding="async">`;
+  `<img class="${cls}${isPhoto(w) ? ' photo' : ''}" data-word="${w.id}" src="${imagePath(w)}" alt="${alt}" draggable="false" loading="lazy" decoding="async">`;
 const esc = (s) =>
   String(s).replace(
     /[&<>"']/g,
@@ -480,7 +480,7 @@ function settings() {
     .map(([v, t]) => `<option value="${v}" ${state.settings.rate === v ? 'selected' : ''}>${t}</option>`)
     .join(
       '',
-    )}</select></label><div class="settings-block"><h3>带着小叶子去旅行</h3><p>下载离线学习内容后，图片和单词音频可断网使用。单词音频可离线播放；例句朗读使用设备语音，是否离线可用由系统决定。</p>${btn('下载 / 更新离线内容', 'offline', 'secondary', 'id="offline-btn"')}<p id="offline-status" role="status"></p><p class="small">手机浏览器菜单可尝试“添加到主屏幕”；安装支持由浏览器决定。</p></div><div class="settings-block"><h3>把成长好好收藏</h3><p>学习进度保存在当前浏览器，不会自动同步。建议定期备份，或用备份换设备。</p><div class="button-row">${btn('导出进度备份', 'export', 'secondary')}<label class="secondary import-label">合并导入备份<input id="import-file" type="file" accept="application/json,.json"></label></div><p class="small">导入按单词保留较新记录，每日次数取较大值，收藏合并。当前学习设置不变。</p></div><div class="settings-block attribution"><p>原创双语词库 · 图片：<a href="https://github.com/jdecked/twemoji" target="_blank" rel="noopener">Twemoji</a>（CC BY 4.0）<br>不含广告，无需账号。录音不上传。<br>词库 ${words.length} 词 · ${categories.length} 主题 · v2.0.0</p><a href="https://github.com/OylDeGit/little-leaf-english" target="_blank" rel="noopener">查看 GitHub 项目 ↗</a></div>`;
+    )}</select></label><div class="settings-block"><h3>带着小叶子去旅行</h3><p>下载离线学习内容后，图片和单词音频可断网使用。单词音频可离线播放；例句朗读使用设备语音，是否离线可用由系统决定。</p>${btn('下载 / 更新离线内容', 'offline', 'secondary', 'id="offline-btn"')}<p id="offline-status" role="status"></p><p class="small">手机浏览器菜单可尝试“添加到主屏幕”；安装支持由浏览器决定。</p></div><div class="settings-block"><h3>把成长好好收藏</h3><p>学习进度保存在当前浏览器，不会自动同步。建议定期备份，或用备份换设备。</p><div class="button-row">${btn('导出进度备份', 'export', 'secondary')}<label class="secondary import-label">合并导入备份<input id="import-file" type="file" accept="application/json,.json"></label></div><p class="small">导入按单词保留较新记录，每日次数取较大值，收藏合并。当前学习设置不变。</p></div><div class="settings-block attribution"><p><a href="photo-credits.html" target="_blank" rel="noopener">查看实拍照片来源与许可 ↗</a></p><p>原创双语词库 · 图形：<a href="https://github.com/jdecked/twemoji" target="_blank" rel="noopener">Twemoji</a>（CC BY 4.0）<br>不含广告，无需账号。录音不上传。<br>词库 ${words.length} 词 · ${categories.length} 主题 · v2.1.0</p><a href="https://github.com/OylDeGit/little-leaf-english" target="_blank" rel="noopener">查看 GitHub 项目 ↗</a></div>`;
   modal.showModal();
 }
 async function offlineDownload() {
@@ -765,3 +765,21 @@ function keyboardLayout() {
 window.visualViewport?.addEventListener('resize', keyboardLayout);
 document.addEventListener('focusin', keyboardLayout);
 document.addEventListener('focusout', () => document.body.classList.remove('keyboard-open'));
+
+// Keep the vocabulary usable if a photo cannot be decoded or loaded.
+document.addEventListener(
+  'error',
+  (event) => {
+    const image = event.target;
+    if (!(image instanceof HTMLImageElement) || image.dataset.fallback) return;
+    const word = wordMap.get(image.dataset.word);
+    if (!word) return;
+    const fallback = imageFallbackPath(word);
+    if (fallback && fallback !== image.getAttribute('src')) {
+      image.dataset.fallback = '1';
+      image.src = fallback;
+      image.classList.remove('photo');
+    }
+  },
+  true,
+);

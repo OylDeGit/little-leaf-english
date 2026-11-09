@@ -1,4 +1,4 @@
-import { wordMap } from './data.js';
+import { wordMap, imagePath } from './data.js';
 export const KEY = 'little-leaf:v1';
 export const dayKey = (date = new Date()) =>
   `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
@@ -139,6 +139,7 @@ export function matchesSpelling(word, text) {
 export function quizOptions(target, pool, rng = Math.random) {
   const prohibited = new Set([target.word, ...(target.variants || [])].map(normalize));
   const unique = new Set([target.emoji]);
+  const uniqueImages = new Set([imagePath(target)]);
   const acceptable = (w) =>
     w.id !== target.id &&
     !prohibited.has(normalize(w.word)) &&
@@ -149,7 +150,8 @@ export function quizOptions(target, pool, rng = Math.random) {
   ];
   const others = [];
   for (const w of candidates) {
-    if (unique.has(w.emoji)) continue;
+    if (unique.has(w.emoji) || uniqueImages.has(imagePath(w))) continue;
+    uniqueImages.add(imagePath(w));
     unique.add(w.emoji);
     others.push(w);
     if (others.length === 3) break;

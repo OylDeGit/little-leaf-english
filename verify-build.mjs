@@ -12,7 +12,7 @@ const media = await import(new URL(`media.js?test=${release.version}`, root));
 for (const word of vocabulary.flatMap((c) => c.words))
   for (const file of [media.imageSources[word.id], media.audioSources[word.id]]) {
     assert.ok(files.includes(file), word.id);
-    assert.match(file, /assets\/(images|audio)\/[a-f0-9]{12}\.(svg|m4a)$/);
+    assert.match(file, /assets\/(images|audio)\/[a-f0-9]{12}\.(svg|m4a|jpg|jpeg|png|webp)$/);
   }
 for (const file of ['app.js', 'core.js', 'data.js', 'vocabulary.js', 'media.js']) {
   const text = await readFile(new URL(file, root), 'utf8');
@@ -29,7 +29,21 @@ const sw = await readFile(new URL('sw.js', root), 'utf8');
 assert.ok(sw.includes(`const RELEASE = '${release.version}'`));
 assert.ok(!sw.includes('const CORE_FILES = null;'));
 const dataSize = (await stat(new URL('media.js', root))).size;
-assert.ok(dataSize < 60000);
+assert.ok(dataSize < 90000);
+
+for (const file of Object.values(media.fallbackSources)) {
+  assert.ok(files.includes(file));
+  await access(new URL(file, root));
+}
+const credits = JSON.parse(await readFile(new URL('photo-credits.json', root), 'utf8'));
+assert.equal(Object.keys(credits).length, release.photos);
+for (const [id, item] of Object.entries(credits)) {
+  assert.ok(media.fallbackSources[id]);
+  assert.ok(item.source && item.author && item.license && item.licenseUrl);
+}
+
+for (const file of ['photo-credits.html', 'photo-credits.json', 'ATTRIBUTION.md'])
+  assert.ok(files.includes(file), `Offline attribution missing: ${file}`);
 console.log(
-  `Verified build ${release.version}: complete media, versioned module graph, offline manifest and worker.`,
+  `Verified build ${release.version}: ${release.photos} credited photos, complete media, versioned modules and offline attribution.`,
 );
