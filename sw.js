@@ -1,8 +1,113 @@
-const CACHE='little-leaf-v1';
-const root=new URL('./',self.location.href);
-self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(['./','index.html','style.css','app.js','core.js','data.js','asset-bundle.js','icon.svg','offline-assets.json'].map(p=>new URL(p,root).href))).then(()=>self.skipWaiting()));});
-self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('little-leaf-')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));});
-self.addEventListener('fetch',e=>{if(e.request.method!=='GET'||!e.request.url.startsWith(root.href))return;const url=new URL(e.request.url);if(url.pathname.includes('/assets/')){e.respondWith(caches.match(e.request,{ignoreSearch:true}).then(c=>c||fetch(e.request).then(async r=>{if(r.ok){const cache=await caches.open(CACHE);cache.put(e.request,r.clone());}return r;})));return;}
- e.respondWith(fetch(e.request).then(async r=>{if(r.ok){const c=await caches.open(CACHE);c.put(e.request,r.clone());}return r;}).catch(async()=>{const c=await caches.match(e.request,{ignoreSearch:true});return c||(e.request.mode==='navigate'?caches.match(new URL('index.html',root).href):Response.error());}));
+const RELEASE = 'development';
+const CORE_FILES = null;
+const ROOT = new URL('./', self.location.href),
+  CORE = `little-leaf-core-${RELEASE}`,
+  MEDIA = 'little-leaf-media-v2';
+const url = (p) => new URL(p, ROOT).href;
+async function coreFiles() {
+  return (
+    CORE_FILES || [
+      './',
+      'index.html',
+      'style.css',
+      'app.js',
+      'core.js',
+      'data.js',
+      'vocabulary.js',
+      'media.js',
+      'icon.svg',
+      'manifest.webmanifest',
+    ]
+  );
+}
+self.addEventListener('install', (event) =>
+  event.waitUntil(
+    (async () => {
+      const cache = await caches.open(CORE);
+      for (const file of await coreFiles()) {
+        const response = await fetch(url(file), { cache: 'reload' });
+        if (!response.ok) throw Error('离线入口缓存失败');
+        await cache.put(url(file), response);
+      }
+      await self.skipWaiting();
+    })(),
+  ),
+);
+self.addEventListener('activate', (event) =>
+  event.waitUntil(
+    (async () => {
+      // Do not delete the legacy cache while a v1 tab can still need its bundled module.
+      for (const key of await caches.keys())
+        if (key.startsWith('little-leaf-core-') && key !== CORE) await caches.delete(key);
+      await self.clients.claim();
+    })(),
+  ),
+);
+self.addEventListener('fetch', (event) => {
+  const request = event.request;
+  if (request.method !== 'GET' || !request.url.startsWith(ROOT.href)) return;
+  const asset = new URL(request.url).pathname.includes('/assets/');
+  event.respondWith(
+    (async () => {
+      const cache = await caches.open(asset ? MEDIA : CORE);
+      if (asset) {
+        const hit = await cache.match(request);
+        if (hit) return hit;
+        const response = await fetch(request);
+        if (response.ok) await cache.put(request, response.clone());
+        return response;
+      }
+      try {
+        const response = await fetch(request, { cache: 'no-cache' });
+        if (response.ok) await cache.put(request, response.clone());
+        return response;
+      } catch {
+        const hit = await cache.match(request, { ignoreSearch: true });
+        if (hit) return hit;
+        if (request.mode === 'navigate') {
+          const home = await cache.match(url('index.html'));
+          if (home) return home;
+        }
+        return Response.error();
+      }
+    })(),
+  );
 });
-self.addEventListener('message',e=>{if(e.data?.type!=='DOWNLOAD')return;const port=e.ports[0];e.waitUntil((async()=>{try{const manifest=await fetch(new URL('offline-assets.json',root));if(!manifest.ok)throw Error('离线清单读取失败');const files=await manifest.json(),cache=await caches.open(CACHE);let done=0;for(const file of files){const url=new URL(file,root).href;const existing=await cache.match(url);if(!existing){const r=await fetch(url);if(!r.ok)throw Error('部分内容下载失败，请联网重试');await cache.put(url,r);}done++;if(done%5===0)port.postMessage({done,total:files.length});}port.postMessage({done,total:files.length,finished:true});}catch(err){port.postMessage({error:err.message||'下载失败，请联网重试'});}})());});
+self.addEventListener('message', (event) => {
+  if (event.data?.type !== 'DOWNLOAD') return;
+  const port = event.ports[0];
+  event.waitUntil(
+    (async () => {
+      try {
+        const response = await fetch(url('offline-assets.json'), { cache: 'no-cache' });
+        if (!response.ok) throw Error('离线清单读取失败，请联网重试');
+        const files = await response.json();
+        let index = 0,
+          done = 0;
+        async function worker() {
+          while (index < files.length) {
+            const file = files[index++],
+              cache = await caches.open(file.startsWith('assets/') ? MEDIA : CORE),
+              target = url(file);
+            if (!(await cache.match(target))) {
+              const r = await fetch(target, { cache: 'no-cache' });
+              if (!r.ok) throw Error('部分内容下载失败，请联网重试');
+              await cache.put(target, r);
+            }
+            done++;
+            port.postMessage({ done, total: files.length });
+          }
+        }
+        await Promise.all(Array.from({ length: 6 }, worker));
+        port.postMessage({ done, total: files.length, finished: true });
+      } catch (err) {
+        port.postMessage({
+          error:
+            err.name === 'QuotaExceededError'
+              ? '设备缓存空间不足，请腾出空间后重试'
+              : err.message || '离线下载失败，请重试',
+        });
+      }
+    })(),
+  );
+});
