@@ -50,13 +50,7 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     (async () => {
       const cache = await caches.open(asset ? MEDIA : CORE);
-      if (asset) {
-        const hit = await cache.match(request);
-        if (hit) return hit;
-        const response = await fetch(request);
-        if (response.ok) await cache.put(request, response.clone());
-        return response;
-      }
+      if (asset) return assetResponse(request,cache);
       try {
         const response = await fetch(request, { cache: 'no-cache' });
         if (response.ok) await cache.put(request, response.clone());
@@ -111,3 +105,23 @@ self.addEventListener('message', (event) => {
     })(),
   );
 });
+
+// Audio elements on mobile browsers may request byte ranges. Cache the whole
+// file and serve the requested range, rather than trying to cache a 206 response.
+async function assetResponse(request,cache){
+ const headers=new Headers(request.headers),range=headers.get('range');headers.delete('range');
+ const fullRequest=new Request(request,{headers});let response=await cache.match(fullRequest);
+ if(!response){response=await fetch(fullRequest);if(response.status===200){try{await cache.put(fullRequest,response.clone());}catch{/* Playback still works when storage is full. */}}}
+ return range&&response.status===200?responseForRange(response,range):response;
+}
+async function responseForRange(response,range){
+ const bytes=await response.arrayBuffer(),size=bytes.byteLength,match=/^bytes=(\d*)-(\d*)$/.exec(range.trim());
+ const invalid=()=>new Response(null,{status:416,headers:{'Content-Range':`bytes */${size}`}});
+ if(!match||(!match[1]&&!match[2]))return invalid();
+ let start,end;
+ if(!match[1]){const suffix=Number(match[2]);if(!Number.isSafeInteger(suffix)||suffix<=0)return invalid();start=Math.max(0,size-suffix);end=size-1;}
+ else{start=Number(match[1]);end=match[2]?Math.min(Number(match[2]),size-1):size-1;}
+ if(!Number.isSafeInteger(start)||!Number.isSafeInteger(end)||start<0||start>=size||end<start)return invalid();
+ const headers=new Headers(response.headers);headers.delete('Content-Encoding');headers.set('Accept-Ranges','bytes');headers.set('Content-Range',`bytes ${start}-${end}/${size}`);headers.set('Content-Length',String(end-start+1));
+ return new Response(bytes.slice(start,end+1),{status:206,headers});
+}

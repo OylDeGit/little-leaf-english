@@ -183,3 +183,19 @@ test('all 96 original IDs remain valid, preserving every existing word record', 
   assert.equal(ids.length, 96);
   for (const id of ids) assert.ok(wordMap.has(id), id);
 });
+
+test('cached audio serves exact, open-ended and suffix byte ranges and rejects invalid ones',async()=>{
+ const {runInNewContext}=await import('node:vm');const context={self:{location:{href:'https://example.com/english/sw.js'},addEventListener(){}},URL,Response,Headers,Request};runInNewContext(readFileSync(new URL('./sw.js',import.meta.url),'utf8'),context);
+ const response=()=>new Response('0123456789',{headers:{'Content-Type':'audio/mp4'}});
+ const partial=await context.responseForRange(response(),'bytes=2-5');assert.equal(partial.status,206);assert.equal(partial.headers.get('Content-Range'),'bytes 2-5/10');assert.equal(partial.headers.get('Content-Length'),'4');assert.equal(await partial.text(),'2345');
+ assert.equal(await(await context.responseForRange(response(),'bytes=7-')).text(),'789');assert.equal(await(await context.responseForRange(response(),'bytes=-3')).text(),'789');assert.equal((await context.responseForRange(response(),'bytes=20-')).status,416);assert.equal((await context.responseForRange(response(),'bytes=-0')).status,416);
+});
+test('range playback fetches and caches a full 200 response before returning a partial response',async()=>{
+ const {runInNewContext}=await import('node:vm');let cachedStatus,requestRange;const context={self:{location:{href:'https://example.com/english/sw.js'},addEventListener(){}},URL,Response,Headers,Request,fetch:async request=>{requestRange=request.headers.get('range');return new Response('abcdefghij',{headers:{'Content-Type':'audio/mp4'}});}};
+ runInNewContext(readFileSync(new URL('./sw.js',import.meta.url),'utf8'),context);
+ const cache={match:async()=>undefined,put:async(_request,response)=>{cachedStatus=response.status;}};
+ const response=await context.assetResponse(new Request('https://example.com/english/assets/audio/sample.m4a',{headers:{Range:'bytes=3-6'}}),cache);
+ assert.equal(requestRange,null);assert.equal(cachedStatus,200);assert.equal(response.status,206);assert.equal(await response.text(),'defg');
+ const fullCache={match:async()=>new Response('cached-audio',{headers:{'Content-Type':'audio/mp4'}})};
+ assert.equal(await(await context.assetResponse(new Request('https://example.com/english/assets/audio/sample.m4a',{headers:{Range:'bytes=0-5'}}),fullCache)).text(),'cached');
+});

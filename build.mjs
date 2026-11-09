@@ -14,7 +14,7 @@ await mkdir('dist/assets/audio', { recursive: true });
 const media = [];
 const paths = new Map();
 for (const folder of ['images', 'audio'])
-  for (const filename of await readdir(`assets/${folder}`)) {
+  for (const filename of (await readdir(`assets/${folder}`)).sort()) {
     const input = `assets/${folder}/${filename}`,
       bytes = await readFile(input),
       ext = filename.slice(filename.lastIndexOf('.'));
