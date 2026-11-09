@@ -6,3 +6,5 @@
 @media(max-width:360px){h1{font-size:22px}.hero h2{font-size:24px}.hero-art{right:-24px;width:43%}.hero-copy{padding-left:16px}.float-label{font-size:9px}.quick-stats strong{font-size:17px}.word-count{display:none}.section-title h2{font-size:17px}.category-pictures img{height:40px}.mode-tabs button{font-size:10px;padding:8px 6px}.mode-tabs button svg{width:13px}.check-label{margin-left:0}.filter-row{justify-content:space-between}.reading-nav .primary{font-size:9px}.reading-nav .secondary{font-size:9px}.reading-nav{gap:4px}.top-meta{gap:8px}.streak{font-size:9px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;scroll-behavior:auto!important}}
 @media(max-width:600px){.hero{min-height:350px}.hero-art{width:39%;right:0}.apple{top:153px;left:5px;width:105px;height:147px}.butterfly{top:239px;right:-13px;width:80px;height:107px}.hero-copy>p{max-width:172px}.hero h2{position:relative;z-index:3}.float-label{top:132px;right:2%;font-size:9px}.two{top:104px;right:27%}.art-leaf{display:none}.one{top:55px;left:46px}.orbit{bottom:17px;left:-15px}}
+
+@media(max-width:600px){.hero-copy>p{max-width:145px}}
