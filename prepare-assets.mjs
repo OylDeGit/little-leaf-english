@@ -1,6 +1,6 @@
 // Content authoring helper: requires macOS say/afconvert. Existing assets are reused.
 import { vocabulary } from './vocabulary.js';
-import { writeFile, mkdir, access, readFile } from 'node:fs/promises';
+import { writeFile, mkdir, access } from 'node:fs/promises';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { tmpdir } from 'node:os';
@@ -70,27 +70,12 @@ async function worker() {
   }
 }
 await Promise.all(Array.from({ length: 5 }, worker));
-const photoCredits = JSON.parse(
-  await readFile(new URL('photo-credits.json', root), 'utf8').catch(() => '{}'),
-);
 await writeFile(
   new URL('media.js', root),
   '// Generated local resource paths. No runtime CDN dependency.\nexport const audioSources=' +
     JSON.stringify(Object.fromEntries(words.map((w) => [w.id, `assets/audio/${w.id}.m4a`])), null, 2) +
     ';\nexport const imageSources=' +
-    JSON.stringify(
-      Object.fromEntries(words.map((w) => [w.id, photoCredits[w.id]?.file || `assets/images/${w.id}.svg`])),
-      null,
-      2,
-    ) +
-    ';\nexport const fallbackSources=' +
-    JSON.stringify(
-      Object.fromEntries(
-        words.filter((w) => photoCredits[w.id]).map((w) => [w.id, `assets/images/${w.id}.svg`]),
-      ),
-      null,
-      2,
-    ) +
+    JSON.stringify(Object.fromEntries(words.map((w) => [w.id, `assets/images/${w.id}.svg`])), null, 2) +
     ';\n',
 );
 console.log(`All ${words.length} illustrations and pronunciations are ready.`);

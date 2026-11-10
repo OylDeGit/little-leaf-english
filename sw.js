@@ -39,6 +39,15 @@ self.addEventListener('activate', (event) =>
       // Do not delete the legacy cache while a v1 tab can still need its bundled module.
       for (const key of await caches.keys())
         if (key.startsWith('little-leaf-core-') && key !== CORE) await caches.delete(key);
+      // Keep existing SVG/audio downloads, but free the retired photo assets.
+      const media = await caches.open(MEDIA);
+      const photoRoots = ['assets/images/', 'assets/photos/'].map((path) => url(path));
+      for (const request of await media.keys()) {
+        if (
+          photoRoots.some((root) => request.url.startsWith(root)) &&
+          /\.(?:jpe?g|png|webp|avif)$/i.test(new URL(request.url).pathname)
+        ) await media.delete(request);
+      }
       await self.clients.claim();
     })(),
   ),
