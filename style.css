@@ -3022,3 +3022,238 @@ dialog .secondary {
     display: none;
   }
 }
+
+.dialogue-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 24px;
+  margin: 24px 0;
+  background: #eaf1e0;
+  border-radius: 18px;
+}
+.dialogue-banner h2 {
+  margin: 8px 0;
+}
+.dialogue-banner p {
+  margin: 0;
+  color: var(--muted);
+}
+.dialogue-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+.dialogue-topic {
+  text-align: left;
+  cursor: pointer;
+  margin: 0;
+  color: var(--text);
+  min-width: 0;
+}
+.dialogue-topic small {
+  display: block;
+  color: #657d51;
+  margin-top: 10px;
+}
+.dialogue-topic h2 {
+  font-size: 23px;
+  margin: 10px 0;
+}
+.dialogue-topic p,
+.dialogue-topic > span:last-child {
+  font-size: 14px;
+  color: var(--muted);
+}
+.dialogue-emoji {
+  font-size: 42px;
+}
+.dialogue-toolbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.dialogue-transcript {
+  max-width: 760px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.dialogue-line {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  text-align: left;
+  width: 94%;
+  color: var(--text);
+  cursor: pointer;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 20px;
+  background: #fdfefb;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.dialogue-line.guest {
+  align-self: flex-end;
+  background: #eaf1e0;
+}
+.dialogue-line small {
+  color: #637e52;
+  font-size: 13px;
+}
+.dialogue-line small svg {
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+}
+.dialogue-line strong {
+  font-size: 20px;
+  line-height: 1.6;
+  font-weight: 600;
+}
+.dialogue-line > span {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+.dialogue-line.speaking {
+  box-shadow: 0 0 0 3px #a0b78a;
+}
+.dialogue-start {
+  position: sticky;
+  bottom: 16px;
+  text-align: center;
+  padding: 18px;
+  margin-top: 18px;
+  background: #f7f9f5ee;
+}
+.dialogue-start .primary {
+  min-height: 50px;
+}
+.dialogue-exercise,
+.dialogue-result {
+  max-width: 760px;
+  margin: 0 auto;
+  padding-bottom: 20px;
+}
+.dialogue-exercise h1 {
+  font-size: 26px;
+  margin: 24px 0;
+}
+.dialogue-exercise .dialogue-line {
+  width: 100%;
+  background: #edf3e5;
+}
+.dialogue-options {
+  display: grid;
+  gap: 12px;
+  margin: 24px 0;
+}
+.dialogue-choice {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  justify-content: center;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  padding: 16px;
+  min-height: 62px;
+  gap: 7px;
+}
+.dialogue-choice strong {
+  font-size: 18px;
+  line-height: 1.6;
+}
+.dialogue-choice span {
+  font-size: 15px;
+  line-height: 1.6;
+  font-weight: 400;
+}
+.dialogue-choice:disabled {
+  cursor: default;
+  opacity: 1;
+}
+.dialogue-choice.right {
+  background: #e5efdb;
+  border-color: #94b079;
+}
+.dialogue-choice.wrong {
+  background: #fbecde;
+  border-color: #d7ac87;
+}
+.dialogue-next {
+  position: sticky;
+  bottom: 0;
+  padding: 14px 0 calc(14px + env(safe-area-inset-bottom));
+  background: #fdfefbf5;
+  text-align: center;
+}
+.dialogue-next .primary {
+  width: 100%;
+  min-height: 50px;
+}
+.dialogue-result {
+  text-align: center;
+}
+.dialogue-result h1 {
+  font-size: 28px;
+}
+.dialogue-result .button-row {
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+@media (max-width: 600px) {
+  .dialogue-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .dialogue-banner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 18px;
+    padding: 20px;
+  }
+  .dialogue-banner .primary {
+    width: 100%;
+  }
+  .dialogue-line {
+    padding: 16px;
+    width: 96%;
+  }
+  .dialogue-line strong {
+    font-size: 18px;
+  }
+  .dialogue-line > span {
+    font-size: 15px;
+  }
+  .dialogue-start {
+    bottom: 76px;
+    padding: 12px;
+  }
+  .dialogue-exercise {
+    padding: 16px;
+  }
+  .dialogue-exercise h1 {
+    font-size: 22px;
+  }
+  .dialogue-choice {
+    padding: 14px;
+  }
+  .dialogue-choice strong {
+    font-size: 16px;
+  }
+  .dialogue-toolbar .secondary {
+    padding: 10px 14px;
+  }
+  .mobile-nav button {
+    min-width: 0;
+    flex: 1;
+  }
+}

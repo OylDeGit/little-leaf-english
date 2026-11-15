@@ -14,7 +14,7 @@ for (const word of vocabulary.flatMap((c) => c.words))
     assert.ok(files.includes(file), word.id);
     assert.match(file, /assets\/(images|audio)\/[a-f0-9]{12}\.(svg|m4a)$/);
   }
-for (const file of ['app.js', 'core.js', 'data.js', 'vocabulary.js', 'media.js']) {
+for (const file of ['app.js', 'core.js', 'data.js', 'vocabulary.js', 'media.js', 'dialogues.js']) {
   const text = await readFile(new URL(file, root), 'utf8');
   for (const m of text.matchAll(/from ['"](.+?)['"]/g)) {
     assert.ok(m[1].endsWith(`?v=${release.version}`), m[1]);
@@ -33,3 +33,11 @@ assert.ok(dataSize < 70000);
 console.log(
   `Verified build ${release.version}: complete media, versioned module graph, offline manifest and worker.`,
 );
+
+const { dialogues } = await import(new URL(`dialogues.js?test=${release.version}`, root));
+assert.equal(dialogues.length, 8);
+assert.equal(release.dialogues, dialogues.length);
+for (const line of dialogues.flatMap((d) => d.lines)) {
+  assert.match(line.audio, /^assets\/audio\/[a-f0-9]{12}\.m4a$/);
+  assert.ok(files.includes(line.audio));
+}

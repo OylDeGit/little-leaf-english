@@ -339,6 +339,34 @@ test('expanded numeric progression and original IDs remain available', () => {
 });
 
 test('sentence blank avoids matching a target inside another word', () => {
-  assert.equal(sentenceParts({id: 'ear', word: 'ear', sentence: 'I hear with my ear.'}).before, 'I hear with my ');
-  assert.equal(sentenceParts({id: 'one', word: 'one', sentence: 'Someone has one apple.'}).before, 'Someone has ');
+  assert.equal(
+    sentenceParts({ id: 'ear', word: 'ear', sentence: 'I hear with my ear.' }).before,
+    'I hear with my ',
+  );
+  assert.equal(
+    sentenceParts({ id: 'one', word: 'one', sentence: 'Someone has one apple.' }).before,
+    'Someone has ',
+  );
+});
+
+test('eight bilingual dialogues contain three unambiguous response checks and complete local audio', async () => {
+  const { dialogues } = await import('./dialogues.js');
+  assert.equal(dialogues.length, 8);
+  assert.equal(new Set(dialogues.map((d) => d.id)).size, 8);
+  assert.equal(dialogues.filter((d) => d.group === '购物').length, 4);
+  assert.equal(dialogues.filter((d) => d.group === '点餐').length, 4);
+  for (const d of dialogues) {
+    assert.equal(d.lines.length, 6, d.id);
+    for (const [i, line] of d.lines.entries()) {
+      assert.ok(line.en && line.zh && line.role, d.id);
+      const bytes = readFileSync(new URL(line.audio, import.meta.url));
+      assert.ok(bytes.length > 1000);
+      assert.ok(bytes.subarray(0, 40).includes(Buffer.from('ftyp')));
+      if (i % 2) {
+        assert.equal(line.options.length, 3);
+        assert.equal(new Set(line.options.map((o) => o.en)).size, 3);
+        assert.equal(line.options.filter((o) => o.en === line.en && o.zh === line.zh).length, 1);
+      }
+    }
+  }
 });

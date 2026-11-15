@@ -1,8 +1,9 @@
+import { dialogues } from './dialogues.js';
 import { vocabulary } from './vocabulary.js';
 import { cp, mkdir, rm, readFile, writeFile, readdir } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 const hash = (bytes) => createHash('sha256').update(bytes).digest('hex').slice(0, 12);
-const modules = ['app.js', 'core.js', 'data.js', 'vocabulary.js', 'media.js'];
+const modules = ['app.js', 'core.js', 'data.js', 'vocabulary.js', 'media.js', 'dialogues.js'];
 const source = Object.fromEntries(
   await Promise.all(modules.map(async (f) => [f, await readFile(f, 'utf8')])),
 );
@@ -32,6 +33,7 @@ for (const file of modules) {
     /from (['"])(\.\/[^'"]+\.js)\1/g,
     (_m, q, path) => `from ${q}${path}?v=${version}${q}`,
   );
+  if (file === 'dialogues.js') for (const [input, target] of paths) text = text.split(input).join(target);
   if (file === 'media.js') {
     text =
       'export const audioSources=' +
@@ -90,7 +92,7 @@ const worker = workerSource
 await writeFile('dist/sw.js', worker);
 await writeFile(
   'dist/release.json',
-  JSON.stringify({ version, words: vocabulary.flatMap((c) => c.words).length, themes: vocabulary.length }),
+  JSON.stringify({ version, words: vocabulary.flatMap((c) => c.words).length, themes: vocabulary.length, dialogues: dialogues.length }),
 );
 console.log(
   `Built release ${version}: ${vocabulary.flatMap((c) => c.words).length} words, ${vocabulary.length} themes, ${media.length} deduplicated media files.`,

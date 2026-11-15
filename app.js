@@ -1,3 +1,4 @@
+import { dialogues } from './dialogues.js';
 import { audioSources } from './media.js';
 import { categories, words, wordMap, categoryMap, imagePath } from './data.js';
 import {
@@ -15,6 +16,7 @@ import {
   validateSession,
   matchesSpelling,
   sentenceParts,
+  shuffle,
   quizOptions,
   dailyRoundSize,
 } from './core.js';
@@ -40,6 +42,9 @@ try {
 }
 let shown = 24,
   allSearch = '';
+let dialogueLesson = null,
+  dialoguePractice = null,
+  dialogueChinese = true;
 let page = 'home',
   category = null,
   mode = 'cards',
@@ -100,6 +105,7 @@ function toast(t, duration = 4000) {
 }
 function stopMedia() {
   playToken++;
+  document.querySelectorAll('.dialogue-line.speaking').forEach((node) => node.classList.remove('speaking'));
   document.querySelectorAll('.quiz-option.speaking').forEach((node) => node.classList.remove('speaking'));
   const playingButton = document.querySelector('.sound-button');
   if (playingButton) playingButton.innerHTML = icon('sound') + '再听一遍';
@@ -164,6 +170,8 @@ function visibleWords() {
 }
 function nav(n) {
   stopMedia();
+  dialogueLesson = null;
+  dialoguePractice = null;
   page = n;
   category = null;
   session = null;
@@ -175,11 +183,15 @@ function nav(n) {
 }
 function render() {
   stopMedia();
-  document.body.classList.toggle('studying', !!category && mode !== 'cards');
+  document.body.classList.toggle(
+    'studying',
+    (!!category && mode !== 'cards') || (page === 'dialogues' && !!dialoguePractice),
+  );
   const learned = Object.values(state.records).filter((r) => r.level >= 3).length;
   app.innerHTML = `<aside class="sidebar"><a class="brand" href="#" data-action="home"><span class="brand-icon">${icon('leaf')}</span><span>小叶子英语<small>LITTLE LEAF ENGLISH</small></span></a><div class="sidebar-label">我的学习空间</div><nav>${[
     ['home', 'home', '学习首页'],
     ['themes', 'grid', '探索主题'],
+    ['dialogues', 'sound', '生活对话'],
     ['review', 'book', '我的复习'],
     ['progress', 'chart', '成长记录'],
   ]
@@ -193,9 +205,10 @@ function render() {
     )
     .join(
       '',
-    )}</nav><div class="sidebar-bottom"><div class="grow-note"><span>🌱</span><strong>每天一点，自然生长</strong><p>每一个新单词，<br>都是一片小小的新叶子。</p></div>${btn(icon('settings') + '学习设置', 'settings', 'nav-link')}<small>给好奇心，一点生长的空间</small></div></aside><div class="workspace"><header class="topbar"><div class="breadcrumb">我的学习空间 <span>/</span> <strong>${category ? esc(category.name) : { home: '学习首页', themes: '探索主题', review: '我的复习', progress: '成长记录' }[page]}</strong></div><div class="top-meta">${category && mode !== 'cards' ? btn(icon('back'), 'nav:themes', 'icon-button study-exit', 'aria-label="退出练习，返回主题"') : ''}<span class="streak">${icon('sun')} 连续学习 ${streak(state)} 天</span><button class="avatar" data-action="settings" aria-label="打开学习设置">🌱</button></div></header><main id="main" tabindex="-1">${category ? renderCategory() : page === 'home' ? home() : page === 'themes' ? themes() : page === 'review' ? review() : progress(learned)}</main><footer>让英语，从看见、听见，到自然说出口。<span>Little steps. Big discoveries.</span></footer></div><nav class="mobile-nav" aria-label="主导航">${[
+    )}</nav><div class="sidebar-bottom"><div class="grow-note"><span>🌱</span><strong>每天一点，自然生长</strong><p>每一个新单词，<br>都是一片小小的新叶子。</p></div>${btn(icon('settings') + '学习设置', 'settings', 'nav-link')}<small>给好奇心，一点生长的空间</small></div></aside><div class="workspace"><header class="topbar"><div class="breadcrumb">我的学习空间 <span>/</span> <strong>${category ? esc(category.name) : { home: '学习首页', themes: '探索主题', review: '我的复习', dialogues: '生活对话', progress: '成长记录' }[page]}</strong></div><div class="top-meta">${page === 'dialogues' && dialoguePractice ? btn(icon('back'), 'nav:dialogues', 'icon-button study-exit', 'aria-label="退出对话练习"') : ''}${category && mode !== 'cards' ? btn(icon('back'), 'nav:themes', 'icon-button study-exit', 'aria-label="退出练习，返回主题"') : ''}<span class="streak">${icon('sun')} 连续学习 ${streak(state)} 天</span><button class="avatar" data-action="settings" aria-label="打开学习设置">🌱</button></div></header><main id="main" tabindex="-1">${category ? renderCategory() : page === 'home' ? home() : page === 'themes' ? themes() : page === 'review' ? review() : page === 'dialogues' ? dialogueView() : progress(learned)}</main><footer>让英语，从看见、听见，到自然说出口。<span>Little steps. Big discoveries.</span></footer></div><nav class="mobile-nav" aria-label="主导航">${[
     ['home', 'home', '首页'],
     ['themes', 'grid', '主题'],
+    ['dialogues', 'sound', '对话'],
     ['review', 'book', '复习'],
     ['progress', 'chart', '成长'],
   ]
@@ -209,7 +222,7 @@ function heading(kicker, title, sub, right = '') {
 function home() {
   const due = dueWords(state, words).length,
     known = Object.keys(state.records).length;
-  return `${heading('A LITTLE ENGLISH, EVERY DAY', '今天，也一起长大一点 <span class="wave">☀️</span>', '看一看，听一听。让好奇心带你认识英语。')}<section class="hero"><div class="hero-copy"><span class="pill">${icon('leaf')} 每天 5 分钟的小小冒险</span><h2>认识世界，<br>从一个单词开始<span>。</span></h2><p>把英语装进生活里。<br>和小叶子一起，轻松学英语。</p>${btn((today() >= state.settings.goal ? '今日已达标 · 自由练习' : '开始今日学习') + ' ' + icon('arrow'), 'daily', 'primary')}<div class="hero-caption"><span class="tiny-dots">● ● ●</span> ${due ? `先复习 ${Math.min(due, 10)} 个到期词` : today() >= state.settings.goal ? '今日目标已完成，继续自由探索吧' : '今天从感兴趣的主题开始'}</div></div><div class="hero-art" aria-label="苹果、蝴蝶与英语词卡插图"><span class="scribble one">✧</span><span class="scribble two">✦</span><div class="float-label">Hello, little explorer!</div><div class="art-card apple">${img(wordMap.get('apple'))}<strong>apple</strong><span>苹果</span></div><div class="art-card butterfly">${img(wordMap.get('butterfly'))}<strong>butterfly</strong></div><div class="art-badge">${icon('sound')} Listen & discover</div><span class="art-leaf">🌿</span><span class="orbit">✧</span></div></section>${savedSession ? `<section class="resume-banner"><div><strong>接着上次的小冒险</strong><p>第 ${savedSession.position + 1} / ${savedSession.queue.length} 题 · ${savedSession.type === 'spell' ? '拼写练习' : '听音选图'}</p></div>${btn('继续学习 ' + icon('arrow'), 'resume', 'secondary')}</section>` : ''}<section class="quick-stats" aria-label="学习概况"><div><span class="stat-icon green">${icon('check')}</span><span><small>今日已练习</small><strong>${today()} <em>/ ${state.settings.goal} 次</em></strong></span><div class="mini-ring" style="--p:${Math.min(100, (today() / state.settings.goal) * 100)}%"></div></div><div><span class="stat-icon orange">${icon('book')}</span><span><small>等待温习</small><strong>${due} <em>个单词</em></strong></span>${btn(icon('arrow'), 'nav:review', 'icon-button', 'aria-label="去复习"')}</div><div><span class="stat-icon lavender">${icon('leaf')}</span><span><small>已经探索</small><strong>${known} <em>/ ${words.length} 个单词</em></strong></span><span class="little-spark">✧</span></div></section><div class="section-title"><div><h2>探索你的小世界 <span>Explore by topic</span></h2><p>从喜欢的主题开始，每一次发现都算数。</p></div>${btn('全部主题 ' + icon('arrow'), 'nav:themes', 'text-button')}</div><div class="category-grid">${categories.slice(0, 6).map(categoryCard).join('')}</div><div class="gentle-tip">${icon('sound')}<span><strong>小小建议</strong>　先听单词，再到例句学习里听一听、填一填，让单词用起来。</span></div>`;
+  return `${heading('A LITTLE ENGLISH, EVERY DAY', '今天，也一起长大一点 <span class="wave">☀️</span>', '看一看，听一听。让好奇心带你认识英语。')}<section class="hero"><div class="hero-copy"><span class="pill">${icon('leaf')} 每天 5 分钟的小小冒险</span><h2>认识世界，<br>从一个单词开始<span>。</span></h2><p>把英语装进生活里。<br>和小叶子一起，轻松学英语。</p>${btn((today() >= state.settings.goal ? '今日已达标 · 自由练习' : '开始今日学习') + ' ' + icon('arrow'), 'daily', 'primary')}<div class="hero-caption"><span class="tiny-dots">● ● ●</span> ${due ? `先复习 ${Math.min(due, 10)} 个到期词` : today() >= state.settings.goal ? '今日目标已完成，继续自由探索吧' : '今天从感兴趣的主题开始'}</div></div><div class="hero-art" aria-label="苹果、蝴蝶与英语词卡插图"><span class="scribble one">✧</span><span class="scribble two">✦</span><div class="float-label">Hello, little explorer!</div><div class="art-card apple">${img(wordMap.get('apple'))}<strong>apple</strong><span>苹果</span></div><div class="art-card butterfly">${img(wordMap.get('butterfly'))}<strong>butterfly</strong></div><div class="art-badge">${icon('sound')} Listen & discover</div><span class="art-leaf">🌿</span><span class="orbit">✧</span></div></section>${savedSession ? `<section class="resume-banner"><div><strong>接着上次的小冒险</strong><p>第 ${savedSession.position + 1} / ${savedSession.queue.length} 题 · ${savedSession.type === 'spell' ? '拼写练习' : '听音选图'}</p></div>${btn('继续学习 ' + icon('arrow'), 'resume', 'secondary')}</section>` : ''}<section class="quick-stats" aria-label="学习概况"><div><span class="stat-icon green">${icon('check')}</span><span><small>今日已练习</small><strong>${today()} <em>/ ${state.settings.goal} 次</em></strong></span><div class="mini-ring" style="--p:${Math.min(100, (today() / state.settings.goal) * 100)}%"></div></div><div><span class="stat-icon orange">${icon('book')}</span><span><small>等待温习</small><strong>${due} <em>个单词</em></strong></span>${btn(icon('arrow'), 'nav:review', 'icon-button', 'aria-label="去复习"')}</div><div><span class="stat-icon lavender">${icon('leaf')}</span><span><small>已经探索</small><strong>${known} <em>/ ${words.length} 个单词</em></strong></span><span class="little-spark">✧</span></div></section><section class="dialogue-banner"><div><span class="eyebrow">LITTLE TALKS, REAL LIFE</span><h2>把英语用在生活里</h2><p>购物、点餐 · 8 组短对话 · 听句子，试着接下一句</p></div>${btn('开始生活对话 ' + icon('arrow'), 'nav:dialogues', 'primary')}</section><div class="section-title"><div><h2>探索你的小世界 <span>Explore by topic</span></h2><p>从喜欢的主题开始，每一次发现都算数。</p></div>${btn('全部主题 ' + icon('arrow'), 'nav:themes', 'text-button')}</div><div class="category-grid">${categories.slice(0, 6).map(categoryCard).join('')}</div><div class="gentle-tip">${icon('sound')}<span><strong>小小建议</strong>　先听单词，再到例句学习里听一听、填一填，让单词用起来。</span></div>`;
 }
 function categoryCard(c) {
   const done = c.words.filter((w) => state.records[w.id]).length;
@@ -501,7 +514,7 @@ function settings() {
     .map(([v, t]) => `<option value="${v}" ${state.settings.rate === v ? 'selected' : ''}>${t}</option>`)
     .join(
       '',
-    )}</select></label><div class="settings-block"><h3>带着小叶子去旅行</h3><p>下载离线学习内容后，图片和单词音频可断网使用。单词音频可离线播放；例句朗读使用设备语音，是否离线可用由系统决定。</p>${btn('下载 / 更新离线内容', 'offline', 'secondary', 'id="offline-btn"')}<p id="offline-status" role="status"></p><p class="small">手机浏览器菜单可尝试“添加到主屏幕”；安装支持由浏览器决定。</p></div><div class="settings-block"><h3>把成长好好收藏</h3><p>学习进度保存在当前浏览器，不会自动同步。建议定期备份，或用备份换设备。</p><div class="button-row">${btn('导出进度备份', 'export', 'secondary')}<label class="secondary import-label">合并导入备份<input id="import-file" type="file" accept="application/json,.json"></label></div><p class="small">导入按单词保留较新记录，每日次数取较大值，收藏合并。当前学习设置不变。</p></div><div class="settings-block attribution"><p>原创双语词库 · 图片：<a href="https://github.com/jdecked/twemoji" target="_blank" rel="noopener">Twemoji</a>（CC BY 4.0）<br>不含广告，无需账号。无需麦克风。<br>词库 ${words.length} 词 · ${categories.length} 主题 · v2.5.0</p><a href="https://github.com/OylDeGit/little-leaf-english" target="_blank" rel="noopener">查看 GitHub 项目 ↗</a></div>`;
+    )}</select></label><div class="settings-block"><h3>带着小叶子去旅行</h3><p>下载离线学习内容后，图片、单词和生活对话音频可断网使用；例句朗读使用设备语音，是否离线可用由系统决定。</p>${btn('下载 / 更新离线内容', 'offline', 'secondary', 'id="offline-btn"')}<p id="offline-status" role="status"></p><p class="small">手机浏览器菜单可尝试“添加到主屏幕”；安装支持由浏览器决定。</p></div><div class="settings-block"><h3>把成长好好收藏</h3><p>学习进度保存在当前浏览器，不会自动同步。建议定期备份，或用备份换设备。</p><div class="button-row">${btn('导出进度备份', 'export', 'secondary')}<label class="secondary import-label">合并导入备份<input id="import-file" type="file" accept="application/json,.json"></label></div><p class="small">导入按单词保留较新记录，每日次数取较大值，收藏合并。当前学习设置不变。</p></div><div class="settings-block attribution"><p>原创双语词库 · 图片：<a href="https://github.com/jdecked/twemoji" target="_blank" rel="noopener">Twemoji</a>（CC BY 4.0）<br>不含广告，无需账号。无需麦克风。<br>词库 ${words.length} 词 · ${categories.length} 主题 · v2.6.0</p><a href="https://github.com/OylDeGit/little-leaf-english" target="_blank" rel="noopener">查看 GitHub 项目 ↗</a></div>`;
   modal.showModal();
 }
 async function offlineDownload() {
@@ -522,7 +535,8 @@ async function offlineDownload() {
       if (e.data.finished || e.data.error) {
         b.disabled = false;
         if (e.data.finished) {
-          label.textContent = '✓ ' + words.length + ' 个单词的离线内容已就绪。';
+          label.textContent =
+            '✓ ' + words.length + ' 个单词和 ' + dialogues.length + ' 组对话的离线内容已就绪。';
           localStorage.setItem('little-leaf:offline', String(words.length));
         }
         channel.port1.close();
@@ -541,6 +555,50 @@ document.addEventListener('click', (e) => {
   e.preventDefault();
   const [a, id] = b.dataset.action.split(':');
   switch (a) {
+    case 'dialogue-open':
+      dialogueLesson = dialogues.find((d) => d.id === id);
+      dialoguePractice = null;
+      render();
+      window.scrollTo(0, 0);
+      break;
+    case 'dialogue-chinese':
+      dialogueChinese = !dialogueChinese;
+      render();
+      break;
+    case 'dialogue-play':
+      speakDialogue(Number(id));
+      break;
+    case 'dialogue-read':
+      dialoguePractice = null;
+      render();
+      window.scrollTo(0, 0);
+      break;
+    case 'dialogue-begin':
+      if (!dialogueLesson) break;
+      dialoguePractice = { step: 0, correct: 0 };
+      prepareDialogueStep();
+      render();
+      window.scrollTo(0, 0);
+      speakDialogue(0);
+      break;
+    case 'dialogue-answer': {
+      const practice = dialoguePractice,
+        choice = Number(id);
+      if (!practice || practice.answered || !practice.options[choice]) break;
+      practice.chosen = choice;
+      practice.answered = true;
+      if (practice.options[choice].en === dialogueLesson.lines[practice.step * 2 + 1].en) practice.correct++;
+      render();
+      break;
+    }
+    case 'dialogue-next':
+      if (!dialoguePractice?.answered) break;
+      dialoguePractice.step++;
+      if (dialoguePractice.step < 3) prepareDialogueStep();
+      render();
+      window.scrollTo(0, 0);
+      if (dialoguePractice.step < 3) speakDialogue(dialoguePractice.step * 2);
+      break;
     case 'resume':
       resumeSession();
       break;
@@ -804,3 +862,41 @@ document.addEventListener('submit', (event) => {
   }
   render();
 });
+
+function dialogueView() {
+  if (!dialogueLesson)
+    return `${heading('LITTLE TALKS, REAL LIFE', '生活里的小对话', '每组 6 句 · 3 次回应练习 · 音频可离线下载')}<div class="dialogue-grid">${dialogues.map((d) => `<button class="dialogue-topic panel" data-action="dialogue-open:${d.id}"><span class="dialogue-emoji" aria-hidden="true">${d.emoji}</span><small>${d.group}</small><h2>${esc(d.title)}</h2><p>${esc(d.lines[0].role)} ↔ ${esc(d.lines[1].role)}</p><span>听对话，再试着回应 →</span></button>`).join('')}</div><p class="small muted">对话练习单独显示本轮结果，不计入单词打卡次数。</p>`;
+  const d = dialogueLesson,
+    practice = dialoguePractice;
+  const controls = `<div class="dialogue-toolbar">${btn('← 全部对话', 'nav:dialogues', 'text-button')}${btn(dialogueChinese ? '隐藏中文' : '显示中文', 'dialogue-chinese', 'secondary', `aria-pressed="${dialogueChinese}"`)}</div>`;
+  if (!practice)
+    return `${controls}${heading(d.group, d.title, '点击每句话听发音，然后试着接下一句。')}<section class="dialogue-transcript" aria-label="完整对话">${d.lines.map((line, i) => `<button class="dialogue-line panel ${i % 2 ? 'guest' : ''}" data-action="dialogue-play:${i}" aria-label="播放第 ${i + 1} 句：${esc(line.en)}"><small>${esc(line.role)} ${icon('sound')}</small><strong>${esc(line.en)}</strong>${dialogueChinese ? `<span>${esc(line.zh)}</span>` : ''}</button>`).join('')}</section><div class="dialogue-start">${btn('试着回应 · 3 小题', 'dialogue-begin', 'primary')}</div>`;
+  if (practice.step >= 3)
+    return `${controls}<section class="panel dialogue-result"><span class="intro-emoji">🌟</span><h1>这段对话，练完啦！</h1><p>首次答对 ${practice.correct} / 3 题</p><p>可以再听完整对话，模仿说出每一句。</p><div class="button-row">${btn('再听完整对话', 'dialogue-read', 'primary')}${btn('重练回应', 'dialogue-begin', 'secondary')}</div></section>`;
+  const prompt = d.lines[practice.step * 2],
+    reply = d.lines[practice.step * 2 + 1];
+  return `${controls}<section class="panel dialogue-exercise"><div class="quiz-top"><span>第 ${practice.step + 1} / 3 题</span><span>你来扮演：${esc(reply.role)}</span></div><p class="eyebrow">${esc(d.group)} · ${esc(d.title)}</p><h1>接下来，你会怎么说？</h1><button class="dialogue-line" data-action="dialogue-play:${practice.step * 2}"><small>${esc(prompt.role)} ${icon('sound')}</small><strong>${esc(prompt.en)}</strong>${dialogueChinese ? `<span>${esc(prompt.zh)}</span>` : ''}</button><div class="dialogue-options">${practice.options.map((option, i) => `<button class="secondary dialogue-choice ${practice.answered && option.en === reply.en ? 'right' : practice.answered && i === practice.chosen ? 'wrong' : ''}" data-action="dialogue-answer:${i}" ${practice.answered ? 'disabled' : ''}><strong>${esc(option.en)}</strong>${dialogueChinese ? `<span>${esc(option.zh)}</span>` : ''}</button>`).join('')}</div>${practice.answered ? `<div class="feedback ${practice.options[practice.chosen].en === reply.en ? 'good' : 'retry'}" role="status"><strong>${practice.options[practice.chosen].en === reply.en ? '回应得很合适！' : '这时可以这样回应'}</strong><p>${esc(reply.en)}<br>${esc(reply.zh)}</p>${btn(icon('sound') + '听正确回应', `dialogue-play:${practice.step * 2 + 1}`, 'secondary')}</div><div class="dialogue-next">${btn(practice.step === 2 ? '查看本轮结果' : '下一轮对话 →', 'dialogue-next', 'primary')}</div>` : '<p class="small muted">点击上方句子可重听，再选一个合适的回应。</p>'}</section>`;
+}
+async function speakDialogue(index) {
+  const line = dialogueLesson?.lines[index];
+  if (!line) return;
+  stopMedia();
+  const token = playToken,
+    clip = new Audio(line.audio);
+  audio = clip;
+  clip.playbackRate = state.settings.rate;
+  const node = document.querySelector(`.dialogue-line[data-action="dialogue-play:${index}"]`);
+  try {
+    await clip.play();
+    if (token !== playToken) return;
+    node?.classList.add('speaking');
+    clip.addEventListener('ended', () => node?.classList.remove('speaking'), { once: true });
+  } catch (error) {
+    if (token === playToken && error.name !== 'AbortError') toast('请点句子重新播放，并检查设备音量');
+  }
+}
+function prepareDialogueStep() {
+  dialoguePractice.options = shuffle(dialogueLesson.lines[dialoguePractice.step * 2 + 1].options);
+  dialoguePractice.answered = false;
+  dialoguePractice.chosen = null;
+}
