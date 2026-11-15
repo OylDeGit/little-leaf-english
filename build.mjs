@@ -1,3 +1,4 @@
+import { vocabulary } from './vocabulary.js';
 import { cp, mkdir, rm, readFile, writeFile, readdir } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 const hash = (bytes) => createHash('sha256').update(bytes).digest('hex').slice(0, 12);
@@ -87,5 +88,10 @@ const worker = workerSource
   .replace("const RELEASE = 'development';", `const RELEASE = '${version}';`)
   .replace('const CORE_FILES = null;', `const CORE_FILES = ${JSON.stringify(core)};`);
 await writeFile('dist/sw.js', worker);
-await writeFile('dist/release.json', JSON.stringify({ version, words: 300, themes: 25 }));
-console.log(`Built release ${version}: 300 words, 25 themes, ${media.length} deduplicated media files.`);
+await writeFile(
+  'dist/release.json',
+  JSON.stringify({ version, words: vocabulary.flatMap((c) => c.words).length, themes: vocabulary.length }),
+);
+console.log(
+  `Built release ${version}: ${vocabulary.flatMap((c) => c.words).length} words, ${vocabulary.length} themes, ${media.length} deduplicated media files.`,
+);

@@ -5,8 +5,8 @@ const root = new URL('./dist/', import.meta.url),
   release = JSON.parse(await readFile(new URL('release.json', root), 'utf8'));
 const files = JSON.parse(await readFile(new URL('offline-assets.json', root), 'utf8'));
 assert.match(release.version, /^[a-f0-9]{12}$/);
-assert.equal(release.words, 300);
-assert.equal(release.themes, 25);
+assert.equal(release.words, vocabulary.flatMap((c) => c.words).length);
+assert.equal(release.themes, vocabulary.length);
 for (const file of files) await access(new URL(file.split('?')[0] || 'index.html', root));
 const media = await import(new URL(`media.js?test=${release.version}`, root));
 for (const word of vocabulary.flatMap((c) => c.words))
@@ -29,7 +29,7 @@ const sw = await readFile(new URL('sw.js', root), 'utf8');
 assert.ok(sw.includes(`const RELEASE = '${release.version}'`));
 assert.ok(!sw.includes('const CORE_FILES = null;'));
 const dataSize = (await stat(new URL('media.js', root))).size;
-assert.ok(dataSize < 60000);
+assert.ok(dataSize < 70000);
 console.log(
   `Verified build ${release.version}: complete media, versioned module graph, offline manifest and worker.`,
 );

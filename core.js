@@ -217,3 +217,15 @@ export function validateSession(raw) {
     typed: typeof raw.typed === 'string' ? raw.typed.slice(0, 100) : undefined,
   };
 }
+
+// Keep original case and punctuation around the target word, including plural suffixes.
+export function sentenceParts(word) {
+  const escaped = word.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const at = word.sentence.search(new RegExp(`\\b${escaped}(?=\\b|s\\b|es\\b)`, 'i'));
+  if (at < 0) throw Error(`Sentence must contain target word: ${word.id}`);
+  return {
+    before: word.sentence.slice(0, at),
+    target: word.sentence.slice(at, at + word.word.length),
+    after: word.sentence.slice(at + word.word.length),
+  };
+}

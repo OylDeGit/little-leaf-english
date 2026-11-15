@@ -13,15 +13,16 @@ import {
   streak,
   normalize,
   matchesSpelling,
+  sentenceParts,
   quizOptions,
   dailyRoundSize,
   validateSession,
 } from './core.js';
 
-test('300 unique bilingual words across 25 themes have usable local illustrations and audio', () => {
-  assert.equal(words.length, 300);
+test('340 unique bilingual words across 25 themes have usable local illustrations and audio', () => {
+  assert.equal(words.length, 340);
   assert.equal(categories.length, 25);
-  assert.equal(new Set(words.map((w) => w.id)).size, 300);
+  assert.equal(new Set(words.map((w) => w.id)).size, 340);
   for (const w of words) {
     assert.ok(w.word && w.zh && w.sentence && w.category);
     const svg = readFileSync(new URL(imagePath(w), import.meta.url), 'utf8');
@@ -184,26 +185,77 @@ test('all 96 original IDs remain valid, preserving every existing word record', 
   for (const id of ids) assert.ok(wordMap.has(id), id);
 });
 
-test('cached audio serves exact, open-ended and suffix byte ranges and rejects invalid ones',async()=>{
- const {runInNewContext}=await import('node:vm');const context={self:{location:{href:'https://example.com/english/sw.js'},addEventListener(){}},URL,Response,Headers,Request};runInNewContext(readFileSync(new URL('./sw.js',import.meta.url),'utf8'),context);
- const response=()=>new Response('0123456789',{headers:{'Content-Type':'audio/mp4'}});
- const partial=await context.responseForRange(response(),'bytes=2-5');assert.equal(partial.status,206);assert.equal(partial.headers.get('Content-Range'),'bytes 2-5/10');assert.equal(partial.headers.get('Content-Length'),'4');assert.equal(await partial.text(),'2345');
- assert.equal(await(await context.responseForRange(response(),'bytes=7-')).text(),'789');assert.equal(await(await context.responseForRange(response(),'bytes=-3')).text(),'789');assert.equal((await context.responseForRange(response(),'bytes=20-')).status,416);assert.equal((await context.responseForRange(response(),'bytes=-0')).status,416);
+test('cached audio serves exact, open-ended and suffix byte ranges and rejects invalid ones', async () => {
+  const { runInNewContext } = await import('node:vm');
+  const context = {
+    self: { location: { href: 'https://example.com/english/sw.js' }, addEventListener() {} },
+    URL,
+    Response,
+    Headers,
+    Request,
+  };
+  runInNewContext(readFileSync(new URL('./sw.js', import.meta.url), 'utf8'), context);
+  const response = () => new Response('0123456789', { headers: { 'Content-Type': 'audio/mp4' } });
+  const partial = await context.responseForRange(response(), 'bytes=2-5');
+  assert.equal(partial.status, 206);
+  assert.equal(partial.headers.get('Content-Range'), 'bytes 2-5/10');
+  assert.equal(partial.headers.get('Content-Length'), '4');
+  assert.equal(await partial.text(), '2345');
+  assert.equal(await (await context.responseForRange(response(), 'bytes=7-')).text(), '789');
+  assert.equal(await (await context.responseForRange(response(), 'bytes=-3')).text(), '789');
+  assert.equal((await context.responseForRange(response(), 'bytes=20-')).status, 416);
+  assert.equal((await context.responseForRange(response(), 'bytes=-0')).status, 416);
 });
-test('range playback fetches and caches a full 200 response before returning a partial response',async()=>{
- const {runInNewContext}=await import('node:vm');let cachedStatus,requestRange;const context={self:{location:{href:'https://example.com/english/sw.js'},addEventListener(){}},URL,Response,Headers,Request,fetch:async request=>{requestRange=request.headers.get('range');return new Response('abcdefghij',{headers:{'Content-Type':'audio/mp4'}});}};
- runInNewContext(readFileSync(new URL('./sw.js',import.meta.url),'utf8'),context);
- const cache={match:async()=>undefined,put:async(_request,response)=>{cachedStatus=response.status;}};
- const response=await context.assetResponse(new Request('https://example.com/english/assets/audio/sample.m4a',{headers:{Range:'bytes=3-6'}}),cache);
- assert.equal(requestRange,null);assert.equal(cachedStatus,200);assert.equal(response.status,206);assert.equal(await response.text(),'defg');
- const fullCache={match:async()=>new Response('cached-audio',{headers:{'Content-Type':'audio/mp4'}})};
- assert.equal(await(await context.assetResponse(new Request('https://example.com/english/assets/audio/sample.m4a',{headers:{Range:'bytes=0-5'}}),fullCache)).text(),'cached');
+test('range playback fetches and caches a full 200 response before returning a partial response', async () => {
+  const { runInNewContext } = await import('node:vm');
+  let cachedStatus, requestRange;
+  const context = {
+    self: { location: { href: 'https://example.com/english/sw.js' }, addEventListener() {} },
+    URL,
+    Response,
+    Headers,
+    Request,
+    fetch: async (request) => {
+      requestRange = request.headers.get('range');
+      return new Response('abcdefghij', { headers: { 'Content-Type': 'audio/mp4' } });
+    },
+  };
+  runInNewContext(readFileSync(new URL('./sw.js', import.meta.url), 'utf8'), context);
+  const cache = {
+    match: async () => undefined,
+    put: async (_request, response) => {
+      cachedStatus = response.status;
+    },
+  };
+  const response = await context.assetResponse(
+    new Request('https://example.com/english/assets/audio/sample.m4a', { headers: { Range: 'bytes=3-6' } }),
+    cache,
+  );
+  assert.equal(requestRange, null);
+  assert.equal(cachedStatus, 200);
+  assert.equal(response.status, 206);
+  assert.equal(await response.text(), 'defg');
+  const fullCache = {
+    match: async () => new Response('cached-audio', { headers: { 'Content-Type': 'audio/mp4' } }),
+  };
+  assert.equal(
+    await (
+      await context.assetResponse(
+        new Request('https://example.com/english/assets/audio/sample.m4a', {
+          headers: { Range: 'bytes=0-5' },
+        }),
+        fullCache,
+      )
+    ).text(),
+    'cached',
+  );
 });
-
 
 test('photo rollback frees retired photos while retaining SVG, audio and unrelated cached assets', async () => {
   const { runInNewContext } = await import('node:vm');
-  const handlers = {}, deleted = [], deletedCaches = [];
+  const handlers = {},
+    deleted = [],
+    deletedCaches = [];
   const urls = [
     'https://example.com/english/assets/images/photo.jpg',
     'https://example.com/english/assets/images/photo.PNG?old=1',
@@ -216,24 +268,77 @@ test('photo rollback frees retired photos while retaining SVG, audio and unrelat
   const context = {
     self: {
       location: { href: 'https://example.com/english/sw.js' },
-      addEventListener: (type, handler) => { handlers[type] = handler; },
-      clients: { claim: async () => { claimed = true; } },
+      addEventListener: (type, handler) => {
+        handlers[type] = handler;
+      },
+      clients: {
+        claim: async () => {
+          claimed = true;
+        },
+      },
     },
     URL,
     caches: {
-      keys: async () => ['little-leaf-core-old', 'little-leaf-core-development', 'little-leaf-media-v2', 'unrelated'],
-      delete: async key => { deletedCaches.push(key); },
-      open: async key => {
+      keys: async () => [
+        'little-leaf-core-old',
+        'little-leaf-core-development',
+        'little-leaf-media-v2',
+        'unrelated',
+      ],
+      delete: async (key) => {
+        deletedCaches.push(key);
+      },
+      open: async (key) => {
         assert.equal(key, 'little-leaf-media-v2');
-        return { keys: async () => urls.map(url => ({ url })), delete: async request => { deleted.push(request.url); } };
+        return {
+          keys: async () => urls.map((url) => ({ url })),
+          delete: async (request) => {
+            deleted.push(request.url);
+          },
+        };
       },
     },
   };
   runInNewContext(readFileSync(new URL('./sw.js', import.meta.url), 'utf8'), context);
   let activation;
-  handlers.activate({ waitUntil: promise => { activation = promise; } });
+  handlers.activate({
+    waitUntil: (promise) => {
+      activation = promise;
+    },
+  });
   await activation;
   assert.deepEqual(deleted, urls.slice(0, 3));
   assert.deepEqual(deletedCaches, ['little-leaf-core-old']);
   assert.ok(claimed);
+});
+
+test('all example sentences can be reconstructed from a non-empty target blank', () => {
+  for (const w of words) {
+    const { before, target, after } = sentenceParts(w);
+    assert.equal(before + target + after, w.sentence, w.id);
+    assert.equal(target.toLowerCase(), w.word.toLowerCase(), w.id);
+    assert.ok(matchesSpelling(w, target), w.id);
+  }
+  assert.throws(() => sentenceParts({ id: 'bad', word: 'apple', sentence: 'A different word.' }));
+});
+test('expanded numeric progression and original IDs remain available', () => {
+  assert.equal(categories.find((c) => c.id === 'numbers').words.length, 32);
+  assert.equal(categories.find((c) => c.id === 'fruit').words.length, 20);
+  for (const id of [
+    'zero',
+    'thirteen',
+    'twenty',
+    'twenty-one',
+    'forty',
+    'hundred',
+    'thousand',
+    'mango',
+    'papaya',
+  ])
+    assert.ok(wordMap.has(id));
+});
+
+test('sentence blank avoids matching a target inside another word', () => {
+  assert.equal(sentenceParts({id: 'ear', word: 'ear', sentence: 'I hear with my ear.'}).before, 'I hear with my ');
+  assert.equal(sentenceParts({id: 'one', word: 'one', sentence: 'Someone has one apple.'}).before, 'Someone has ');
 });
