@@ -2930,3 +2930,5 @@ dialog .secondary {
 }
 
 @media(max-width:360px){body.studying .top-meta .streak{display:none}.study-exit{width:44px;min-width:44px}}
+
+.recall-actions { justify-content: center; flex-wrap: wrap; gap: 12px; margin: 20px 0; }

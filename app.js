@@ -47,11 +47,8 @@ let page = 'home',
   index = 0,
   session = null,
   audio = null,
-  recorder = null,
-  recordURL = null,
-  recordStream = null,
-  recordTimer = null,
-  recordToken = 0,
+  recallRevealed = false,
+  recallRated = new Map(),
   playToken = 0;
 const icons = {
   leaf: '<path d="M5 18C1 5 13 2 21 3c0 11-5 19-14 16M4 21 17 8M9 15 8 9m5 3h5"/>',
@@ -100,22 +97,13 @@ function toast(t) {
   toastTimer = setTimeout(() => $('#toast').classList.remove('visible'), 4000);
 }
 function stopMedia() {
-  recordToken++;
   playToken++;
-  clearTimeout(recordTimer);
   if (audio) {
     audio.pause();
     audio = null;
   }
   window.speechSynthesis?.cancel();
-  if (recorder?.state === 'recording') recorder.stop();
-  recordStream?.getTracks().forEach((t) => t.stop());
-  recordStream = null;
-  recorder = null;
-  if (recordURL) {
-    URL.revokeObjectURL(recordURL);
-    recordURL = null;
-  }
+
 }
 async function speak(id) {
   stopMedia();
@@ -196,7 +184,7 @@ function heading(kicker, title, sub, right = '') {
 function home() {
   const due = dueWords(state, words).length,
     known = Object.keys(state.records).length;
-  return `${heading('A LITTLE ENGLISH, EVERY DAY', '今天，也一起长大一点 <span class="wave">☀️</span>', '看一看，听一听。让好奇心带你认识英语。')}<section class="hero"><div class="hero-copy"><span class="pill">${icon('leaf')} 每天 5 分钟的小小冒险</span><h2>认识世界，<br>从一个单词开始<span>。</span></h2><p>把英语装进生活里。<br>和小叶子一起，轻松学英语。</p>${btn((today() >= state.settings.goal ? '今日已达标 · 自由练习' : '开始今日学习') + ' ' + icon('arrow'), 'daily', 'primary')}<div class="hero-caption"><span class="tiny-dots">● ● ●</span> ${due ? `先复习 ${Math.min(due, 10)} 个到期词` : today() >= state.settings.goal ? '今日目标已完成，继续自由探索吧' : '今天从感兴趣的主题开始'}</div></div><div class="hero-art" aria-label="苹果、蝴蝶与英语词卡插图"><span class="scribble one">✧</span><span class="scribble two">✦</span><div class="float-label">Hello, little explorer!</div><div class="art-card apple">${img(wordMap.get('apple'))}<strong>apple</strong><span>苹果</span></div><div class="art-card butterfly">${img(wordMap.get('butterfly'))}<strong>butterfly</strong></div><div class="art-badge">${icon('sound')} Listen & discover</div><span class="art-leaf">🌿</span><span class="orbit">✧</span></div></section>${savedSession ? `<section class="resume-banner"><div><strong>接着上次的小冒险</strong><p>第 ${savedSession.position + 1} / ${savedSession.queue.length} 题 · ${savedSession.type === 'spell' ? '拼写练习' : '听音选图'}</p></div>${btn('继续学习 ' + icon('arrow'), 'resume', 'secondary')}</section>` : ''}<section class="quick-stats" aria-label="学习概况"><div><span class="stat-icon green">${icon('check')}</span><span><small>今日已练习</small><strong>${today()} <em>/ ${state.settings.goal} 次</em></strong></span><div class="mini-ring" style="--p:${Math.min(100, (today() / state.settings.goal) * 100)}%"></div></div><div><span class="stat-icon orange">${icon('book')}</span><span><small>等待温习</small><strong>${due} <em>个单词</em></strong></span>${btn(icon('arrow'), 'nav:review', 'icon-button', 'aria-label="去复习"')}</div><div><span class="stat-icon lavender">${icon('leaf')}</span><span><small>已经探索</small><strong>${known} <em>/ ${words.length} 个单词</em></strong></span><span class="little-spark">✧</span></div></section><div class="section-title"><div><h2>探索你的小世界 <span>Explore by topic</span></h2><p>从喜欢的主题开始，每一次发现都算数。</p></div>${btn('全部主题 ' + icon('arrow'), 'nav:themes', 'text-button')}</div><div class="category-grid">${categories.slice(0, 6).map(categoryCard).join('')}</div><div class="gentle-tip">${icon('sound')}<span><strong>小小建议</strong>　先听声音，再试着跟读。记住一个单词，也记住它的样子。</span></div>`;
+  return `${heading('A LITTLE ENGLISH, EVERY DAY', '今天，也一起长大一点 <span class="wave">☀️</span>', '看一看，听一听。让好奇心带你认识英语。')}<section class="hero"><div class="hero-copy"><span class="pill">${icon('leaf')} 每天 5 分钟的小小冒险</span><h2>认识世界，<br>从一个单词开始<span>。</span></h2><p>把英语装进生活里。<br>和小叶子一起，轻松学英语。</p>${btn((today() >= state.settings.goal ? '今日已达标 · 自由练习' : '开始今日学习') + ' ' + icon('arrow'), 'daily', 'primary')}<div class="hero-caption"><span class="tiny-dots">● ● ●</span> ${due ? `先复习 ${Math.min(due, 10)} 个到期词` : today() >= state.settings.goal ? '今日目标已完成，继续自由探索吧' : '今天从感兴趣的主题开始'}</div></div><div class="hero-art" aria-label="苹果、蝴蝶与英语词卡插图"><span class="scribble one">✧</span><span class="scribble two">✦</span><div class="float-label">Hello, little explorer!</div><div class="art-card apple">${img(wordMap.get('apple'))}<strong>apple</strong><span>苹果</span></div><div class="art-card butterfly">${img(wordMap.get('butterfly'))}<strong>butterfly</strong></div><div class="art-badge">${icon('sound')} Listen & discover</div><span class="art-leaf">🌿</span><span class="orbit">✧</span></div></section>${savedSession ? `<section class="resume-banner"><div><strong>接着上次的小冒险</strong><p>第 ${savedSession.position + 1} / ${savedSession.queue.length} 题 · ${savedSession.type === 'spell' ? '拼写练习' : '听音选图'}</p></div>${btn('继续学习 ' + icon('arrow'), 'resume', 'secondary')}</section>` : ''}<section class="quick-stats" aria-label="学习概况"><div><span class="stat-icon green">${icon('check')}</span><span><small>今日已练习</small><strong>${today()} <em>/ ${state.settings.goal} 次</em></strong></span><div class="mini-ring" style="--p:${Math.min(100, (today() / state.settings.goal) * 100)}%"></div></div><div><span class="stat-icon orange">${icon('book')}</span><span><small>等待温习</small><strong>${due} <em>个单词</em></strong></span>${btn(icon('arrow'), 'nav:review', 'icon-button', 'aria-label="去复习"')}</div><div><span class="stat-icon lavender">${icon('leaf')}</span><span><small>已经探索</small><strong>${known} <em>/ ${words.length} 个单词</em></strong></span><span class="little-spark">✧</span></div></section><div class="section-title"><div><h2>探索你的小世界 <span>Explore by topic</span></h2><p>从喜欢的主题开始，每一次发现都算数。</p></div>${btn('全部主题 ' + icon('arrow'), 'nav:themes', 'text-button')}</div><div class="category-grid">${categories.slice(0, 6).map(categoryCard).join('')}</div><div class="gentle-tip">${icon('sound')}<span><strong>小小建议</strong>　先看图回想英文，再翻卡核对。想不起来的单词，留到复习时再练。</span></div>`;
 }
 function categoryCard(c) {
   const done = c.words.filter((w) => state.records[w.id]).length;
@@ -263,7 +251,7 @@ function wordCard(w) {
 function renderCategory() {
   return `<div class="study-heading">${btn(icon('back') + '返回主题', 'nav:themes', 'text-button')}<span class="eyebrow">${category.en}</span><h1>${category.name}</h1><p class="muted">${category.description}</p></div><div class="study-toolbar"><div class="mode-tabs" role="group" aria-label="学习模式">${[
     ['cards', 'grid', '词卡'],
-    ['read', 'mic', '跟读'],
+    ['recall', 'book', '翻卡自测'],
     ['listen', 'sound', '听音选图'],
     ['spell', 'book', '拼写'],
   ]
@@ -284,14 +272,15 @@ function renderCategory() {
           .join(
             '',
           )}<label class="check-label"><input id="chinese" type="checkbox" ${state.settings.showChinese ? 'checked' : ''}> 显示中文</label></div><div id="word-results" class="word-grid">${wordResults()}</div>`
-      : mode === 'read'
-        ? reading()
+      : mode === 'recall'
+        ? recallCard()
         : quizView()
   }`;
 }
-function reading() {
-  const w = category.words[index % category.words.length];
-  return `<section class="reading panel" aria-label="跟读词卡" tabindex="-1"><div class="reading-top"><span>${index + 1} / ${category.words.length}</span>${btn(icon('star'), `favorite:${w.id}`, `icon-button ${state.favorites.includes(w.id) ? 'on' : ''}`, 'aria-label="收藏当前单词" aria-pressed="' + state.favorites.includes(w.id) + '"')}</div>${img(w, 'reading-image')}<h2>${w.word}</h2><p class="translation">${state.settings.showChinese ? w.zh : ''}</p>${btn(icon('sound') + '听单词', `speak:${w.id}`, 'primary')}<div class="example"><span>TRY A LITTLE SENTENCE</span><p>${w.sentence}</p>${btn(icon('sound') + '听例句', `sentence:${w.id}`, 'text-button')}</div><div class="record-row">${btn(icon('mic') + '录下我的跟读', 'record', 'secondary', 'id="record-btn"')}<div id="record-player"></div></div><p class="small muted">录音只在当前页面回放，离开后释放，不上传。可以听完自己对照。</p><p class="swipe-hint">左右滑动词卡，或用方向键切换</p><div class="reading-nav">${btn(icon('back') + '上一个', 'previous', 'secondary', index === 0 ? 'disabled' : '')}${btn('我认识了 ' + icon('check'), 'know', 'primary')}${btn('下一个 ' + icon('arrow'), 'next', 'secondary')}</div></section>`;
+function recallCard() {
+  const w = category.words[index], rated = recallRated.has(w.id);
+  const complete = recallRated.size === category.words.length;
+  return `<section class="reading panel" aria-label="翻卡自测" tabindex="-1"><div class="reading-top"><span>${index + 1} / ${category.words.length} · 已自测 ${recallRated.size} 个</span></div>${img(w, 'reading-image')}${recallRevealed ? `<div aria-live="polite"><h2>${w.word}</h2><p class="translation">${w.zh}</p>${btn(icon('sound') + '听单词', `speak:${w.id}`, 'secondary')}<div class="example"><p>${w.sentence}</p>${btn(icon('sound') + '听例句', `sentence:${w.id}`, 'text-button')}</div></div>${rated ? `<p role="status">本轮已记录：${recallRated.get(w.id) ? '记住了' : '再练一次'}</p>` : `<p>刚才想出英文了吗？如实选择，安排下一次复习。</p><div class="button-row recall-actions">${btn('再练一次', 'recall-rate:no', 'secondary')}${btn('记住了', 'recall-rate:yes', 'primary')}</div>`}` : `<h2>它的英文是什么？</h2><p>先在心里想一想，再翻开答案。</p>${btn('翻开答案', 'reveal', 'primary')}`}<div class="reading-nav">${btn('上一个', 'previous', 'secondary', index === 0 ? 'disabled' : '')}${btn('下一个', 'next', 'secondary', index === category.words.length - 1 ? 'disabled' : '')}</div>${complete ? `<div class="feedback good" role="status"><strong>本轮自测完成</strong><p>记住了 ${[...recallRated.values()].filter(Boolean).length} 个，待加强 ${[...recallRated.values()].filter(v => !v).length} 个。待加强单词已加入复习计划。</p>${btn('重新自测', 'mode:recall', 'secondary')}</div>` : '<p class="small muted">选择后会记录一次练习；本轮同一张卡只记录一次。切换模式或刷新会重新开始本轮。</p>'}</section>`;
 }
 function startQuiz(pool, type = 'listen', source = 'theme') {
   stopMedia();
@@ -425,51 +414,6 @@ function submitAnswer(id, typed) {
     document.querySelector('.feedback')?.scrollIntoView({ block: 'nearest', behavior: 'instant' }),
   );
 }
-async function recording() {
-  if (recorder?.state === 'recording') {
-    recorder.stop();
-    return;
-  }
-  if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
-    toast('此浏览器不支持录音，请使用系统录音工具跟读');
-    return;
-  }
-  const token = ++recordToken;
-  let stream;
-  try {
-    stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    if (token !== recordToken) {
-      stream.getTracks().forEach((t) => t.stop());
-      return;
-    }
-    recordStream = stream;
-    const chunks = [];
-    const rec = new MediaRecorder(stream);
-    recorder = rec;
-    rec.ondataavailable = (e) => {
-      if (e.data.size) chunks.push(e.data);
-    };
-    rec.onstop = () => {
-      clearTimeout(recordTimer);
-      stream.getTracks().forEach((t) => t.stop());
-      if (token !== recordToken) return;
-      if (recordURL) URL.revokeObjectURL(recordURL);
-      recordURL = URL.createObjectURL(new Blob(chunks, { type: rec.mimeType }));
-      const player = $('#record-player');
-      if (player) player.innerHTML = `<audio controls src="${recordURL}" aria-label="我的跟读录音"></audio>`;
-      const b = $('#record-btn');
-      if (b) b.innerHTML = icon('mic') + '重新录音';
-    };
-    rec.start();
-    $('#record-btn').innerHTML = '■ 停止录音';
-    recordTimer = setTimeout(() => {
-      if (rec.state === 'recording') rec.stop();
-    }, 15000);
-  } catch {
-    stream?.getTracks().forEach((t) => t.stop());
-    toast('麦克风未开启。你仍然可以听音并跟读。');
-  }
-}
 function settings() {
   stopMedia();
   modal.innerHTML = `<div class="modal-title"><div><span class="eyebrow">MAKE IT YOURS</span><h2>按照你的节奏来</h2></div>${btn(icon('close'), 'close', 'icon-button', 'aria-label="关闭设置"')}</div><label class="setting-row">每日练习目标<select id="goal">${[5, 10, 15, 20].map((n) => `<option ${state.settings.goal === n ? 'selected' : ''} value="${n}">${n} 次</option>`).join('')}</select></label><label class="setting-row">单词播放速度<select id="rate">${[
@@ -480,7 +424,7 @@ function settings() {
     .map(([v, t]) => `<option value="${v}" ${state.settings.rate === v ? 'selected' : ''}>${t}</option>`)
     .join(
       '',
-    )}</select></label><div class="settings-block"><h3>带着小叶子去旅行</h3><p>下载离线学习内容后，图片和单词音频可断网使用。单词音频可离线播放；例句朗读使用设备语音，是否离线可用由系统决定。</p>${btn('下载 / 更新离线内容', 'offline', 'secondary', 'id="offline-btn"')}<p id="offline-status" role="status"></p><p class="small">手机浏览器菜单可尝试“添加到主屏幕”；安装支持由浏览器决定。</p></div><div class="settings-block"><h3>把成长好好收藏</h3><p>学习进度保存在当前浏览器，不会自动同步。建议定期备份，或用备份换设备。</p><div class="button-row">${btn('导出进度备份', 'export', 'secondary')}<label class="secondary import-label">合并导入备份<input id="import-file" type="file" accept="application/json,.json"></label></div><p class="small">导入按单词保留较新记录，每日次数取较大值，收藏合并。当前学习设置不变。</p></div><div class="settings-block attribution"><p>原创双语词库 · 图片：<a href="https://github.com/jdecked/twemoji" target="_blank" rel="noopener">Twemoji</a>（CC BY 4.0）<br>不含广告，无需账号。录音不上传。<br>词库 ${words.length} 词 · ${categories.length} 主题 · v2.2.0</p><a href="https://github.com/OylDeGit/little-leaf-english" target="_blank" rel="noopener">查看 GitHub 项目 ↗</a></div>`;
+    )}</select></label><div class="settings-block"><h3>带着小叶子去旅行</h3><p>下载离线学习内容后，图片和单词音频可断网使用。单词音频可离线播放；例句朗读使用设备语音，是否离线可用由系统决定。</p>${btn('下载 / 更新离线内容', 'offline', 'secondary', 'id="offline-btn"')}<p id="offline-status" role="status"></p><p class="small">手机浏览器菜单可尝试“添加到主屏幕”；安装支持由浏览器决定。</p></div><div class="settings-block"><h3>把成长好好收藏</h3><p>学习进度保存在当前浏览器，不会自动同步。建议定期备份，或用备份换设备。</p><div class="button-row">${btn('导出进度备份', 'export', 'secondary')}<label class="secondary import-label">合并导入备份<input id="import-file" type="file" accept="application/json,.json"></label></div><p class="small">导入按单词保留较新记录，每日次数取较大值，收藏合并。当前学习设置不变。</p></div><div class="settings-block attribution"><p>原创双语词库 · 图片：<a href="https://github.com/jdecked/twemoji" target="_blank" rel="noopener">Twemoji</a>（CC BY 4.0）<br>不含广告，无需账号。无需麦克风。<br>词库 ${words.length} 词 · ${categories.length} 主题 · v2.3.0</p><a href="https://github.com/OylDeGit/little-leaf-english" target="_blank" rel="noopener">查看 GitHub 项目 ↗</a></div>`;
   modal.showModal();
 }
 async function offlineDownload() {
@@ -579,6 +523,9 @@ document.addEventListener('click', (e) => {
     case 'mode':
       stopMedia();
       mode = id;
+      index = 0;
+      recallRevealed = false;
+      recallRated = new Map();
       session = null;
       render();
       scrollToStudy();
@@ -589,19 +536,26 @@ document.addEventListener('click', (e) => {
       render();
       break;
     case 'previous':
-      turnReading(-1);
+      turnRecall(-1);
       break;
     case 'next':
-      turnReading(1);
+      turnRecall(1);
       break;
-    case 'know':
-      answer(state, category.words[index].id, true);
-      save();
-      toast('已记录，按到期计划复习会逐步巩固');
-      stopMedia();
-      index = (index + 1) % category.words.length;
+    case 'reveal':
+      if (mode !== 'recall' || !category) break;
+      recallRevealed = true;
       render();
       break;
+    case 'recall-rate': {
+      if (mode !== 'recall' || !category || !recallRevealed) break;
+      const w = category.words[index];
+      if (recallRated.has(w.id)) break;
+      recallRated.set(w.id, id === 'yes');
+      answer(state, w.id, id === 'yes');
+      save();
+      render();
+      break;
+    }
     case 'begin':
       startQuiz(currentPool(), mode === 'spell' ? 'spell' : 'listen');
       break;
@@ -630,9 +584,6 @@ document.addEventListener('click', (e) => {
       session.options = [];
       render();
       scrollToStudy();
-      break;
-    case 'record':
-      recording();
       break;
     case 'export': {
       const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' }),
@@ -707,10 +658,11 @@ if ('serviceWorker' in navigator)
   navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' }).catch(() => {});
 render();
 
-function turnReading(delta) {
-  if (!category || mode !== 'read') return;
+function turnRecall(delta) {
+  if (!category || mode !== 'recall') return;
   stopMedia();
-  index = (index + delta + category.words.length) % category.words.length;
+  index = Math.max(0, Math.min(category.words.length - 1, index + delta));
+  recallRevealed = false;
   render();
   scrollToStudy();
 }
@@ -734,7 +686,7 @@ let touchStart = null;
 document.addEventListener(
   'touchstart',
   (e) => {
-    if (mode !== 'read' || !e.target.closest('.reading') || e.target.closest('button,a,audio,input')) return;
+    if (mode !== 'recall' || !e.target.closest('.reading') || e.target.closest('button,a,audio,input')) return;
     touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
   },
   { passive: true },
@@ -746,15 +698,15 @@ document.addEventListener(
     const dx = e.changedTouches[0].clientX - touchStart.x,
       dy = e.changedTouches[0].clientY - touchStart.y;
     touchStart = null;
-    if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy) * 1.5) turnReading(dx < 0 ? 1 : -1);
+    if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy) * 1.5) turnRecall(dx < 0 ? 1 : -1);
   },
   { passive: true },
 );
 document.addEventListener('keydown', (e) => {
   if (modal.open || e.target.closest('input,select,textarea,[contenteditable]')) return;
-  if (mode === 'read' && category && ['ArrowLeft', 'ArrowRight'].includes(e.key)) {
+  if (mode === 'recall' && category && ['ArrowLeft', 'ArrowRight'].includes(e.key)) {
     e.preventDefault();
-    turnReading(e.key === 'ArrowRight' ? 1 : -1);
+    turnRecall(e.key === 'ArrowRight' ? 1 : -1);
   }
 });
 function keyboardLayout() {

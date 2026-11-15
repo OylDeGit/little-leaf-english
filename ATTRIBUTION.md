@@ -4,4 +4,3 @@
 - rectangle、oval、pink、gray、gold、pentagon、hexagon、cube、crescent、eleven、twelve 的 SVG 及网站图标为本项目原创。
 - 300 个词条的中文释义和英文例句由本项目编写，不代表官方考试词表，未经过外部教师逐条审校。
 - 预置单词音频由 macOS Samantha 系统语音合成，不是真人录音；例句朗读使用访问者设备的浏览器语音。
-- 用户跟读录音只在当前页面回放，不上传。
