@@ -90,14 +90,17 @@ function save() {
   }
 }
 let toastTimer;
-function toast(t) {
+function toast(t, duration = 4000) {
   $('#toast').textContent = t;
   $('#toast').classList.add('visible');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => $('#toast').classList.remove('visible'), 4000);
+  toastTimer = setTimeout(() => $('#toast').classList.remove('visible'), duration);
 }
 function stopMedia() {
   playToken++;
+  document.querySelectorAll('.quiz-option.speaking').forEach(node => node.classList.remove('speaking'));
+  const playingButton = document.querySelector('.sound-button');
+  if (playingButton) playingButton.innerHTML = icon('sound') + '再听一遍';
   if (audio) {
     audio.pause();
     audio = null;
@@ -105,7 +108,7 @@ function stopMedia() {
   window.speechSynthesis?.cancel();
 
 }
-async function speak(id) {
+async function speak(id, automatic = false) {
   stopMedia();
   const token = playToken;
   const clip = new Audio(audioSources[id]);
@@ -113,8 +116,24 @@ async function speak(id) {
   clip.playbackRate = state.settings.rate;
   try {
     await clip.play();
+    const option = document.querySelector(`.quiz-option[data-action="speak:${id}"]`);
+    if (option && token === playToken) {
+      option.classList.add('speaking');
+      clip.addEventListener('ended', () => option.classList.remove('speaking'), { once: true });
+    }
+    const button = document.querySelector(`.sound-button[data-action="speak:${id}"]`);
+    if (button && token === playToken) {
+      button.innerHTML = icon('sound') + '正在播放…';
+      clip.addEventListener('ended', () => {
+        if (token === playToken && button.isConnected) button.innerHTML = icon('sound') + '再听一遍';
+      }, { once: true });
+    }
   } catch (error) {
     if (token !== playToken || error.name === 'AbortError') return;
+    if (automatic && error.name === 'NotAllowedError') {
+      toast('浏览器需要点一下“播放单词”才能开启声音');
+      return;
+    }
     const w = wordMap.get(id);
     if ('speechSynthesis' in window) {
       const u = new SpeechSynthesisUtterance(w.word);
@@ -323,6 +342,10 @@ function startQuiz(pool, type = 'listen', source = 'theme') {
   mode = type;
   render();
   scrollToStudy();
+  playQuestion();
+}
+function playQuestion() {
+  if (mode === 'listen' && session && !session.answered && session.position < session.queue.length) speak(session.queue[session.position].id, true);
 }
 function prepareQuestion() {
   if (!session || session.answered || session.options.length || session.position >= session.queue.length)
@@ -370,6 +393,7 @@ function resumeSession() {
   };
   render();
   scrollToStudy();
+  playQuestion();
 }
 function scrollToStudy() {
   requestAnimationFrame(() => {
@@ -391,10 +415,11 @@ function quizView() {
   prepareQuestion();
   persistSession();
   const w = session.queue[session.position];
-  return `<section class="quiz panel"><div class="quiz-top"><span>第 ${session.position + 1} / ${session.queue.length} 题</span><span>已答对 ${session.correct} 题</span></div><div class="category-progress"><span style="width:${(session.position / session.queue.length) * 100}%"></span></div><h2>${mode === 'spell' ? '看图，写出它的英文' : '听声音，选择对应的图'}</h2>${btn(icon('sound') + '播放单词', `speak:${w.id}`, 'sound-button')}${mode === 'spell' ? `${img(w, 'spell-image')}<form id="spell-form"><label for="spelling">英文单词</label><div class="spell-input"><input id="spelling" autocomplete="off" autocapitalize="none" spellcheck="false" inputmode="text" enterkeyhint="done" maxlength="100" value="${session.answered ? esc(session.typed || '') : ''}" placeholder="输入你想到的单词" ${session.answered ? 'disabled' : ''}><button class="primary" ${session.answered ? 'disabled' : ''}>检查答案</button></div></form>` : `<div class="quiz-options">${session.options.map((o) => `<button data-action="answer:${o.id}" aria-label="选项 ${session.options.indexOf(o) + 1}" class="quiz-option ${session.answered ? (o.id === w.id ? 'correct' : o.id === session.chosen ? 'incorrect' : '') : ''}" ${session.answered ? 'disabled' : ''}>${img(o, '', o.zh)}${session.answered ? `<span>${o.word} · ${o.zh}</span>` : ''}</button>`).join('')}</div>`}<div class="feedback ${session.answered ? (session.lastCorrect ? 'good' : 'retry') : ''}" role="status">${session.answered ? `<strong>${session.lastCorrect ? '答对啦，真棒！' : '再认识一下这位朋友'}</strong><p>${w.word} · ${w.zh}${mode === 'spell' && session.typed ? `<br>你输入的是：${esc(session.typed)}` : ''}</p>${btn(session.position + 1 === session.queue.length ? '查看本轮收获 ' + icon('arrow') : '下一题 ' + icon('arrow'), 'continue')}` : '<span>准备好后，点一下播放声音。按你的节奏来。</span>'}</div></section>`;
+  return `<section class="quiz panel"><div class="quiz-top"><span>第 ${session.position + 1} / ${session.queue.length} 题</span><span>已答对 ${session.correct} 题</span></div><div class="category-progress"><span style="width:${(session.position / session.queue.length) * 100}%"></span></div><h2>${mode === 'spell' ? '看图，写出它的英文' : '听声音，选择对应的图'}</h2>${btn(icon('sound') + '播放单词', `speak:${w.id}`, 'sound-button')}${mode === 'spell' ? `${img(w, 'spell-image')}<form id="spell-form"><label for="spelling">英文单词</label><div class="spell-input"><input id="spelling" autocomplete="off" autocapitalize="none" spellcheck="false" inputmode="text" enterkeyhint="done" maxlength="100" value="${session.answered ? esc(session.typed || '') : ''}" placeholder="输入你想到的单词" ${session.answered ? 'disabled' : ''}><button class="primary" ${session.answered ? 'disabled' : ''}>检查答案</button></div></form>` : `<div class="quiz-options">${session.options.map((o) => `<button data-action="${session.answered ? 'speak' : 'answer'}:${o.id}" aria-label="${session.answered ? '播放 ' + o.word : '选项 ' + (session.options.indexOf(o) + 1)}" class="quiz-option ${session.answered ? (o.id === w.id ? 'correct' : o.id === session.chosen ? 'incorrect' : '') : ''}">${img(o, '', o.zh)}${session.answered ? `<span>${o.word} · ${o.zh} ${icon('sound')}</span>` : ''}</button>`).join('')}</div>`}<div class="feedback ${mode === 'listen' ? 'listening-feedback' : ''} ${session.answered ? (session.lastCorrect ? 'good' : 'retry') : ''}" role="status">${session.answered ? `<strong>${mode === 'listen' ? (session.lastCorrect ? '点图听发音，准备好就继续' : '再听一听，看看正确答案') : (session.lastCorrect ? '答对啦，真棒！' : '再认识一下这位朋友')}</strong><p>${w.word} · ${w.zh}${mode === 'spell' && session.typed ? `<br>你输入的是：${esc(session.typed)}` : ''}</p>${btn(session.position + 1 === session.queue.length ? '查看本轮收获 ' + icon('arrow') : '下一题 ' + icon('arrow'), 'continue')}` : '<span>听单词后选图，没听清可以重播。</span>'}</div></section>`;
 }
 function submitAnswer(id, typed) {
   if (!session || session.answered) return;
+  stopMedia();
   const w = session.queue[session.position],
     correct = typed !== undefined ? matchesSpelling(w, typed) : id === w.id;
   session.answered = true;
@@ -406,11 +431,12 @@ function submitAnswer(id, typed) {
   answer(state, w.id, correct);
   save();
   render();
+  if (correct) toast('✓ 答对了，真棒！', 1800);
   if (mode === 'spell' && session.answered) {
     $('#spelling').value = typed;
     $('#spelling').blur();
   }
-  requestAnimationFrame(() =>
+  if (mode === 'spell') requestAnimationFrame(() =>
     document.querySelector('.feedback')?.scrollIntoView({ block: 'nearest', behavior: 'instant' }),
   );
 }
@@ -424,7 +450,7 @@ function settings() {
     .map(([v, t]) => `<option value="${v}" ${state.settings.rate === v ? 'selected' : ''}>${t}</option>`)
     .join(
       '',
-    )}</select></label><div class="settings-block"><h3>带着小叶子去旅行</h3><p>下载离线学习内容后，图片和单词音频可断网使用。单词音频可离线播放；例句朗读使用设备语音，是否离线可用由系统决定。</p>${btn('下载 / 更新离线内容', 'offline', 'secondary', 'id="offline-btn"')}<p id="offline-status" role="status"></p><p class="small">手机浏览器菜单可尝试“添加到主屏幕”；安装支持由浏览器决定。</p></div><div class="settings-block"><h3>把成长好好收藏</h3><p>学习进度保存在当前浏览器，不会自动同步。建议定期备份，或用备份换设备。</p><div class="button-row">${btn('导出进度备份', 'export', 'secondary')}<label class="secondary import-label">合并导入备份<input id="import-file" type="file" accept="application/json,.json"></label></div><p class="small">导入按单词保留较新记录，每日次数取较大值，收藏合并。当前学习设置不变。</p></div><div class="settings-block attribution"><p>原创双语词库 · 图片：<a href="https://github.com/jdecked/twemoji" target="_blank" rel="noopener">Twemoji</a>（CC BY 4.0）<br>不含广告，无需账号。无需麦克风。<br>词库 ${words.length} 词 · ${categories.length} 主题 · v2.3.0</p><a href="https://github.com/OylDeGit/little-leaf-english" target="_blank" rel="noopener">查看 GitHub 项目 ↗</a></div>`;
+    )}</select></label><div class="settings-block"><h3>带着小叶子去旅行</h3><p>下载离线学习内容后，图片和单词音频可断网使用。单词音频可离线播放；例句朗读使用设备语音，是否离线可用由系统决定。</p>${btn('下载 / 更新离线内容', 'offline', 'secondary', 'id="offline-btn"')}<p id="offline-status" role="status"></p><p class="small">手机浏览器菜单可尝试“添加到主屏幕”；安装支持由浏览器决定。</p></div><div class="settings-block"><h3>把成长好好收藏</h3><p>学习进度保存在当前浏览器，不会自动同步。建议定期备份，或用备份换设备。</p><div class="button-row">${btn('导出进度备份', 'export', 'secondary')}<label class="secondary import-label">合并导入备份<input id="import-file" type="file" accept="application/json,.json"></label></div><p class="small">导入按单词保留较新记录，每日次数取较大值，收藏合并。当前学习设置不变。</p></div><div class="settings-block attribution"><p>原创双语词库 · 图片：<a href="https://github.com/jdecked/twemoji" target="_blank" rel="noopener">Twemoji</a>（CC BY 4.0）<br>不含广告，无需账号。无需麦克风。<br>词库 ${words.length} 词 · ${categories.length} 主题 · v2.4.0</p><a href="https://github.com/OylDeGit/little-leaf-english" target="_blank" rel="noopener">查看 GitHub 项目 ↗</a></div>`;
   modal.showModal();
 }
 async function offlineDownload() {
@@ -578,12 +604,16 @@ document.addEventListener('click', (e) => {
       submitAnswer(id);
       break;
     case 'continue':
+      if (!session?.answered) break;
       stopMedia();
+      clearTimeout(toastTimer);
+      $('#toast').classList.remove('visible');
       session.position++;
       session.answered = false;
       session.options = [];
       render();
       scrollToStudy();
+      playQuestion();
       break;
     case 'export': {
       const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' }),
