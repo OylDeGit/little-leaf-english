@@ -1,0 +1,1618 @@
+{
+  "provider": "Microsoft Fluent Emoji — Flat",
+  "license": "MIT",
+  "repository": "https://github.com/microsoft/fluentui-emoji",
+  "revision": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+  "images": {
+    "apple": {
+      "path": "assets/Red apple/Flat/red_apple_flat.svg",
+      "bytes": 563,
+      "sha256": "bc69f7c89a3621fb564482f9e13818019c6eac3a9d16fe996852514f3b19a073"
+    },
+    "banana": {
+      "path": "assets/Banana/Flat/banana_flat.svg",
+      "bytes": 1909,
+      "sha256": "40047ed9d10462ba41457b0c55beb05b6fde4ce590e6c1f88577539e46c2f20d"
+    },
+    "watermelon": {
+      "path": "assets/Watermelon/Flat/watermelon_flat.svg",
+      "bytes": 2024,
+      "sha256": "33ce86d2784776504191684fd34495c68ac54be7b98e100ef18c3a19297c735e"
+    },
+    "strawberry": {
+      "path": "assets/Strawberry/Flat/strawberry_flat.svg",
+      "bytes": 2048,
+      "sha256": "d8522f848f305fc81040dd9c5467f97df483fde5e2568429046e7f1ae1a23d91"
+    },
+    "grape": {
+      "path": "assets/Grapes/Flat/grapes_flat.svg",
+      "bytes": 1971,
+      "sha256": "e959e27685f84cead6cc230c719c75feaf3a3cfde878cf00819473036005edd0"
+    },
+    "orange": {
+      "path": "assets/Tangerine/Flat/tangerine_flat.svg",
+      "bytes": 347,
+      "sha256": "c820b266373b52bb1854213b08801c8d582d60dae06d380fdb4beaf89d569ea3"
+    },
+    "lemon": {
+      "path": "assets/Lemon/Flat/lemon_flat.svg",
+      "bytes": 713,
+      "sha256": "f3a924a7031fc0dd7c57a90e5f9794cf72859d860151dec321c4adc38605e4cc"
+    },
+    "pineapple": {
+      "path": "assets/Pineapple/Flat/pineapple_flat.svg",
+      "bytes": 4821,
+      "sha256": "9d064d8f8796b53a9eeb18b642e6e16628848ad2fa944576b597e7c7f36a95be"
+    },
+    "peach": {
+      "path": "assets/Peach/Flat/peach_flat.svg",
+      "bytes": 1048,
+      "sha256": "a144b995f3b094fb28d3eb016efebd6372c5ae82273cf3c0379741eb0c9d4657"
+    },
+    "pear": {
+      "path": "assets/Pear/Flat/pear_flat.svg",
+      "bytes": 636,
+      "sha256": "ddab6102c0ab2fef2dee700b7bb3d427187df8bfa010b23c4e2516e15c226551"
+    },
+    "cherry": {
+      "path": "assets/Cherries/Flat/cherries_flat.svg",
+      "bytes": 1091,
+      "sha256": "67c243eed8f6430539076d065d71b90d8f7bb25ccd41c87c02a6f6f419dacf9f"
+    },
+    "kiwi": {
+      "path": "assets/Kiwi fruit/Flat/kiwi_fruit_flat.svg",
+      "bytes": 2946,
+      "sha256": "760a74fa383f6ed6c89d0faf46ddd2635a5374a6c49eff4004df72ace283cfc5"
+    },
+    "mango": {
+      "path": "assets/Mango/Flat/mango_flat.svg",
+      "bytes": 651,
+      "sha256": "5747bef4b8d4857d84e6bf784e65ef8b3925d162ae6ca099ab37e33e5b4d33bd"
+    },
+    "avocado": {
+      "path": "assets/Avocado/Flat/avocado_flat.svg",
+      "bytes": 1663,
+      "sha256": "81e6bdde887deddceedbd538ecc14876ab0f3873406632bcd3fd365741efe434"
+    },
+    "blueberry": {
+      "path": "assets/Blueberries/Flat/blueberries_flat.svg",
+      "bytes": 1902,
+      "sha256": "5305d77f9893a5b694e0f068bedf20854527c1691654667f75bcbfef64d466ca"
+    },
+    "tomato": {
+      "path": "assets/Tomato/Flat/tomato_flat.svg",
+      "bytes": 924,
+      "sha256": "3b3326c731fce0fe697656d33bb092613eb261d827b6ca319b5cd6df08212add"
+    },
+    "potato": {
+      "path": "assets/Potato/Flat/potato_flat.svg",
+      "bytes": 1551,
+      "sha256": "630cf5cd73f353d09805ff72c9eeab5bf0caa65c65a8c615f6a4658a6993f6dc"
+    },
+    "carrot": {
+      "path": "assets/Carrot/Flat/carrot_flat.svg",
+      "bytes": 1448,
+      "sha256": "99521ccf4753d9b5312707541eafc41f00b35f616bb6e96cada9acfc7bf1d396"
+    },
+    "corn": {
+      "path": "assets/Ear of corn/Flat/ear_of_corn_flat.svg",
+      "bytes": 4009,
+      "sha256": "98badfb85ed658177c2d2002fa6ab9fe619b0330147838d76e95739e73d879e8"
+    },
+    "onion": {
+      "path": "assets/Onion/Flat/onion_flat.svg",
+      "bytes": 1984,
+      "sha256": "16ef144c9b55823bfe1d6099fdbf884cdc715b74c4cdfaa09e5bb2cc7b970ad9"
+    },
+    "mushroom": {
+      "path": "assets/Mushroom/Flat/mushroom_flat.svg",
+      "bytes": 1189,
+      "sha256": "80114589bc5ecf3caa4625437208b05479838d678c48758232589295c06f3d3d"
+    },
+    "cucumber": {
+      "path": "assets/Cucumber/Flat/cucumber_flat.svg",
+      "bytes": 1503,
+      "sha256": "b7f5faf23e5990593c5a8c29fe75ffa91df99cb66f994a8e24cd47c4a4c39bfc"
+    },
+    "pepper": {
+      "path": "assets/Bell pepper/Flat/bell_pepper_flat.svg",
+      "bytes": 1195,
+      "sha256": "e6327c805e2df2e6c1d18b0d66bfe54e41e14393bc21f4b8f6b4b3be5cecdbe4"
+    },
+    "broccoli": {
+      "path": "assets/Broccoli/Flat/broccoli_flat.svg",
+      "bytes": 1257,
+      "sha256": "53e9899f7e5ee6da63c0357a1152d7da413bbab029bbf53beb5255999c2823df"
+    },
+    "lettuce": {
+      "path": "assets/Leafy green/Flat/leafy_green_flat.svg",
+      "bytes": 2841,
+      "sha256": "4df9bb2eb271ac221b75e16bce9c63ae4e54780159bf4cca83adea4604ea4fec"
+    },
+    "garlic": {
+      "path": "assets/Garlic/Flat/garlic_flat.svg",
+      "bytes": 798,
+      "sha256": "ce8af0b3e79c5d3e4dd040882626dfdf7036019e46cae7286677484d528852a5"
+    },
+    "eggplant": {
+      "path": "assets/Eggplant/Flat/eggplant_flat.svg",
+      "bytes": 896,
+      "sha256": "a4f479a1476608d8a69bb84a85e83471a09f6cd030c1614c4dca1e5a6796a0d4"
+    },
+    "ginger": {
+      "path": "assets/Ginger root/Flat/ginger_root_flat.svg",
+      "bytes": 6439,
+      "sha256": "0bd3547e12b61e257f6819da9e38750aaab42df28768fed1ca31ea8d45511507"
+    },
+    "chili": {
+      "path": "assets/Hot pepper/Flat/hot_pepper_flat.svg",
+      "bytes": 995,
+      "sha256": "05d8b631d7bd3242503f5b058918a17ff738ed0721a5fcc8b0a8167f9656c208"
+    },
+    "cow": {
+      "path": "assets/Cow/Flat/cow_flat.svg",
+      "bytes": 3351,
+      "sha256": "2aa1806bbf6299d6a8fc865587d9384dff832fabc2fe04ff6d11aa01b53b5109"
+    },
+    "pig": {
+      "path": "assets/Pig/Flat/pig_flat.svg",
+      "bytes": 1571,
+      "sha256": "790bb801b792327d607bf51f7410be069fb26f2a2908b2a691c851a947bdba08"
+    },
+    "sheep": {
+      "path": "assets/Ewe/Flat/ewe_flat.svg",
+      "bytes": 3092,
+      "sha256": "a403aaed8305513b5584030f208b100301dfc787be1b1941b9f0e44b4c475c77"
+    },
+    "horse": {
+      "path": "assets/Horse/Flat/horse_flat.svg",
+      "bytes": 3740,
+      "sha256": "ef5b2ffb755b9dcd241736df80cd4a755cf89923ca67c07131251f3beba2886d"
+    },
+    "chicken": {
+      "path": "assets/Chicken/Flat/chicken_flat.svg",
+      "bytes": 2973,
+      "sha256": "697797fdd9ba34d7a69e448de2bbcbafdb6b3f6a15e1b63b91538dddc881bc64"
+    },
+    "duck": {
+      "path": "assets/Duck/Flat/duck_flat.svg",
+      "bytes": 1457,
+      "sha256": "4d793eb8e867817586ae2a03784cbad9814f0e89f195a3503c77f8cb8441e35d"
+    },
+    "dog": {
+      "path": "assets/Dog/Flat/dog_flat.svg",
+      "bytes": 2255,
+      "sha256": "e3ee366f39d9f47bbb5a6dc22a521dbea32f05f2216d0665a551b134ca2474da"
+    },
+    "cat": {
+      "path": "assets/Cat/Flat/cat_flat.svg",
+      "bytes": 3210,
+      "sha256": "59f5401062509f4d0fb310817ce9a9656724c6c924a4d42f2a33ac6bb0964602"
+    },
+    "goat": {
+      "path": "assets/Goat/Flat/goat_flat.svg",
+      "bytes": 2228,
+      "sha256": "a7f51b36bdc7a4b3a5456ec470800ecb33b94af23fc0cc94b11934a0175ac140"
+    },
+    "rooster": {
+      "path": "assets/Rooster/Flat/rooster_flat.svg",
+      "bytes": 2772,
+      "sha256": "52b2a8d0f55e1fcf2aef0518f40142a06f5438bddde74ef969c1c9b5c9a7e67c"
+    },
+    "turkey": {
+      "path": "assets/Turkey/Flat/turkey_flat.svg",
+      "bytes": 2942,
+      "sha256": "28f0a348a48cb796552b05174435199f7de06024278c55c0c866491f4fc08da9"
+    },
+    "chick": {
+      "path": "assets/Baby chick/Flat/baby_chick_flat.svg",
+      "bytes": 1311,
+      "sha256": "88843e98df4af20226db3f29ceed89d12428e6d6cdc3e483efa3476a8a52301e"
+    },
+    "donkey": {
+      "path": "assets/Donkey/Flat/donkey_flat.svg",
+      "bytes": 4933,
+      "sha256": "907075780d5246aacd5ea171b8bfb007fa3f61448073dad1f36555b24774a857"
+    },
+    "tiger": {
+      "path": "assets/Tiger/Flat/tiger_flat.svg",
+      "bytes": 3868,
+      "sha256": "b41f616d7a80caa5310e3822dbffa8b5bea959c2568c112a782e2d4e8cce6375"
+    },
+    "elephant": {
+      "path": "assets/Elephant/Flat/elephant_flat.svg",
+      "bytes": 1800,
+      "sha256": "756c630d03adf722b0686012db737f097650f24b8b77174c862e4bafb202fa44"
+    },
+    "monkey": {
+      "path": "assets/Monkey/Flat/monkey_flat.svg",
+      "bytes": 4222,
+      "sha256": "b991c3f700ea455df2076b6dc23c9bc29f252c10b7f4ad4ed08b256e7cf67654"
+    },
+    "giraffe": {
+      "path": "assets/Giraffe/Flat/giraffe_flat.svg",
+      "bytes": 5547,
+      "sha256": "754e9905438473e77bdfbefae26c92bbb5240cd6c718bf1ec95aa190af0a317c"
+    },
+    "lion": {
+      "path": "assets/Lion/Flat/lion_flat.svg",
+      "bytes": 3019,
+      "sha256": "82c0b956f3d733b2139bec69ca0043676ae31bf5870190a1174175ed1d3d27ed"
+    },
+    "zebra": {
+      "path": "assets/Zebra/Flat/zebra_flat.svg",
+      "bytes": 6585,
+      "sha256": "967c3bdbf21c974ede5a55f35310c5e734c2bdc69872a694fce4c51fe7820fc4"
+    },
+    "bear": {
+      "path": "assets/Bear/Flat/bear_flat.svg",
+      "bytes": 3498,
+      "sha256": "37b4389149a58d50feff1eec24b8c2e20d2d67f2188208e3af3bcc3b66c067cb"
+    },
+    "panda": {
+      "path": "assets/Panda/Flat/panda_flat.svg",
+      "bytes": 3399,
+      "sha256": "c713e668dbdb6cd53ead805cd968b839ed706dc5ebe40f68d02e89879f2b9996"
+    },
+    "fox": {
+      "path": "assets/Fox/Flat/fox_flat.svg",
+      "bytes": 2572,
+      "sha256": "05992c69f46f9a8ef14e7a95894baa3168f4c195d8d3de3f3a09ce82d68bffc9"
+    },
+    "deer": {
+      "path": "assets/Deer/Flat/deer_flat.svg",
+      "bytes": 3692,
+      "sha256": "5b8363cecc81bb3b6b983173e417a7cf72341c82d006270b88f9d9e0f8b59b80"
+    },
+    "kangaroo": {
+      "path": "assets/Kangaroo/Flat/kangaroo_flat.svg",
+      "bytes": 2247,
+      "sha256": "6a207d887206c2d8f687f11173046dabec2cb9dcc42f1c5ae14e26c714ce6754"
+    },
+    "koala": {
+      "path": "assets/Koala/Flat/koala_flat.svg",
+      "bytes": 1641,
+      "sha256": "18fc56aac0e48f026e4d44d684b5de431f580496c3f5fc8f9fee2d574e07bab1"
+    },
+    "gorilla": {
+      "path": "assets/Gorilla/Flat/gorilla_flat.svg",
+      "bytes": 2487,
+      "sha256": "31b60ca4588f8a863cf101d0631f792eed822f46cc0dc74bbe147b989bc44ea1"
+    },
+    "camel": {
+      "path": "assets/Camel/Flat/camel_flat.svg",
+      "bytes": 1537,
+      "sha256": "226d0da373ca842b97309514fb8756a922eeeb2d7f6ad795831cb6f1bed5e4de"
+    },
+    "flamingo": {
+      "path": "assets/Flamingo/Flat/flamingo_flat.svg",
+      "bytes": 1573,
+      "sha256": "4718a9b69276db2394e6f674a1215807032303b775397ad25d86553e2f666e43"
+    },
+    "wolf": {
+      "path": "assets/Wolf/Flat/wolf_flat.svg",
+      "bytes": 3310,
+      "sha256": "23316ea219d91065f4a7747d2d3a9cf90794502ce33f1378b63f188d4ec1b467"
+    },
+    "leopard": {
+      "path": "assets/Leopard/Flat/leopard_flat.svg",
+      "bytes": 3726,
+      "sha256": "3c4542129748e9b41a894a9285e45d2487cdb55cbbd82fb4d5dd12685edb6501"
+    },
+    "peacock": {
+      "path": "assets/Peacock/Flat/peacock_flat.svg",
+      "bytes": 8483,
+      "sha256": "869d281762e4e1bd88477dc16ca1a9c334ad940e69106ecf4fdeefcf98cf1090"
+    },
+    "hippo": {
+      "path": "assets/Hippopotamus/Flat/hippopotamus_flat.svg",
+      "bytes": 2830,
+      "sha256": "311f095ca5a5e4c2a32905de31852d6dcd7487c998f7b02f98a7173d790ea1bc"
+    },
+    "owl": {
+      "path": "assets/Owl/Flat/owl_flat.svg",
+      "bytes": 2627,
+      "sha256": "443a589d5c8ac73bb60deb4350570e25d21cad33a1e189d2e195aaab14856873"
+    },
+    "bread": {
+      "path": "assets/Bread/Flat/bread_flat.svg",
+      "bytes": 3105,
+      "sha256": "ef08e033f63a4f215744a3067a9c0693411ebcfe57b36bf9d197495ecbccf156"
+    },
+    "cake": {
+      "path": "assets/Shortcake/Flat/shortcake_flat.svg",
+      "bytes": 1711,
+      "sha256": "1aef1f7b8c9e45deeab006d58963bfa883e5ffb3e56180ab4ee57f041b91e106"
+    },
+    "chocolate": {
+      "path": "assets/Chocolate bar/Flat/chocolate_bar_flat.svg",
+      "bytes": 3137,
+      "sha256": "e6b6a36fc83a2cfb2c87f19b7b2b4eeeeda4248134e60f7689129c9ddce6322f"
+    },
+    "sandwich": {
+      "path": "assets/Sandwich/Flat/sandwich_flat.svg",
+      "bytes": 2812,
+      "sha256": "05f59260b1124d411b89f43cb3eb8ed60656effdb0184a2b6c17944a3e63878f"
+    },
+    "pizza": {
+      "path": "assets/Pizza/Flat/pizza_flat.svg",
+      "bytes": 955,
+      "sha256": "bd7804b29e91ecaf112656eadcd7d898e55500d92cde468dcb8b61f780110d89"
+    },
+    "egg": {
+      "path": "assets/Egg/Flat/egg_flat.svg",
+      "bytes": 412,
+      "sha256": "1c7146a519276e93c0f939756e80beb5b0edb4e9a350dbe58ab63c7d0bcc5204"
+    },
+    "rice": {
+      "path": "assets/Cooked rice/Flat/cooked_rice_flat.svg",
+      "bytes": 6053,
+      "sha256": "e0c90595db3d7575f7e887012ec32dc6c6895ea200f636473dc12cfbe541e85c"
+    },
+    "cheese": {
+      "path": "assets/Cheese wedge/Flat/cheese_wedge_flat.svg",
+      "bytes": 1380,
+      "sha256": "f239293bf0d152a15326a186166168f8da7ad8d6c7127a4ecfa2ace4005aff7a"
+    },
+    "hamburger": {
+      "path": "assets/Hamburger/Flat/hamburger_flat.svg",
+      "bytes": 3189,
+      "sha256": "2ee7b07350dc64ed12dc312006733d56d99ef4f93b8f7b178ab77fc2c8227e64"
+    },
+    "fries": {
+      "path": "assets/French fries/Flat/french_fries_flat.svg",
+      "bytes": 2220,
+      "sha256": "42fcc18cfe00bad06a5db579e1775a77d6c184723fa6bea6eb3cbec11c5ce51a"
+    },
+    "cookie": {
+      "path": "assets/Cookie/Flat/cookie_flat.svg",
+      "bytes": 2020,
+      "sha256": "d02b9e85fa0394a4c59fd74654244c069eddb9aaf72abbcba8d0d3060262d6af"
+    },
+    "donut": {
+      "path": "assets/Doughnut/Flat/doughnut_flat.svg",
+      "bytes": 3183,
+      "sha256": "d527b9996ed080d76dd94276638b35b2662dda49fbd69715b2cad311e36954de"
+    },
+    "ice-cream": {
+      "path": "assets/Soft ice cream/Flat/soft_ice_cream_flat.svg",
+      "bytes": 2486,
+      "sha256": "30080a0e3e52639454d4e86436adbd145b38db4a6a2d83ff218fc9b7d4adb7f2"
+    },
+    "noodles": {
+      "path": "assets/Steaming bowl/Flat/steaming_bowl_flat.svg",
+      "bytes": 1656,
+      "sha256": "3aede2bd98b87da9f951314237c4b9f80320c43e32937e8d27b811d10c3ce7de"
+    },
+    "pancake": {
+      "path": "assets/Pancakes/Flat/pancakes_flat.svg",
+      "bytes": 2553,
+      "sha256": "621f68f3d0eeabd0a7a226823d7e08a0c6649f266e43cab87263132c6fd483c5"
+    },
+    "dumpling": {
+      "path": "assets/Dumpling/Flat/dumpling_flat.svg",
+      "bytes": 1909,
+      "sha256": "985691cfc2ade1dd846e984a568a44731955dab37969755fea6c8b221f5b7767"
+    },
+    "salt": {
+      "path": "assets/Salt/Flat/salt_flat.svg",
+      "bytes": 2014,
+      "sha256": "920ad160887a325accc654a8ab9b160d02a71d386a686dcc49234a3bc079a890"
+    },
+    "chicken-meat": {
+      "path": "assets/Poultry leg/Flat/poultry_leg_flat.svg",
+      "bytes": 1829,
+      "sha256": "5a4e15b8cec438a087698e2ec30e64507090115265fb47a1a5f6fdf812ab439b"
+    },
+    "water": {
+      "path": "assets/Droplet/Flat/droplet_flat.svg",
+      "bytes": 327,
+      "sha256": "91bbffebc864f286b0684817b797f8ce1e1c4cc7dd0d9e1af1bd58afef2d09f0"
+    },
+    "milk": {
+      "path": "assets/Glass of milk/Flat/glass_of_milk_flat.svg",
+      "bytes": 768,
+      "sha256": "3b60194616354c508ba142fce6e396fea3140abf09df99a31024336fbba384e4"
+    },
+    "coffee": {
+      "path": "assets/Hot beverage/Flat/hot_beverage_flat.svg",
+      "bytes": 1702,
+      "sha256": "1fd0ed706ba85841193fffc9d2382c533486e41f7d1b9ec90d8eb6748c397183"
+    },
+    "tea": {
+      "path": "assets/Teacup without handle/Flat/teacup_without_handle_flat.svg",
+      "bytes": 2112,
+      "sha256": "7b409aa4f404087594385635b789feeb616aa7f2f0720b73f2bad30ca01bc5d2"
+    },
+    "juice": {
+      "path": "assets/Beverage box/Flat/beverage_box_flat.svg",
+      "bytes": 1997,
+      "sha256": "135e7cf6dd378e8ee10bed849ee8452bc4e24ca799a0bf225f8c565669c220da"
+    },
+    "coconut": {
+      "path": "assets/Coconut/Flat/coconut_flat.svg",
+      "bytes": 2780,
+      "sha256": "6fb7ab7eb745efdd2e89d22e15b2011efd167ec286e12ced0aa18d94fd95facf"
+    },
+    "bubble-tea": {
+      "path": "assets/Bubble tea/Flat/bubble_tea_flat.svg",
+      "bytes": 1714,
+      "sha256": "0c035d16f4559222696120059c255147e00bccb13a99bc67f049b75f4e11d681"
+    },
+    "car": {
+      "path": "assets/Automobile/Flat/automobile_flat.svg",
+      "bytes": 1985,
+      "sha256": "1d12961ada570f692b9ce495a9c531b0d56edcf1136be5823bb7bd8a3112907c"
+    },
+    "airplane": {
+      "path": "assets/Airplane/Flat/airplane_flat.svg",
+      "bytes": 1862,
+      "sha256": "712be925e9ba02fa9dfa86d2b8e53a0a7205b5dfb5bfd9322a53ed2a99fe9013"
+    },
+    "bus": {
+      "path": "assets/Bus/Flat/bus_flat.svg",
+      "bytes": 1866,
+      "sha256": "d31dafdba29476b40fccca7c157a9913c8bc469b46b420eac6597050e17a8352"
+    },
+    "bicycle": {
+      "path": "assets/Bicycle/Flat/bicycle_flat.svg",
+      "bytes": 3376,
+      "sha256": "0241c712d2ea30a7ab0253422f94f1687838f6312a7a628f6d9c8da509faadf9"
+    },
+    "boat": {
+      "path": "assets/Sailboat/Flat/sailboat_flat.svg",
+      "bytes": 942,
+      "sha256": "e80a311ad9504c1a8b754c295b6279e6d54c7c28437835b09d1ed33697241c03"
+    },
+    "helicopter": {
+      "path": "assets/Helicopter/Flat/helicopter_flat.svg",
+      "bytes": 1726,
+      "sha256": "17bc32d7fb0147054a03128b79d2212da45327770f17ed9646e65e371865069c"
+    },
+    "rocket": {
+      "path": "assets/Rocket/Flat/rocket_flat.svg",
+      "bytes": 2376,
+      "sha256": "ea9423e32494b81bbdccc8970987d9fe2a85462610cd4b8ddd0b9e1a03fb2ebf"
+    },
+    "taxi": {
+      "path": "assets/Taxi/Flat/taxi_flat.svg",
+      "bytes": 1964,
+      "sha256": "9044f78bace8610f6f1ca73010f3af5e8f3cee5621ce46dfa0ad387bf3643041"
+    },
+    "truck": {
+      "path": "assets/Delivery truck/Flat/delivery_truck_flat.svg",
+      "bytes": 1268,
+      "sha256": "eb6c8e547c6d4b97ac94796a390bdb603699a3489c61df1446f1658f8932b89e"
+    },
+    "ambulance": {
+      "path": "assets/Ambulance/Flat/ambulance_flat.svg",
+      "bytes": 2083,
+      "sha256": "9b869656bc6032e8078095dfdddbdd087b534e78bb9f90a68b283378af281ccb"
+    },
+    "motorcycle": {
+      "path": "assets/Motorcycle/Flat/motorcycle_flat.svg",
+      "bytes": 2268,
+      "sha256": "caaabdfd28a785e420d2d827f4bd5320a6e399de96024a3dca9345a13f20d91d"
+    },
+    "ship": {
+      "path": "assets/Ship/Flat/ship_flat.svg",
+      "bytes": 2392,
+      "sha256": "13624a616a02fa9e05365cd48fadd110690c8711fd0ad8817ba97991d7bd49c5"
+    },
+    "high-speed-train": {
+      "path": "assets/High-speed train/Flat/high-speed_train_flat.svg",
+      "bytes": 1080,
+      "sha256": "d41ec0e6d35726f43a0c914e1af58b2500e89d483cda23760a2aa95fdec8a7d3"
+    },
+    "police-car": {
+      "path": "assets/Police car/Flat/police_car_flat.svg",
+      "bytes": 2641,
+      "sha256": "0d1e6b38a3f76674ab772710cf7bccc8afdad7695481b49ff1a4b8e4bbdfc161"
+    },
+    "fire-engine": {
+      "path": "assets/Fire engine/Flat/fire_engine_flat.svg",
+      "bytes": 2486,
+      "sha256": "f6b94842fa62deaafcd1d31b8d785d9027b256f2a109a0627808c9d54413540c"
+    },
+    "electric-scooter": {
+      "path": "assets/Motor scooter/Flat/motor_scooter_flat.svg",
+      "bytes": 1816,
+      "sha256": "cee7e900386d029914fa30b2a60a5cd1818318b2dcb2467c5046c1a0bf31e42d"
+    },
+    "subway": {
+      "path": "assets/Metro/Flat/metro_flat.svg",
+      "bytes": 2313,
+      "sha256": "f29d611e4b2806c2e9f3d7d1ec844639bf83e715287abddc56477984dc2fdd9e"
+    },
+    "tractor": {
+      "path": "assets/Tractor/Flat/tractor_flat.svg",
+      "bytes": 2280,
+      "sha256": "3bd7b847907d839c3b37653b468ee545f52983edff4e467f6badd6ee95119065"
+    },
+    "shark": {
+      "path": "assets/Shark/Flat/shark_flat.svg",
+      "bytes": 2178,
+      "sha256": "9c182b64a0b5732be3e378a3df6cb799c961ea0189173c9ca4afe0a298c559cc"
+    },
+    "turtle": {
+      "path": "assets/Turtle/Flat/turtle_flat.svg",
+      "bytes": 1879,
+      "sha256": "91215c4ddf01d1ae49b4e987ef4ce007a30ddae8818e40b7c6e2991c12ace35d"
+    },
+    "dolphin": {
+      "path": "assets/Dolphin/Flat/dolphin_flat.svg",
+      "bytes": 2286,
+      "sha256": "76b57f2babc3de5fc188242bcf4f80a30266e8b4a866af9d080fe85426594aaf"
+    },
+    "crab": {
+      "path": "assets/Crab/Flat/crab_flat.svg",
+      "bytes": 3963,
+      "sha256": "27358ad17af6023fded1fc2fd9c374a16256e4ab6ec120f9312aebb12a9b8e28"
+    },
+    "whale": {
+      "path": "assets/Whale/Flat/whale_flat.svg",
+      "bytes": 2535,
+      "sha256": "bb31a1f4ff478bb4838a3404de66678a8bee61e62d96f31218e4cf98b0104fb8"
+    },
+    "fish": {
+      "path": "assets/Fish/Flat/fish_flat.svg",
+      "bytes": 1646,
+      "sha256": "1fc7329fd735a8b8bd7482a39bc100e3c347e7f0e9ce36473fde81d19e96a1ee"
+    },
+    "octopus": {
+      "path": "assets/Octopus/Flat/octopus_flat.svg",
+      "bytes": 3365,
+      "sha256": "50a262e105a309ee21273e1e31a1cff0982a1bf9562fb9d8310a0d61c0f511dd"
+    },
+    "shell": {
+      "path": "assets/Spiral shell/Flat/spiral_shell_flat.svg",
+      "bytes": 1743,
+      "sha256": "c4b2587cb7593ce513c536cb5ddf0bf903e59705b909d4b3dae638f5f5aac5b0"
+    },
+    "jellyfish": {
+      "path": "assets/Jellyfish/Flat/jellyfish_flat.svg",
+      "bytes": 4273,
+      "sha256": "eafdf92dc015a21867d6c764f6b946e44691a8aa9b08f38977d3f1ec3993b922"
+    },
+    "seal": {
+      "path": "assets/Seal/Flat/seal_flat.svg",
+      "bytes": 3268,
+      "sha256": "5ffa0f89e1b7d0be1324990a106bda1f89c58525b80938167c26d8d139e4f214"
+    },
+    "lobster": {
+      "path": "assets/Lobster/Flat/lobster_flat.svg",
+      "bytes": 6248,
+      "sha256": "33a85ae15a9c2143267a5c5ebd28a4312a498629a1be784942688d042b39759a"
+    },
+    "shrimp": {
+      "path": "assets/Shrimp/Flat/shrimp_flat.svg",
+      "bytes": 4383,
+      "sha256": "83f35e371d824cab2fd4a087233721063ee8b75b8b7835235a44c7052303675a"
+    },
+    "basketball": {
+      "path": "assets/Basketball/Flat/basketball_flat.svg",
+      "bytes": 2516,
+      "sha256": "50735d09f42671499773bc4bd7d3fd2a2717205ceacdc5f8c5012abc586ecf65"
+    },
+    "soccer": {
+      "path": "assets/Soccer ball/Flat/soccer_ball_flat.svg",
+      "bytes": 7732,
+      "sha256": "ca792d91995ac20dc37be0c1bd1f9f46d2f7ea4aea3bd4d0c69df1083bd641c9"
+    },
+    "tennis": {
+      "path": "assets/Tennis/Flat/tennis_flat.svg",
+      "bytes": 5289,
+      "sha256": "26ca7fd42382005af1e540f3f1ef4120af5c898e3ff75c7776ff95b81fd6cc42"
+    },
+    "badminton": {
+      "path": "assets/Badminton/Flat/badminton_flat.svg",
+      "bytes": 4262,
+      "sha256": "c90283a2712e736690234419f68c5d5dfde8486480a94bbf252762cab615667a"
+    },
+    "baseball": {
+      "path": "assets/Baseball/Flat/baseball_flat.svg",
+      "bytes": 4031,
+      "sha256": "1f443b7fc9f7c5e5c55fd6449f1e9725005367cb5f91db38f22fec50dc85e20f"
+    },
+    "swimming": {
+      "path": "assets/Person swimming/Default/Flat/person_swimming_flat_default.svg",
+      "bytes": 4590,
+      "sha256": "a8d397dbf539ff78b8f582856deb1e2772166a633eb10b792f2d5ab62476c3d9"
+    },
+    "skiing": {
+      "path": "assets/Skier/Flat/skier_flat.svg",
+      "bytes": 7836,
+      "sha256": "1f7c70fa51a90ca5ea1d36e6a8bbfbc1e09b13183fb0dc6fac8ce40889b558d5"
+    },
+    "volleyball": {
+      "path": "assets/Volleyball/Flat/volleyball_flat.svg",
+      "bytes": 3581,
+      "sha256": "2ba00dd24acd1516adce0ed47c9ecfd32fe7016727dedb76cab0ccbeb2e8d28c"
+    },
+    "bowling": {
+      "path": "assets/Bowling/Flat/bowling_flat.svg",
+      "bytes": 4265,
+      "sha256": "3c0f3387eaedbacae292ce51c0b2d7389c480e376b8f1de6bb1f3df7a51fd27e"
+    },
+    "table-tennis": {
+      "path": "assets/Ping pong/Flat/ping_pong_flat.svg",
+      "bytes": 1577,
+      "sha256": "1dc851a4e92bf196fe021a6d5b8e27c2f5e8256dcdad94b27a59b945a764eb86"
+    },
+    "ice-skating": {
+      "path": "assets/Ice skate/Flat/ice_skate_flat.svg",
+      "bytes": 1771,
+      "sha256": "371d2a215ee8d7fa65203fa6d3b3864b67d934fef4a497418b810edd7eb244cf"
+    },
+    "butterfly": {
+      "path": "assets/Butterfly/Flat/butterfly_flat.svg",
+      "bytes": 4050,
+      "sha256": "118a7aee6fb3360fef0dcf86aeaac8e022c35c3f52529145750155a8893f50fc"
+    },
+    "bee": {
+      "path": "assets/Honeybee/Flat/honeybee_flat.svg",
+      "bytes": 2981,
+      "sha256": "bb82291c1870bcc05fb694c0f0a4dc63ca0c593fc12e7edd17fc32264ae8d9d5"
+    },
+    "ant": {
+      "path": "assets/Ant/Flat/ant_flat.svg",
+      "bytes": 2162,
+      "sha256": "a244cd13f876b91748dad8656f18a1322a71f496ef87755c2c34fd0b2260df44"
+    },
+    "ladybug": {
+      "path": "assets/Lady beetle/Flat/lady_beetle_flat.svg",
+      "bytes": 4788,
+      "sha256": "c6db446e4774261821661bee4a6a8cf660e546ed20e492b8393d832a93c3d88b"
+    },
+    "cricket": {
+      "path": "assets/Cricket/Flat/cricket_flat.svg",
+      "bytes": 1758,
+      "sha256": "e10127a80f741e08bd9ed98c7099f194b0472d56289059a1dfab81c54fc54982"
+    },
+    "beetle": {
+      "path": "assets/Beetle/Flat/beetle_flat.svg",
+      "bytes": 4921,
+      "sha256": "9ef11173f1ceed307a778b1b8a05fb033d827419f89d332abec8051f092c5b4a"
+    },
+    "fly": {
+      "path": "assets/Fly/Flat/fly_flat.svg",
+      "bytes": 4015,
+      "sha256": "610b2b6ae1fc77fbfcbcbaf9ceee41eca6e4b88a6d3834994d795ba40edf689c"
+    },
+    "mosquito": {
+      "path": "assets/Mosquito/Flat/mosquito_flat.svg",
+      "bytes": 2530,
+      "sha256": "fb4cb8f97f47c6dc14a49a7ad99cdd46b93414809f722827aba6e2be92956e05"
+    },
+    "cockroach": {
+      "path": "assets/Cockroach/Flat/cockroach_flat.svg",
+      "bytes": 3822,
+      "sha256": "15c949ec400db0cf1d4397de13e75b8b0d2c288c014e839591cd094285a53cb3"
+    },
+    "worm": {
+      "path": "assets/Worm/Flat/worm_flat.svg",
+      "bytes": 5312,
+      "sha256": "984de6ae4cdb7fde7c245ac1c492d99c66799eee271d3be8d5cd19f9f4a0f276"
+    },
+    "spider": {
+      "path": "assets/Spider/Flat/spider_flat.svg",
+      "bytes": 2450,
+      "sha256": "bafb097cb975812d5bae959621fce0bbd64e36d4ce8a7d79f5e4690269ebb91e"
+    },
+    "scorpion": {
+      "path": "assets/Scorpion/Flat/scorpion_flat.svg",
+      "bytes": 5219,
+      "sha256": "064875a44f490a45c1e0fa029a870adb6fc791d00582ed8b56db763aed74fac9"
+    },
+    "t-shirt": {
+      "path": "assets/T-shirt/Flat/t-shirt_flat.svg",
+      "bytes": 1171,
+      "sha256": "6f8ffd795e5ed30cb3f2075cb7336824ddc6d2c988bf8c2e29503a8717d9cb6d"
+    },
+    "jeans": {
+      "path": "assets/Jeans/Flat/jeans_flat.svg",
+      "bytes": 2778,
+      "sha256": "4157a78ea0211fa0204573aa9c64f5e6d11a5b8439b3551e24704671dc445fc5"
+    },
+    "dress": {
+      "path": "assets/Dress/Flat/dress_flat.svg",
+      "bytes": 1481,
+      "sha256": "a4a0318e755fe518aa270bc3d00cec4a12d9675a4a5f9d4931eb449e07dd2168"
+    },
+    "coat": {
+      "path": "assets/Coat/Flat/coat_flat.svg",
+      "bytes": 2636,
+      "sha256": "3aceb35d3d72ef05557617a80f98d21f372aa5141ad8b2c0d40ce42be8c14c74"
+    },
+    "socks": {
+      "path": "assets/Socks/Flat/socks_flat.svg",
+      "bytes": 3198,
+      "sha256": "21d265b928af081abcb4bc9b32eda8ba44f911ee585ef2b7b10349e1eab248a6"
+    },
+    "shoes": {
+      "path": "assets/Mans shoe/Flat/mans_shoe_flat.svg",
+      "bytes": 853,
+      "sha256": "6eabcc69e932a629115f324f267e798ce2c8d46455653a8c58ca95c393c76731"
+    },
+    "hat": {
+      "path": "assets/Womans hat/Flat/womans_hat_flat.svg",
+      "bytes": 2333,
+      "sha256": "9f5a923eb3cb5d3b8b5ccb64b47da2fdbf0fa653e2c3142afead47212ea795ff"
+    },
+    "cap": {
+      "path": "assets/Billed cap/Flat/billed_cap_flat.svg",
+      "bytes": 803,
+      "sha256": "5530f82327d71065e67d6c5844038a793cefe78f9f79e6cae47e1ae9723e09f3"
+    },
+    "gloves": {
+      "path": "assets/Gloves/Flat/gloves_flat.svg",
+      "bytes": 2693,
+      "sha256": "e3af7bcee603f4a9e3c1a9c769ac07acb14d14ef7caff7f781785ccaca6851ba"
+    },
+    "scarf": {
+      "path": "assets/Scarf/Flat/scarf_flat.svg",
+      "bytes": 1686,
+      "sha256": "bbab2b40e912134161c619740043fc95a40fc4dd3565d8bd8dfeb2ef8babbfbe"
+    },
+    "handbag": {
+      "path": "assets/Handbag/Flat/handbag_flat.svg",
+      "bytes": 1106,
+      "sha256": "f1322e9af630360b55176f81d9b6a3fc459748d5f2eb889da45543972fd181d8"
+    },
+    "shorts": {
+      "path": "assets/Shorts/Flat/shorts_flat.svg",
+      "bytes": 2924,
+      "sha256": "df1597cbce572530ca75d035884be9b965c88b980640a6351bf1f916100df6cb"
+    },
+    "underpants": {
+      "path": "assets/Briefs/Flat/briefs_flat.svg",
+      "bytes": 1384,
+      "sha256": "d9c18522e6d8f6dcbff8c9aed77e6b05b4b9cf4c628cdfd75a234bc87e5010bc"
+    },
+    "sneakers": {
+      "path": "assets/Running shoe/Flat/running_shoe_flat.svg",
+      "bytes": 2099,
+      "sha256": "0b171e09195a6d146aea23e1628448d418b051a4f436ce2a03d3bc8e908bdacb"
+    },
+    "sandals": {
+      "path": "assets/Thong sandal/Flat/thong_sandal_flat.svg",
+      "bytes": 2035,
+      "sha256": "c0013784602f0fd888e65f0a179b871ec1bc5b548ec03382b0ddd84d53544dbe"
+    },
+    "clothing": {
+      "path": "assets/Womans clothes/Flat/womans_clothes_flat.svg",
+      "bytes": 1574,
+      "sha256": "98e8ea56960b6909bce03a7b05c21f9ba7ef3bc67363819d23df7da99eea2d15"
+    },
+    "sunglasses": {
+      "path": "assets/Sunglasses/Flat/sunglasses_flat.svg",
+      "bytes": 1488,
+      "sha256": "735077c8a94a3d3ee750cd1acc36a240fcd4d5ecdc96d9d423d267b38e59cee6"
+    },
+    "watch": {
+      "path": "assets/Watch/Flat/watch_flat.svg",
+      "bytes": 1378,
+      "sha256": "3aeeff635582191d2506a55203d8cfeb69be89a3d3dfe96e0eb2e76a878a6a00"
+    },
+    "house": {
+      "path": "assets/House/Flat/house_flat.svg",
+      "bytes": 1591,
+      "sha256": "9fe2c5d0c32e5414252b6bf919cb53f65849094431e4305660ace13549e7f4a7"
+    },
+    "door": {
+      "path": "assets/Door/Flat/door_flat.svg",
+      "bytes": 915,
+      "sha256": "6a81dd76ab1e38aef2e6dafdfec77880b51067c0e20ed5ea5d3491cb0af7c3b6"
+    },
+    "window": {
+      "path": "assets/Window/Flat/window_flat.svg",
+      "bytes": 1295,
+      "sha256": "ab692000040726301372d57bba4072d63c2281c93091959785e93037e45c41bf"
+    },
+    "bed": {
+      "path": "assets/Bed/Flat/bed_flat.svg",
+      "bytes": 1188,
+      "sha256": "80fecebffc4efb24e8b83033d27d601969eac3edc6cc9a2a197c98b095aab0d3"
+    },
+    "chair": {
+      "path": "assets/Chair/Flat/chair_flat.svg",
+      "bytes": 997,
+      "sha256": "9701521075e86b0e9b99e79daa8de065598f17bf3c2d597616057c086c7cb399"
+    },
+    "sofa": {
+      "path": "assets/Couch and lamp/Flat/couch_and_lamp_flat.svg",
+      "bytes": 1991,
+      "sha256": "abc972c728856afd5c365221636fe98d0fb727c64365ca469366a3fcb88254a3"
+    },
+    "bathtub": {
+      "path": "assets/Bathtub/Flat/bathtub_flat.svg",
+      "bytes": 1413,
+      "sha256": "d0bc3af649637e6330e1d818b75da5ec32ef4ae8af06ad883ae9b6a8dd62b61d"
+    },
+    "toilet": {
+      "path": "assets/Toilet/Flat/toilet_flat.svg",
+      "bytes": 681,
+      "sha256": "a1cb971c1e51162f4c74f41cf7231c462f5de3ad2fdc7c3ff53180db128a63c2"
+    },
+    "soap": {
+      "path": "assets/Soap/Flat/soap_flat.svg",
+      "bytes": 1741,
+      "sha256": "f2fd8b29f2c8111e5b70af29d67ce14bcd2fbe79101724aa4f4422a53e308d1f"
+    },
+    "toothbrush": {
+      "path": "assets/Toothbrush/Flat/toothbrush_flat.svg",
+      "bytes": 1518,
+      "sha256": "de7bc7a2eec3c0c828f18a0676c070e25dab0a8ecf8369a3b883b8e93bf46e4d"
+    },
+    "television": {
+      "path": "assets/Television/Flat/television_flat.svg",
+      "bytes": 1558,
+      "sha256": "169ecf2f4b21e644be50094cce9348881bbaf6a920af52804c0fcde0d6e0bbcc"
+    },
+    "clock": {
+      "path": "assets/Mantelpiece clock/Flat/mantelpiece_clock_flat.svg",
+      "bytes": 3327,
+      "sha256": "405adbf5928323c4ab72c9191de0b033a4cf5fb471275dbc5c624b99ab021bbe"
+    },
+    "cell-phone": {
+      "path": "assets/Mobile phone/Flat/mobile_phone_flat.svg",
+      "bytes": 1771,
+      "sha256": "46d491e10b70419637c10823d55a5af38f504a8e0e1d0f6ac4ff44de80b12e05"
+    },
+    "trash-can": {
+      "path": "assets/Wastebasket/Flat/wastebasket_flat.svg",
+      "bytes": 1764,
+      "sha256": "28f5656260b783ade62fbd892327b1f90c5dab6e995ea3d05c71fee50fbe92e9"
+    },
+    "shampoo": {
+      "path": "assets/Lotion bottle/Flat/lotion_bottle_flat.svg",
+      "bytes": 624,
+      "sha256": "df19714104aae5ba7dff8842d137149388b56a7d8bc32ea1eb0d82d7246064b8"
+    },
+    "toilet-paper": {
+      "path": "assets/Roll of paper/Flat/roll_of_paper_flat.svg",
+      "bytes": 724,
+      "sha256": "f30384eee325d735dfaf98294e26180d62e6ee918639aaed4afe441a75309d7a"
+    },
+    "alarm-clock": {
+      "path": "assets/Alarm clock/Flat/alarm_clock_flat.svg",
+      "bytes": 1541,
+      "sha256": "e5356b8830074a3ca21fff8bb74807003ce996645341d46c25e26e06f0385d3b"
+    },
+    "pan": {
+      "path": "assets/Cooking/Flat/cooking_flat.svg",
+      "bytes": 1932,
+      "sha256": "c091a89f0a40c42a11861309a16e03ad0dc0626790ec87621421fa55d2345d32"
+    },
+    "sponge": {
+      "path": "assets/Sponge/Flat/sponge_flat.svg",
+      "bytes": 3066,
+      "sha256": "c5ae5e6ec5e059494b5729571df8bb5c4a35705644cf5a2ad0cc7bbfc4d013de"
+    },
+    "pot": {
+      "path": "assets/Pot of food/Flat/pot_of_food_flat.svg",
+      "bytes": 2075,
+      "sha256": "6595d6b8d7dbab2003dc9a3524358c5dd78e39871c0d3a59c9aa0f3787531354"
+    },
+    "teapot": {
+      "path": "assets/Teapot/Flat/teapot_flat.svg",
+      "bytes": 1648,
+      "sha256": "361686ee042ae1f473385551b3598fc562c400b1a587d1f5e1d48cb48c469009"
+    },
+    "cup": {
+      "path": "assets/Hot beverage/Flat/hot_beverage_flat.svg",
+      "bytes": 1702,
+      "sha256": "1fd0ed706ba85841193fffc9d2382c533486e41f7d1b9ec90d8eb6748c397183"
+    },
+    "kitchen-knife": {
+      "path": "assets/Kitchen knife/Flat/kitchen_knife_flat.svg",
+      "bytes": 1484,
+      "sha256": "4c7358effaf8061fa0fc7ecdabd6480d003c8cde4aaf5e7ca242b6158bc2388f"
+    },
+    "spoon": {
+      "path": "assets/Spoon/Flat/spoon_flat.svg",
+      "bytes": 785,
+      "sha256": "1f0abf9af1a5f5128c2dcd8e0f9a33f8ee28fa5c5a99c832ba358d844aa3186d"
+    },
+    "bowl": {
+      "path": "assets/Bowl with spoon/Flat/bowl_with_spoon_flat.svg",
+      "bytes": 1358,
+      "sha256": "562b461a8f1ca694b9f0cda2fac460e7b0a27606594b4228b4fa9555749c985c"
+    },
+    "chopsticks": {
+      "path": "assets/Chopsticks/Flat/chopsticks_flat.svg",
+      "bytes": 916,
+      "sha256": "c931e0ab4c296a4ef0d5a6fc319261057f1f9b48ede300515b3f5cdeeb7ae573"
+    },
+    "backpack": {
+      "path": "assets/Backpack/Flat/backpack_flat.svg",
+      "bytes": 2948,
+      "sha256": "9a3ea2d79e670de01c0f6e742b80d5b679c172edc4532c08a7c3083d703b4f23"
+    },
+    "book": {
+      "path": "assets/Open book/Flat/open_book_flat.svg",
+      "bytes": 1885,
+      "sha256": "84809f80ba9252021198ee4f015f1e16ac76020727625c3ee611712c017108b4"
+    },
+    "notebook": {
+      "path": "assets/Notebook/Flat/notebook_flat.svg",
+      "bytes": 738,
+      "sha256": "88d97d0a553b501eab3ed70feb191481dfcf12a308ecc7ece2afdbfb74f102c1"
+    },
+    "pencil": {
+      "path": "assets/Pencil/Flat/pencil_flat.svg",
+      "bytes": 785,
+      "sha256": "f82b7820c41b57d2cca96ef75e32fdedcb07d2d8b786a781274c25fe306c76d7"
+    },
+    "pen": {
+      "path": "assets/Pen/Flat/pen_flat.svg",
+      "bytes": 1557,
+      "sha256": "302d3ce8f609b09dbff8af43ea9e0b5fbd9a4e9404e8381f0190fd98b4c991d8"
+    },
+    "ruler": {
+      "path": "assets/Straight ruler/Flat/straight_ruler_flat.svg",
+      "bytes": 2535,
+      "sha256": "9c0ec39141eec2167c334545a76d4c6db1e06dc1920c3689fe203a1d8d25317d"
+    },
+    "scissors": {
+      "path": "assets/Scissors/Flat/scissors_flat.svg",
+      "bytes": 1283,
+      "sha256": "67d643e25a39792627bfef5aaea3866cdd083fe047a7e449d0070945e32f163f"
+    },
+    "paper-clip": {
+      "path": "assets/Paperclip/Flat/paperclip_flat.svg",
+      "bytes": 1253,
+      "sha256": "a122cd5080f33fcbb65e33b7e96518a6642f2cf345a1da00fc4413919264138f"
+    },
+    "crayon": {
+      "path": "assets/Crayon/Flat/crayon_flat.svg",
+      "bytes": 1433,
+      "sha256": "27f73eca2adb077f87c7843b18372b8afae4141c02e8b8917437d508177e5da6"
+    },
+    "paintbrush": {
+      "path": "assets/Paintbrush/Flat/paintbrush_flat.svg",
+      "bytes": 984,
+      "sha256": "78757c4c943e8e05cf3485d017b172ebc622d1e5f70e5ab6371a28f97102770d"
+    },
+    "computer": {
+      "path": "assets/Laptop/Flat/laptop_flat.svg",
+      "bytes": 3198,
+      "sha256": "c8fa307ed2c3e7e9e4267cff317caff6f0789a0601dabebde8380a0f0a7671b5"
+    },
+    "school": {
+      "path": "assets/School/Flat/school_flat.svg",
+      "bytes": 3438,
+      "sha256": "03febeb59b9c13ee792874a87cd04aea413e7c6ef23b1e7752837dc5d6cbe34d"
+    },
+    "folder": {
+      "path": "assets/File folder/Flat/file_folder_flat.svg",
+      "bytes": 542,
+      "sha256": "870727aa9758f76359181c035456aba47e87d622a619a0ee80fb60b40070fbd1"
+    },
+    "tree": {
+      "path": "assets/Deciduous tree/Flat/deciduous_tree_flat.svg",
+      "bytes": 554,
+      "sha256": "0dd734acc351486d31824d85d7aec4004e3392a00a44ca2f3129603f1d6a0040"
+    },
+    "flower": {
+      "path": "assets/Cherry blossom/Flat/cherry_blossom_flat.svg",
+      "bytes": 3888,
+      "sha256": "eb1ec221824f85581b5dc685e2a8d31bf9f6113c08d0940ee361234173336e62"
+    },
+    "seedling": {
+      "path": "assets/Seedling/Flat/seedling_flat.svg",
+      "bytes": 483,
+      "sha256": "69afa13809bd8192cb4599db991f7cedd3cea054efb5eb68f6f93d8bb19b3652"
+    },
+    "leaf": {
+      "path": "assets/Leaf fluttering in wind/Flat/leaf_fluttering_in_wind_flat.svg",
+      "bytes": 1953,
+      "sha256": "a1f5b88707dc2bfbe64a94401e905ab9d45cbc15d01a92d8a4fb165ba8591c93"
+    },
+    "cactus": {
+      "path": "assets/Cactus/Flat/cactus_flat.svg",
+      "bytes": 3484,
+      "sha256": "ca0a29dfc8d0beae5771012d99822bc3a67e2521987260d7b3613b6c3487bb3c"
+    },
+    "fallen-leaf": {
+      "path": "assets/Fallen leaf/Flat/fallen_leaf_flat.svg",
+      "bytes": 1867,
+      "sha256": "e08bbe73eab15e6269c24fa867d278d8d8ee75d9eb8ae02003ba6f3a91bd9690"
+    },
+    "log": {
+      "path": "assets/Wood/Flat/wood_flat.svg",
+      "bytes": 1943,
+      "sha256": "75fc76516531e677773121beb864b79653807e60d0593d446f0efff855d8674c"
+    },
+    "rock": {
+      "path": "assets/Rock/Flat/rock_flat.svg",
+      "bytes": 2008,
+      "sha256": "bf1331690f16a9bcb6cdfe6f052ff6b998cb29b2a05ce956ba78a21bdd968532"
+    },
+    "mountain": {
+      "path": "assets/Mountain/Flat/mountain_flat.svg",
+      "bytes": 1724,
+      "sha256": "c80aa9f24f53bae91a2df7ce8b319c68aa3766015bd4f30f8de1da4b552e69a0"
+    },
+    "volcano": {
+      "path": "assets/Volcano/Flat/volcano_flat.svg",
+      "bytes": 2114,
+      "sha256": "1765ce0afd6c3b2fd2bfc4561f2c280f06995763b5e836fde3e609883036511e"
+    },
+    "island": {
+      "path": "assets/Desert island/Flat/desert_island_flat.svg",
+      "bytes": 2034,
+      "sha256": "c24f5a68d174a58d42e92587d20ccfd06e8b572a2220ba5b2c605a69256850c2"
+    },
+    "plant": {
+      "path": "assets/Potted plant/Flat/potted_plant_flat.svg",
+      "bytes": 2182,
+      "sha256": "9305371ce7ffd696cee2a47746ead59c9f99fdabde7d9e4f0b6d91e4bcc17417"
+    },
+    "sun": {
+      "path": "assets/Sun/Flat/sun_flat.svg",
+      "bytes": 1495,
+      "sha256": "a51d98e68ac038b917584d43b7729174f035a94ed7cd694802a3a7160f0b08f2"
+    },
+    "cloud": {
+      "path": "assets/Cloud/Flat/cloud_flat.svg",
+      "bytes": 994,
+      "sha256": "b679020aa5321149bad0a7f4dd0f0362a570a1ba1e3ddfeccac94064c4e87955"
+    },
+    "rain": {
+      "path": "assets/Cloud with rain/Flat/cloud_with_rain_flat.svg",
+      "bytes": 1785,
+      "sha256": "7a3def011fdc07eeb8050d74a32a26e4c6247fbee7756494af07c3617e0154a8"
+    },
+    "snow": {
+      "path": "assets/Cloud with snow/Flat/cloud_with_snow_flat.svg",
+      "bytes": 2616,
+      "sha256": "766bb4dd8c5a3ca809e0a13099ba6da9682a49d128ea9b48de063f3a94b624e1"
+    },
+    "rainbow": {
+      "path": "assets/Rainbow/Flat/rainbow_flat.svg",
+      "bytes": 1256,
+      "sha256": "85a0bee875fa032375f0448ac5ed89bf5fa8662438dbb539abbfcba118c18c74"
+    },
+    "wind": {
+      "path": "assets/Wind face/Flat/wind_face_flat.svg",
+      "bytes": 2093,
+      "sha256": "e9ee948f6d5d3960c18c9cf5f81196532c1a6f9862f86fcf2e071a858c89e595"
+    },
+    "lightning": {
+      "path": "assets/High voltage/Flat/high_voltage_flat.svg",
+      "bytes": 444,
+      "sha256": "e85d1b10f93078bbc7cf9eb047ae37b5fa47a66a2aed63c25523592e567036ba"
+    },
+    "snowflake": {
+      "path": "assets/Snowflake/Flat/snowflake_flat.svg",
+      "bytes": 2615,
+      "sha256": "bbe0ff7fbfbd17f02d26aa59d4f961c6470af1cff9474047b7b031a81c4915ab"
+    },
+    "fog": {
+      "path": "assets/Fog/Flat/fog_flat.svg",
+      "bytes": 1200,
+      "sha256": "dbb7803f44f3e2c9e111e785fd1c42dcd40cde890f70c4b48dc04affee62de6d"
+    },
+    "tornado": {
+      "path": "assets/Tornado/Flat/tornado_flat.svg",
+      "bytes": 1483,
+      "sha256": "498d490380dd2fc517491aa857218f6f910de842bdf20682075510dcf37c00cf"
+    },
+    "thermometer": {
+      "path": "assets/Thermometer/Flat/thermometer_flat.svg",
+      "bytes": 1308,
+      "sha256": "3db178db4cfd28a1488948b5ae94ec07ded473c85f9f4dac6218d223aff130ab"
+    },
+    "umbrella": {
+      "path": "assets/Umbrella/Flat/umbrella_flat.svg",
+      "bytes": 1307,
+      "sha256": "7a8ad98481ebff883a216200a0228b84f0679d609c85158afcfe5ce45f9bd52c"
+    },
+    "eye": {
+      "path": "assets/Eye/Flat/eye_flat.svg",
+      "bytes": 1129,
+      "sha256": "b3a5d3a19c43fff9977062fa8ce1b5eb3a9a1bd36ebefc058e45b9dbf1825425"
+    },
+    "ear": {
+      "path": "assets/Ear/Default/Flat/ear_flat_default.svg",
+      "bytes": 1699,
+      "sha256": "d6dc35602efd19ceabd95824243d55168fc3f8e71dfd7e7cf244fd4350960164"
+    },
+    "nose": {
+      "path": "assets/Nose/Default/Flat/nose_flat_default.svg",
+      "bytes": 977,
+      "sha256": "6f7bcd230f987ea215916b743a4c139f85385e19a8bf8b32d6732daf64e3f29c"
+    },
+    "mouth": {
+      "path": "assets/Mouth/Flat/mouth_flat.svg",
+      "bytes": 1311,
+      "sha256": "a901edfa3696253117b8b960c3c2d43b9d6b0ce02c93201e071015c53bffb044"
+    },
+    "tongue": {
+      "path": "assets/Tongue/Flat/tongue_flat.svg",
+      "bytes": 410,
+      "sha256": "13c9754a92bdce1ec0c8ca6c64d6dbeb033df5c0dbb2029481a433d6a36375a2"
+    },
+    "tooth": {
+      "path": "assets/Tooth/Flat/tooth_flat.svg",
+      "bytes": 3194,
+      "sha256": "f1de4464be967269122cd98b458f662d858069a50c5d810498093c9ed65188cb"
+    },
+    "hand": {
+      "path": "assets/Hand with fingers splayed/Default/Flat/hand_with_fingers_splayed_flat_default.svg",
+      "bytes": 3571,
+      "sha256": "66c85ca4ebeab2036d5e8979d005302a13badba3def3a2cc78d766e0465fc286"
+    },
+    "foot": {
+      "path": "assets/Foot/Default/Flat/foot_flat_default.svg",
+      "bytes": 1207,
+      "sha256": "84fb15335cba91a1a7bd5f788dda5f6b95fc10f46e8337998858cf23c38ccb28"
+    },
+    "leg": {
+      "path": "assets/Leg/Default/Flat/leg_flat_default.svg",
+      "bytes": 1903,
+      "sha256": "d3e9ee8e31b2e707b51ee95cc6db6b9166a1c5f8b4b55739527b3570f8531254"
+    },
+    "arm": {
+      "path": "assets/Flexed biceps/Default/Flat/flexed_biceps_flat_default.svg",
+      "bytes": 2078,
+      "sha256": "0271c7b5033da1653b0c9d6e54f0136c568a7f7e974c301fe56a6643948cc7c1"
+    },
+    "brain": {
+      "path": "assets/Brain/Flat/brain_flat.svg",
+      "bytes": 2701,
+      "sha256": "6265573ae0b28db8fc53ba15f886ec9dca72c6345d4c304852db5f4d36876d46"
+    },
+    "bone": {
+      "path": "assets/Bone/Flat/bone_flat.svg",
+      "bytes": 5230,
+      "sha256": "1271e3a6d33a1abf5a666e92215f96192345d5feabaabed162272a44472e1505"
+    },
+    "doctor": {
+      "path": "assets/Health worker/Default/Flat/health_worker_flat_default.svg",
+      "bytes": 8702,
+      "sha256": "3eac49687c4ab278eb334b2c5c37ff88e5c997697ee60e065baf2cfeeef512f3"
+    },
+    "teacher": {
+      "path": "assets/Teacher/Default/Flat/teacher_flat_default.svg",
+      "bytes": 10298,
+      "sha256": "d0cf19fac6954476cfc0e0e1dc0ce662977cc6e13e10adcea31491ce9cb322a6"
+    },
+    "farmer": {
+      "path": "assets/Farmer/Default/Flat/farmer_flat_default.svg",
+      "bytes": 7917,
+      "sha256": "e9b7dd9555d156c769124e3eaa6023f291925db2afd9b0298ab4d9a4ccd1d2b2"
+    },
+    "cook": {
+      "path": "assets/Cook/Default/Flat/cook_flat_default.svg",
+      "bytes": 7771,
+      "sha256": "3bd1ec92a5d2c8fe6ac4327d41a03b169d06194b6c102f0d66abaabecbf881aa"
+    },
+    "firefighter": {
+      "path": "assets/Firefighter/Default/Flat/firefighter_flat_default.svg",
+      "bytes": 8361,
+      "sha256": "c1ac6d1cf735ec77b5374c8184bcce92987dde618e86534dd8ccbf83f4ebbe59"
+    },
+    "police-officer": {
+      "path": "assets/Police officer/Default/Flat/police_officer_flat_default.svg",
+      "bytes": 7321,
+      "sha256": "1c1a6622249d8f7e90555a21411d7ca6059da64b87a15f3148b071d4b99255bb"
+    },
+    "pilot": {
+      "path": "assets/Pilot/Default/Flat/pilot_flat_default.svg",
+      "bytes": 9524,
+      "sha256": "8ed8e0cd95f5bcded049e5e7e7ed34ba274b5614487aed78e9d0bfddea0264a8"
+    },
+    "artist": {
+      "path": "assets/Artist/Default/Flat/artist_flat_default.svg",
+      "bytes": 9258,
+      "sha256": "5462b1f6b4f4b43b6981be0369be28a070da9196b9dbeb71c2f125a3f0b0db62"
+    },
+    "singer": {
+      "path": "assets/Singer/Default/Flat/singer_flat_default.svg",
+      "bytes": 7921,
+      "sha256": "b6d3c42b5f7f1fe0d708d3ba53ef757b4411907c1b85dda9560900b6ed59f7ba"
+    },
+    "scientist": {
+      "path": "assets/Scientist/Default/Flat/scientist_flat_default.svg",
+      "bytes": 9067,
+      "sha256": "6ed4b3738601f0c11481c90392a8cc6878224e9dedc9a4dc626fccae4625e186"
+    },
+    "mechanic": {
+      "path": "assets/Mechanic/Default/Flat/mechanic_flat_default.svg",
+      "bytes": 7774,
+      "sha256": "a50715d61e69b8d3ae3de9590436c926f95a11d0c0ae857c702bd63935470ae3"
+    },
+    "astronaut": {
+      "path": "assets/Astronaut/Default/Flat/astronaut_flat_default.svg",
+      "bytes": 6736,
+      "sha256": "5579e2d124545cf55bf70ff09adc4d2e6f55c3390c90c574426c2ce794debb25"
+    },
+    "guitar": {
+      "path": "assets/Guitar/Flat/guitar_flat.svg",
+      "bytes": 4524,
+      "sha256": "f02523439d0f910c533c21aa1f93b89a1c809a310b5b385ef966643225c4ccf8"
+    },
+    "piano": {
+      "path": "assets/Musical keyboard/Flat/musical_keyboard_flat.svg",
+      "bytes": 1228,
+      "sha256": "f863f70361fd7512352fe353173282e5578a29d614d46fb3d035656c17773478"
+    },
+    "drum": {
+      "path": "assets/Drum/Flat/drum_flat.svg",
+      "bytes": 4211,
+      "sha256": "6080debd6ab56a32adcb6291abe852a79ded995339988cd79053089e99d27be8"
+    },
+    "trumpet": {
+      "path": "assets/Trumpet/Flat/trumpet_flat.svg",
+      "bytes": 3245,
+      "sha256": "54ff1e1b5f8d41fbfb2c7c72353d03364fabfbda0258c0405311230d95794551"
+    },
+    "saxophone": {
+      "path": "assets/Saxophone/Flat/saxophone_flat.svg",
+      "bytes": 2048,
+      "sha256": "10c23039568a8b37c38b259a342c257568ce328b290848bf57d96e459945a93c"
+    },
+    "flute": {
+      "path": "assets/Flute/Flat/flute_flat.svg",
+      "bytes": 5106,
+      "sha256": "f55f18d35a021e780a68926d52b81ba2c9c566d476a5df0959fd86b614f4a8c6"
+    },
+    "banjo": {
+      "path": "assets/Banjo/Flat/banjo_flat.svg",
+      "bytes": 3900,
+      "sha256": "9e7fa15f97e997ac0e6f4fe3e4a639bfc352b52bc98e90db4993895c8f7abb3d"
+    },
+    "accordion": {
+      "path": "assets/Accordion/Flat/accordion_flat.svg",
+      "bytes": 7037,
+      "sha256": "b7ca8ff9a71f624abe1c1e572f106571ce7f8028f34784265753013e74c8bfb5"
+    },
+    "microphone": {
+      "path": "assets/Microphone/Flat/microphone_flat.svg",
+      "bytes": 975,
+      "sha256": "fc26fde67149e368178c4e5db7cc66ce0311942ada5a0d4315149e03393f6e01"
+    },
+    "headphones": {
+      "path": "assets/Headphone/Flat/headphone_flat.svg",
+      "bytes": 2490,
+      "sha256": "cda2447d8063692b29056d0cb1a2ea38a66d9f6ac787f380bc88c7b30735ca8a"
+    },
+    "bell": {
+      "path": "assets/Bell/Flat/bell_flat.svg",
+      "bytes": 752,
+      "sha256": "424eaadb88e85199e742372dfcb0bc93812ab5dc20a2415e2495f60ca73a60a3"
+    },
+    "hospital": {
+      "path": "assets/Hospital/Flat/hospital_flat.svg",
+      "bytes": 1730,
+      "sha256": "919d0a79cfdc122317f342f5f7cbd80f87f41d1757e7c6283c297e5e3d327e00"
+    },
+    "bank": {
+      "path": "assets/Bank/Flat/bank_flat.svg",
+      "bytes": 3575,
+      "sha256": "e4b87d75976c51e6efda9207ff9cdc74921f91b56a89fb229976345c4b6d40df"
+    },
+    "hotel": {
+      "path": "assets/Hotel/Flat/hotel_flat.svg",
+      "bytes": 5445,
+      "sha256": "a09c37a20c4bae3995fb80658190bb898a707d08e9be567e326d5a864b47d0f3"
+    },
+    "post-office": {
+      "path": "assets/Japanese post office/Flat/japanese_post_office_flat.svg",
+      "bytes": 2846,
+      "sha256": "bfaba4fd99fb45faebfd9ac4e14be0d0e3bbff1ed4ac820bda6dcd981081b2d9"
+    },
+    "castle": {
+      "path": "assets/Castle/Flat/castle_flat.svg",
+      "bytes": 3677,
+      "sha256": "428a55fded378431d5b69c83a9fe22c19c55a569182e236b94f02fe7408951ff"
+    },
+    "factory": {
+      "path": "assets/Factory/Flat/factory_flat.svg",
+      "bytes": 2926,
+      "sha256": "3ca282ee30aaf864ea677e1de20a66271b4b5f44c050e971a56e063c7140a056"
+    },
+    "stadium": {
+      "path": "assets/Stadium/Flat/stadium_flat.svg",
+      "bytes": 4917,
+      "sha256": "fd4a84b01acd66df7e0cbb8e631bb1c952cfd13a74efe655b78e307fa27c67f1"
+    },
+    "tent": {
+      "path": "assets/Tent/Flat/tent_flat.svg",
+      "bytes": 1779,
+      "sha256": "230a747c17431c13c17295b541612edec7b01ec35664df31ee2a61c6c0c8ec3f"
+    },
+    "bridge": {
+      "path": "assets/Bridge at night/Flat/bridge_at_night_flat.svg",
+      "bytes": 4097,
+      "sha256": "50292397a2c30312da58a0843d8b1d8fd8eee0610e1bc1dcf16341e4040ad9a9"
+    },
+    "church": {
+      "path": "assets/Church/Flat/church_flat.svg",
+      "bytes": 1696,
+      "sha256": "243820f3bfdc74e67e6317de61af317c78ed56eeedb3a6e120328d4bf37a19eb"
+    },
+    "mosque": {
+      "path": "assets/Mosque/Flat/mosque_flat.svg",
+      "bytes": 2759,
+      "sha256": "764bf9111cd67b1b1d0e05a580068cc2f48d288e1f28f354b01cf6a22f4ee64f"
+    },
+    "airport": {
+      "path": "assets/Airplane departure/Flat/airplane_departure_flat.svg",
+      "bytes": 2517,
+      "sha256": "bb0ad469590c5593e39127ebcdcae742d5f9616b752efe575ba03d3c4a59dbb0"
+    },
+    "park": {
+      "path": "assets/National park/Flat/national_park_flat.svg",
+      "bytes": 3199,
+      "sha256": "81d06ddf5acb50968e774c6ebd7fea8aa1a92fbbc5c946a58c7c45fc55b07bf3"
+    },
+    "museum": {
+      "path": "assets/Classical building/Flat/classical_building_flat.svg",
+      "bytes": 2262,
+      "sha256": "3c62410392043e2f44caf075b1950a1f51929676b9d54e8e2fa1655b86dc8e87"
+    },
+    "shopping-mall": {
+      "path": "assets/Department store/Flat/department_store_flat.svg",
+      "bytes": 3706,
+      "sha256": "79aa5eb80ac4de9331e593663cf7f30ed572674cbd2add31cd629e63ac4ae549"
+    },
+    "restaurant": {
+      "path": "assets/Fork and knife with plate/Flat/fork_and_knife_with_plate_flat.svg",
+      "bytes": 1507,
+      "sha256": "c4745d563e1587989ed8a1cd0f4b39ef2b40fc7a97c29382102652195db4a8df"
+    },
+    "library": {
+      "path": "assets/Books/Flat/books_flat.svg",
+      "bytes": 1989,
+      "sha256": "41e2686cdc526bfa41ea599e2a74378f3a02788ff7e8cd1b9ad0a39ea157000c"
+    },
+    "bus-stop": {
+      "path": "assets/Bus stop/Flat/bus_stop_flat.svg",
+      "bytes": 3080,
+      "sha256": "b80c4a111d08cf48746f08a6540ef55b364a05ffdff28046f8a606d25b0a9b08"
+    },
+    "teddy-bear": {
+      "path": "assets/Teddy bear/Flat/teddy_bear_flat.svg",
+      "bytes": 4281,
+      "sha256": "83e2f3bd7cdeadade4be675ed238b8d1ba9e90e967ff1c10e8de8423043e568d"
+    },
+    "kite": {
+      "path": "assets/Kite/Flat/kite_flat.svg",
+      "bytes": 3666,
+      "sha256": "13b9a1b5313d577763d3ea048acf3faef58fa438b8925dd945b55066e62b0704"
+    },
+    "balloon": {
+      "path": "assets/Balloon/Flat/balloon_flat.svg",
+      "bytes": 2101,
+      "sha256": "5b7af328c99543aa940215cd82af39c6248c54d5f3b36260284364db63490e73"
+    },
+    "puzzle": {
+      "path": "assets/Puzzle piece/Flat/puzzle_piece_flat.svg",
+      "bytes": 4172,
+      "sha256": "72b3482570a4041ab8b77a54cf2b4e81fe78dab7c3b9ecb879a2921ab3711533"
+    },
+    "yo-yo": {
+      "path": "assets/Yo-yo/Flat/yo-yo_flat.svg",
+      "bytes": 2545,
+      "sha256": "3bb076810fed2ed224c76ea48d67ecd607cd0ef3c317c4c3649a2ce0e8e89a8a"
+    },
+    "robot": {
+      "path": "assets/Robot/Flat/robot_flat.svg",
+      "bytes": 1858,
+      "sha256": "5bf295c5a8c7c4197c8deb639c13b93359ad009585c1ff6b3fd0fbdcf6f8da20"
+    },
+    "video-game": {
+      "path": "assets/Video game/Flat/video_game_flat.svg",
+      "bytes": 2874,
+      "sha256": "72e72f324aea8c19f4eac430d377be8a33b0c3fa12495d74e886625568b4af60"
+    },
+    "dice": {
+      "path": "assets/Game die/Flat/game_die_flat.svg",
+      "bytes": 2397,
+      "sha256": "9c35e8ac41bb5e15ab1a34d8346578633e80a5b674dbd51825739fe52f17b931"
+    },
+    "chess": {
+      "path": "assets/Chess pawn/Flat/chess_pawn_flat.svg",
+      "bytes": 638,
+      "sha256": "4738422350e9400f2d474973cac3b888f4573c978bf4d906c3c522b988c6e5f9"
+    },
+    "skateboard": {
+      "path": "assets/Skateboard/Flat/skateboard_flat.svg",
+      "bytes": 3299,
+      "sha256": "0753292ccf614083ca4929ea6cf7db8f1b7c55b82dd72b645d337197e57e63da"
+    },
+    "roller-skates": {
+      "path": "assets/Roller skate/Flat/roller_skate_flat.svg",
+      "bytes": 1876,
+      "sha256": "6f93ae525dd89c4c9779b7ec36d89f195b17aaa2a9f7f48dfb1b4e3099cd7e23"
+    },
+    "hammer": {
+      "path": "assets/Hammer/Flat/hammer_flat.svg",
+      "bytes": 1062,
+      "sha256": "86c017f059dfa32320ee390cd0fcabc67e92ca30edb65d5b260a3bc9796d248e"
+    },
+    "wrench": {
+      "path": "assets/Wrench/Flat/wrench_flat.svg",
+      "bytes": 1032,
+      "sha256": "bf72f7cd17e82492ea669cdf9d23f06e6009afb391c4dad55b3c493fcae4f840"
+    },
+    "screwdriver": {
+      "path": "assets/Screwdriver/Flat/screwdriver_flat.svg",
+      "bytes": 1611,
+      "sha256": "c07fc81be2fbcf4c36d9b9bd54958cd2b18f56dbcf8d9e723be491a2db5c9436"
+    },
+    "saw": {
+      "path": "assets/Carpentry saw/Flat/carpentry_saw_flat.svg",
+      "bytes": 1324,
+      "sha256": "2bbade22cca4f25f92ad7742d827b50600c3cda7049201b229e33394b485bad5"
+    },
+    "ladder": {
+      "path": "assets/Ladder/Flat/ladder_flat.svg",
+      "bytes": 1424,
+      "sha256": "05fcd26bcd9f1aedfd263699caa0a592c4b2cb01e3a6386a7c653bb045dec547"
+    },
+    "key": {
+      "path": "assets/Key/Flat/key_flat.svg",
+      "bytes": 1148,
+      "sha256": "a526faedcffc7f460053eabc25ac617404009d1536f1f7b172f1dc46b11dd4d1"
+    },
+    "lock": {
+      "path": "assets/Locked/Flat/locked_flat.svg",
+      "bytes": 804,
+      "sha256": "a3042ba561a791bf2a4ad820e82e557374962c771e39eeb93d2963478e5b57b8"
+    },
+    "magnet": {
+      "path": "assets/Magnet/Flat/magnet_flat.svg",
+      "bytes": 502,
+      "sha256": "2f5f7e822d6a33d5399e91615dfab6a7a6495a062cc95a910f1a17cc56d41405"
+    },
+    "flashlight": {
+      "path": "assets/Flashlight/Flat/flashlight_flat.svg",
+      "bytes": 1795,
+      "sha256": "6486515a5ad3b63e75cd78574d622bcd4cae5cb62ae014691d38492ef23275e7"
+    },
+    "bucket": {
+      "path": "assets/Bucket/Flat/bucket_flat.svg",
+      "bytes": 1389,
+      "sha256": "ef9ec134a928ab8e5450a4ebaa983e339c6138f4d37511fcf7058e99c2726526"
+    },
+    "broom": {
+      "path": "assets/Broom/Flat/broom_flat.svg",
+      "bytes": 1432,
+      "sha256": "a0d9f525a3a2b02f847f378cec0b1242a323e027a58e9abad6028b8ee07e6795"
+    },
+    "basket": {
+      "path": "assets/Basket/Flat/basket_flat.svg",
+      "bytes": 3628,
+      "sha256": "ba3325690df45f79d0254dd290b72432c6799977be42d6818caf7f0bd4fedb75"
+    },
+    "happy": {
+      "path": "assets/Smiling face with smiling eyes/Flat/smiling_face_with_smiling_eyes_flat.svg",
+      "bytes": 2181,
+      "sha256": "4a429b15f9aa2831f2fe786923751b6d59b099fabff39a4e41003267629cda25"
+    },
+    "sad": {
+      "path": "assets/Crying face/Flat/crying_face_flat.svg",
+      "bytes": 2455,
+      "sha256": "4a0960d7115204c9b89ae94d21fb53c244734cf2da91cba32f295f6e346ffd0c"
+    },
+    "angry": {
+      "path": "assets/Angry face/Flat/angry_face_flat.svg",
+      "bytes": 2121,
+      "sha256": "bf536eeb45a62dcf593200817c268b9e4d72b034a788aa49591a58a01c1bfd35"
+    },
+    "surprised": {
+      "path": "assets/Astonished face/Flat/astonished_face_flat.svg",
+      "bytes": 2072,
+      "sha256": "79fa3662c37d8b9db9aeb642266e387e0029c33b9ce2e2ed717ce137a16f9545"
+    },
+    "sleepy": {
+      "path": "assets/Sleeping face/Flat/sleeping_face_flat.svg",
+      "bytes": 2614,
+      "sha256": "47c702745c7be1af9250f79afbea555cfe8bf01a59a78f67b8cae3ed9645143f"
+    },
+    "scared": {
+      "path": "assets/Fearful face/Flat/fearful_face_flat.svg",
+      "bytes": 2008,
+      "sha256": "bdc4b25b6f9af1b95610e8181b2e246b18f80230dd1a4943c35b35048a5cb6b7"
+    },
+    "cold": {
+      "path": "assets/Cold face/Flat/cold_face_flat.svg",
+      "bytes": 2658,
+      "sha256": "3bf1c839f72b7b525c710df4bb1213bfac0e95b45ea4b8d8ae77b4595e9339d2"
+    },
+    "hot": {
+      "path": "assets/Hot face/Flat/hot_face_flat.svg",
+      "bytes": 2598,
+      "sha256": "cf84b609f46ffc13211d634fe061c59952f46c4f2e3298bddb38fbee3372107e"
+    },
+    "silly": {
+      "path": "assets/Zany face/Flat/zany_face_flat.svg",
+      "bytes": 1831,
+      "sha256": "d09a561c2258f59c6758858f6137ec6dd35571100f5016d4d988217ec15925ca"
+    },
+    "sick": {
+      "path": "assets/Face with thermometer/Flat/face_with_thermometer_flat.svg",
+      "bytes": 3114,
+      "sha256": "c28feb5113d7f331915f15fe7ec9bfb00eda8be1608d76edb7de384b0462958f"
+    },
+    "excited": {
+      "path": "assets/Star-struck/Flat/star-struck_flat.svg",
+      "bytes": 1843,
+      "sha256": "c2207e61f41de47854eb31137d7297a6c1a5a72ca6249745a6b186107bf00958"
+    },
+    "tired": {
+      "path": "assets/Tired face/Flat/tired_face_flat.svg",
+      "bytes": 2217,
+      "sha256": "d63b18c3cbe37c618417af919b3ffcf75874b948ee3eb804bc0d95de710584e7"
+    },
+    "grandfather": {
+      "path": "assets/Old man/Default/Flat/old_man_flat_default.svg",
+      "bytes": 6382,
+      "sha256": "b12f74af3049e92f59ac289f0423cc50b3e25960a4acfc0b7f9bde256a9448dd"
+    },
+    "grandmother": {
+      "path": "assets/Old woman/Default/Flat/old_woman_flat_default.svg",
+      "bytes": 6846,
+      "sha256": "dcb8941b21023c01a486c4c6f3b9acc641ac7e570d12021328204112417d6942"
+    },
+    "father": {
+      "path": "assets/Man/Default/Flat/man_flat_default.svg",
+      "bytes": 5808,
+      "sha256": "1c45eb8dde3888fb3b6bf614e1a29e1d3f779d36a18ea14b8bd0b30097e5dfbf"
+    },
+    "mother": {
+      "path": "assets/Woman/Default/Flat/woman_flat_default.svg",
+      "bytes": 6106,
+      "sha256": "a7f5f3775c092305821fc0796b5734c0be351c6ab9e977ac4c3f2289add285a1"
+    },
+    "sister": {
+      "path": "assets/Girl/Default/Flat/girl_flat_default.svg",
+      "bytes": 4621,
+      "sha256": "81df57c25a7e6efb354580783ba16620c6d0951c995dd61283ab7689d6cadd25"
+    },
+    "brother": {
+      "path": "assets/Boy/Default/Flat/boy_flat_default.svg",
+      "bytes": 5143,
+      "sha256": "78ae21d36ec70fb1d65e5bc37653e71278e3f163799d096cf1d8db20318502f6"
+    },
+    "me": {
+      "path": "assets/Child/Default/Flat/child_flat_default.svg",
+      "bytes": 4397,
+      "sha256": "1b938a9b04232efc53987dca2011fc8a4e4e0f33dd04d4d2da0919a673c22a1c"
+    },
+    "cousin": {
+      "path": "assets/Person/Default/Flat/person_flat_default.svg",
+      "bytes": 4908,
+      "sha256": "19170c4e0b3f7f83c0159e817935fd36316a1c8446dc198d09684022e3167ce0"
+    },
+    "envelope": {
+      "path": "assets/Envelope/Flat/envelope_flat.svg",
+      "bytes": 736,
+      "sha256": "82a8b1c5576caa1c83ca9d1f2e7a340f84f86788969a27ff749811089d33353c"
+    },
+    "fan": {
+      "path": "assets/Folding hand fan/Flat/folding_hand_fan_flat.svg",
+      "bytes": 3921,
+      "sha256": "d5c28189b4ddcbe025a02815149ae7cbd928d054fdf51e746b94bfb959ea4100"
+    },
+    "gift": {
+      "path": "assets/Wrapped gift/Flat/wrapped_gift_flat.svg",
+      "bytes": 804,
+      "sha256": "326da81790739066b77219b1a84dbcdb2efb4fddbf4d1767c7097c6ab9b7634b"
+    },
+    "hourglass": {
+      "path": "assets/Hourglass not done/Flat/hourglass_not_done_flat.svg",
+      "bytes": 1868,
+      "sha256": "111b05a30ae7cc4e4e09d6a2f46941b48eeb2c97b72ba8b0e37ef88e010401ae"
+    },
+    "ring": {
+      "path": "assets/Ring/Flat/ring_flat.svg",
+      "bytes": 1292,
+      "sha256": "e8daa3acbd367283e8a3e469c7666c99d43efb17acf184ab6aa2dc842bdfc8b7"
+    }
+  }
+}

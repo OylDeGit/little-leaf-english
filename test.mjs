@@ -17,12 +17,87 @@ import {
   quizOptions,
   dailyRoundSize,
   validateSession,
+  contactWord,
+  learningStats,
+  lessonWords,
 } from './core.js';
+import { validateLesson, validateView, routeFor, parseRoute } from './navigation.js';
 
-test('340 unique bilingual words across 25 themes have usable local illustrations and audio', () => {
-  assert.equal(words.length, 340);
-  assert.equal(categories.length, 25);
-  assert.equal(new Set(words.map((w) => w.id)).size, 340);
+test('first contact is idempotent and never changes scores, review records or daily counts', () => {
+  const s = emptyState();
+  assert.equal(contactWord(s, 'apple', 1794210000000), true);
+  assert.equal(contactWord(s, 'apple', 1794210000100), false);
+  assert.equal(contactWord(s, 'missing'), false);
+  assert.deepEqual(s.records, {});
+  assert.deepEqual(s.days, {});
+  assert.deepEqual(learningStats(s), {contacted:1, practiced:0, mastered:0});
+  answer(s, 'pear', true, 1794210000000);
+  assert.deepEqual(learningStats(s), {contacted:2, practiced:1, mastered:0});
+  contactWord(s, 'pear', 1794210000000);
+  assert.equal(learningStats(s).contacted, 2);
+  s.records.pear.level = 3;
+  assert.equal(learningStats(s).mastered, 1);
+});
+test('contact footprints survive backup import and preserve the earliest encounter on merge', () => {
+  const s = emptyState(), other = emptyState();
+  contactWord(s, 'apple', 1794210000000);
+  contactWord(other, 'apple', 1794200000000);
+  contactWord(other, 'pear', 1794210000000);
+  const imported = validateBackup(other);
+  const merged = mergeBackup(s, imported);
+  assert.equal(merged.contacts.apple, 1794200000000);
+  assert.equal(merged.contacts.pear, 1794210000000);
+  const legacy = emptyState(); delete legacy.contacts; delete legacy.settings.autoNext;
+  assert.deepEqual(validateBackup(legacy).contacts, {});
+  assert.equal(validateBackup(legacy).settings.autoNext, false);
+  assert.throws(()=>validateBackup({...s, contacts:{apple:'yesterday'}}));
+  assert.deepEqual(validateBackup({...s, contacts:{missing:1794210000000}}).contacts, {});
+});
+test('small lessons choose at most five unique words, prioritizing due and contacted words', () => {
+  const s=emptyState(), now=1794210000000;
+  answer(s, 'apple', true, now);
+  answer(s, 'pear', false, now-86400000);
+  contactWord(s, 'banana', now);
+  const pool=['apple','orange','pear','banana','grape','lemon','peach','banana'].map(id=>wordMap.get(id));
+  assert.deepEqual(lessonWords(s,pool,now).map(w=>w.id), ['pear','banana','orange','grape','lemon']);
+});
+test('strict lesson distractors stay inside the group, including groups smaller than four', () => {
+  const pool=['apple','orange','banana'].map(id=>wordMap.get(id));
+  for(const target of pool){
+    const options=quizOptions(target,pool,()=>0.5,true);
+    assert.equal(options.length,3);
+    assert.ok(options.every(w=>pool.includes(w)));
+    assert.equal(new Set(options.map(w=>w.imageKey)).size, options.length);
+  }
+});
+test('lesson and view bookmarks validate context, deduplicate IDs and bound stored UI values', () => {
+  const lesson={ids:['apple','banana'],sceneId:'supermarket',completed:false};
+  assert.ok(validateLesson(lesson));
+  assert.equal(validateLesson({...lesson,ids:['apple','apple']}),null);
+  assert.equal(validateLesson({...lesson,sceneId:'bathroom'}),null);
+  const view=validateView({page:'themes',sceneId:'supermarket',mode:'scene',scroll:Infinity,shown:999999,search:'x'.repeat(200),lesson});
+  assert.equal(view.scroll,0);
+  assert.equal(view.shown,526);
+  assert.equal(view.search.length,100);
+  assert.equal(view.lesson.ids.length,2);
+  assert.equal(validateView({page:'unknown'}),null);
+});
+test('known scene, category and list routes round-trip and malformed hashes fall back safely', () => {
+  for(const scene of sceneMap.values()){
+    const view=parseRoute(routeFor({sceneId:scene.id}));
+    assert.equal(view.sceneId,scene.id);
+    assert.equal(view.mode,'scene');
+  }
+  for(const category of categories) assert.equal(parseRoute(routeFor({categoryId:category.id})).categoryId,category.id);
+  assert.equal(parseRoute('#/scenes').themeView,'scenes');
+  assert.equal(parseRoute('#/%E0%A4%A').page,'home');
+  assert.equal(parseRoute('#/scene/missing').page,'home');
+});
+
+test('526 unique bilingual words across 27 themes have usable local illustrations and audio', () => {
+  assert.equal(words.length, 526);
+  assert.equal(categories.length, 27);
+  assert.equal(new Set(words.map((w) => w.id)).size, 526);
   for (const w of words) {
     assert.ok(w.word && w.zh && w.sentence && w.category);
     const svg = readFileSync(new URL(imagePath(w), import.meta.url), 'utf8');
@@ -127,7 +202,7 @@ test('every listening question has four distinct pictures and only one spoken an
   for (const w of words) {
     const options = quizOptions(w, categories.find((c) => c.id === w.category).words);
     assert.equal(options.length, 4, w.id);
-    assert.equal(new Set(options.map((o) => o.emoji)).size, 4, w.id);
+    assert.equal(new Set(options.map((o) => o.imageKey)).size, 4, w.id);
     assert.equal(options.filter((o) => matchesSpelling(w, o.word)).length, 1, w.id);
     assert.equal(options.filter((o) => o.id === w.id).length, 1, w.id);
   }
@@ -177,6 +252,17 @@ test('invalid or completed practice snapshots cannot be resumed', () => {
   assert.throws(() => validateSession({ ...s, queue: ['missing-word'] }));
   assert.throws(() => validateSession({ ...s, options: ['apple', 'apple', 'pear', 'grape'] }));
   assert.throws(() => validateSession({ ...s, results: [] }));
+});
+test('lesson snapshots retain the same group and feedback and reject outside options', () => {
+  const raw={...sampleSession(),source:'lesson',lessonIds:['apple','banana','pear'],pool:['apple','banana','pear'],options:['apple','banana','pear']};
+  const r=validateSession(raw);
+  assert.deepEqual(r.lessonIds,raw.lessonIds);
+  assert.deepEqual(r.options,raw.options);
+  assert.equal(r.answered,true);
+  assert.equal(r.lastCorrect,false);
+  assert.throws(()=>validateSession({...raw,options:['apple','banana','grape']}));
+  assert.throws(()=>validateSession({...raw,lessonIds:['banana','pear']}));
+  assert.throws(()=>validateSession({...raw,queue:['apple','banana','pear','grape']}));
 });
 
 test('all 96 original IDs remain valid, preserving every existing word record', () => {
@@ -323,7 +409,7 @@ test('all example sentences can be reconstructed from a non-empty target blank',
 });
 test('expanded numeric progression and original IDs remain available', () => {
   assert.equal(categories.find((c) => c.id === 'numbers').words.length, 32);
-  assert.equal(categories.find((c) => c.id === 'fruit').words.length, 20);
+  assert.equal(categories.find((c) => c.id === 'fruit').words.length, 21);
   for (const id of [
     'zero',
     'thirteen',
@@ -369,4 +455,131 @@ test('eight bilingual dialogues contain three unambiguous response checks and co
       }
     }
   }
+});
+
+// Scene data and all reference mappings are part of the shipped content contract.
+import { scenes, sceneMap, alphabet } from './scenes.js';
+import { extraWords } from './scene-content.js';
+import { createHash } from 'node:crypto';
+test('all 340 previous words retain their IDs', () => {
+  const ids = JSON.parse(readFileSync(new URL('./baseline-word-ids.json', import.meta.url)));
+  assert.equal(ids.length, 340);
+  for (const id of ids) assert.ok(wordMap.has(id), id);
+  assert.equal(extraWords.length, 186);
+  assert.equal(new Set([...ids, ...extraWords.map(w => w.id)]).size, 526);
+});
+test('13 scenes cover every readable reference label with canonical words', () => {
+  assert.equal(scenes.length, 13);
+  assert.equal(sceneMap.size, 13);
+  const ledger = JSON.parse(readFileSync(new URL('./reference-vocabulary.json', import.meta.url)));
+  assert.equal(ledger.entries.length, 281);
+  assert.equal(new Set(ledger.entries.map(e => e.photo)).size, 13);
+  for (const s of scenes) {
+    assert.ok(s.wordIds.length > 0);
+    assert.equal(new Set(s.wordIds).size, s.wordIds.length);
+    for (const id of s.wordIds) assert.ok(wordMap.has(id), `${s.id}: ${id}`);
+    assert.deepEqual(s.wordIds, [...new Set(s.groups.flatMap(g => g.items.map(i => i.wordId)))]);
+    for (const target of s.wordIds.map(id => wordMap.get(id))) {
+      const options = quizOptions(target, s.wordIds.map(id => wordMap.get(id)));
+      const hashes = options.map(w => createHash('sha256').update(readFileSync(new URL(imagePath(w), import.meta.url))).digest('hex'));
+      assert.equal(new Set(hashes).size, 4, `Duplicate scene picture: ${target.id}`);
+      assert.equal(options.filter(w => matchesSpelling(target, w.word)).length, 1);
+    }
+  }
+  for (const e of ledger.entries) {
+    assert.ok(sceneMap.get(e.sceneId).wordIds.includes(e.wordId));
+    assert.equal(wordMap.get(e.wordId).word, e.english);
+    assert.ok(e.originalEnglish && e.originalChinese);
+  }
+});
+test('letter names have separate local clips and the exact A–Z reference examples', () => {
+  const expected = 'acorn balloon can door envelope fan gift hourglass ice juice key lock mop net owl pumpkin queen ring sunglasses tea umbrella vase watch x-ray yo-yo zipper'.split(' ');
+  assert.equal(alphabet.length, 26);
+  assert.deepEqual(alphabet.map(l => l.wordId), expected);
+  for (const [i, l] of alphabet.entries()) {
+    assert.equal(l.upper, String.fromCharCode(65 + i));
+    assert.equal(l.lower, l.upper.toLowerCase());
+    assert.ok(!wordMap.has(l.audioId));
+    const audio = readFileSync(new URL(audioSources[l.audioId], import.meta.url));
+    assert.ok(audio.length > 1000 && audio.subarray(0,40).includes(Buffer.from('ftyp')));
+  }
+});
+test('scene sessions preserve source, scope, return position and answered feedback', () => {
+  const raw = { ...sampleSession(), source: 'scene', sceneId: 'supermarket', categoryId: 'scene:supermarket', sceneScroll: 520 };
+  const restored = validateSession(raw);
+  assert.equal(restored.sceneId, 'supermarket');
+  assert.equal(restored.sceneScroll, 520);
+  assert.equal(restored.answered, true);
+  assert.equal(restored.chosen, 'pear');
+  assert.equal(restored.correct, 0);
+  assert.equal(validateSession({...raw, source:'retry'}).sceneId, 'supermarket');
+  assert.throws(() => validateSession({...raw, sceneId:'missing'}));
+  assert.throws(() => validateSession({...raw, sceneId:null}));
+  assert.throws(() => validateSession({...raw, sceneId:'bedroom'}));
+  assert.equal(validateSession(sampleSession()).sceneId, null);
+});
+test('a previous scene retry can retain distractors from its full scene with a one-word target pool', () => {
+  const raw={...sampleSession(),source:'retry',sceneId:'supermarket',categoryId:'scene:supermarket',queue:['apple'],pool:['apple']};
+  assert.equal(validateSession(raw).options.length,4);
+  assert.throws(()=>validateSession({...raw,options:['apple','banana','pear','toilet']}));
+});
+test('family relations share progress and chicken food has its own meaning', () => {
+  const family = sceneMap.get('family');
+  const labels = family.groups.flatMap(g => g.items).filter(i => i.wordId === 'grandfather');
+  assert.deepEqual(labels.map(i => i.label), ['爷爷','外公']);
+  assert.equal(wordMap.get('chicken').zh, '鸡');
+  assert.equal(wordMap.get('chicken-meat').zh, '鸡肉');
+  assert.ok(matchesSpelling(wordMap.get('airplane'), 'plane'));
+  assert.ok(matchesSpelling(wordMap.get('grandfather'), 'grandpa'));
+  assert.ok(matchesSpelling(wordMap.get('cinema'), 'cinema'));
+  assert.ok(!matchesSpelling(wordMap.get('me'), 'I'));
+});
+
+const illustrationManifest = JSON.parse(readFileSync(new URL('./illustration-sources.json', import.meta.url)));
+const illustrationReview = JSON.parse(readFileSync(new URL('./illustration-review.json', import.meta.url)));
+test('reviewed Flat illustrations retain pinned, verifiable sources and a local MIT notice', () => {
+  assert.equal(illustrationManifest.revision, '1ffb34c752ecf5d402f04cfb4b392c77f57c54bc');
+  assert.equal(illustrationManifest.license, 'MIT');
+  assert.equal(Object.keys(illustrationManifest.images).length, 322);
+  for (const [id, entry] of Object.entries(illustrationManifest.images)) {
+    assert.ok(wordMap.has(id), id);
+    assert.match(entry.path, /^assets\/.+\/Flat\/.+\.svg$/);
+    assert.ok(!entry.path.includes('..'));
+    assert.ok(entry.bytes > 0 && entry.bytes <= 12000);
+    const svg = readFileSync(new URL(imagePath(wordMap.get(id)), import.meta.url));
+    assert.equal(svg.length, entry.bytes, id);
+    assert.equal(createHash('sha256').update(svg).digest('hex'), entry.sha256, id);
+    assert.doesNotMatch(svg.toString('utf8'), /<script\b|<foreignObject\b|\bon\w+\s*=|(?:href|src)\s*=\s*["'](?:https?:|data:)/i);
+  }
+  const license = readFileSync(new URL('./licenses/fluent-emoji-LICENSE.txt', import.meta.url), 'utf8');
+  assert.ok(license.includes('MIT License') && license.includes('Microsoft Corporation'));
+});
+test('every word has an audited image decision and a current content fingerprint', () => {
+  assert.equal(illustrationReview.entries.length, 526);
+  assert.equal(new Set(illustrationReview.entries.map(r => r.wordId)).size, 526);
+  assert.equal(illustrationReview.entries.filter(r => r.decision === 'replaced').length, 322);
+  assert.equal(illustrationReview.entries.filter(r => r.decision === 'retained').length, 204);
+  let total = 0;
+  for (const row of illustrationReview.entries) {
+    const w = wordMap.get(row.wordId);
+    assert.ok(w && row.reason);
+    const svg = readFileSync(new URL(imagePath(w), import.meta.url));
+    const sha = createHash('sha256').update(svg).digest('hex');
+    assert.equal(sha, row.afterSha256, row.wordId);
+    assert.equal(w.imageKey, sha.slice(0,12), row.wordId);
+    if (row.decision === 'retained') assert.equal(row.beforeSha256, row.afterSha256);
+    else assert.notEqual(row.beforeSha256, row.afterSha256);
+    total += svg.length;
+  }
+  assert.equal(total, illustrationReview.summary.afterBytes);
+  assert.ok(total < 1024 * 1024, 'Keep the complete 526-card SVG collection under 1 MiB');
+});
+test('quiz pictures are deduplicated by actual image content rather than emoji labels', () => {
+  const target = wordMap.get('apple');
+  const duplicate = { ...wordMap.get('pear'), imageKey: target.imageKey, emoji: 'different-label' };
+  const options = quizOptions(target, [target, duplicate], () => 0.5);
+  assert.ok(!options.includes(duplicate));
+  assert.equal(new Set(options.map(w => w.imageKey)).size, 4);
+  assert.equal(wordMap.get('coffee').imageKey, wordMap.get('cup').imageKey);
+  assert.ok(!quizOptions(wordMap.get('cup'), words).some(w => w.id === 'coffee'));
 });

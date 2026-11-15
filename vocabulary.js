@@ -1,3 +1,4 @@
+import { extraCategories, extraWords, aliases } from './scene-content.js';
 // Original bilingual vocabulary. Existing word IDs are retained for progress compatibility.
 export const vocabulary = [
   {
@@ -2999,3 +3000,13 @@ export const vocabulary = [
     ],
   },
 ];
+
+vocabulary.push(...extraCategories);
+for (const word of extraWords) vocabulary.find(c => c.id === word.category).words.push(word);
+for (const word of vocabulary.flatMap(c => c.words)) {
+  const alias = aliases[word.id];
+  if (alias) {
+    word.variants = [...new Set([...(word.variants || []), ...(alias.variants || [])])];
+    word.searchAliases = alias.searchAliases || [];
+  }
+}

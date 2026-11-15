@@ -1,3 +1,7 @@
+import { writeMediaIndex } from './write-media-index.mjs';
+import { fetchReviewedIllustration } from './prepare-illustrations.mjs';
+import { sceneIllustration } from './scene-illustrations.js';
+import { alphabet } from './scenes.js';
 // Content authoring helper: requires macOS say/afconvert. Existing assets are reused.
 import { vocabulary } from './vocabulary.js';
 import { writeFile, mkdir, access } from 'node:fs/promises';
@@ -61,8 +65,10 @@ async function worker() {
       au = new URL(`assets/audio/${w.id}.m4a`, root);
     if (!(await exists(im))) {
       let svg;
-      if (w.emoji.startsWith('custom:'))
-        svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">${w.number !== undefined ? `<rect x="8" y="8" width="84" height="84" rx="18" fill="#6289bc"/><text x="50" y="67" fill="white" font-family="sans-serif" font-weight="bold" text-anchor="middle" font-size="${w.number === 1000 ? 36 : 46}">${w.number}</text>` : custom[w.id]}</svg>`;
+      const reviewed = await fetchReviewedIllustration(w.id);
+      if (reviewed) svg = reviewed.toString('utf8');
+      else if (w.emoji.startsWith('custom:'))
+        svg = sceneIllustration(w.id) || `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">${w.number !== undefined ? `<rect x="8" y="8" width="84" height="84" rx="18" fill="#6289bc"/><text x="50" y="67" fill="white" font-family="sans-serif" font-weight="bold" text-anchor="middle" font-size="${w.number === 1000 ? 36 : 46}">${w.number}</text>` : custom[w.id]}</svg>`;
       else {
         const code = Array.from(w.emoji)
           .filter((c) => w.emoji.includes('\u200d') || c.codePointAt(0) !== 0xfe0f)
@@ -92,12 +98,13 @@ async function worker() {
   }
 }
 await Promise.all(Array.from({ length: 5 }, worker));
-await writeFile(
-  new URL('media.js', root),
-  '// Generated local resource paths. No runtime CDN dependency.\nexport const audioSources=' +
-    JSON.stringify(Object.fromEntries(words.map((w) => [w.id, `assets/audio/${w.id}.m4a`])), null, 2) +
-    ';\nexport const imageSources=' +
-    JSON.stringify(Object.fromEntries(words.map((w) => [w.id, `assets/images/${w.id}.svg`])), null, 2) +
-    ';\n',
-);
-console.log(`All ${words.length} illustrations and pronunciations are ready.`);
+for (const letter of alphabet) {
+  const target = new URL(`assets/audio/${letter.audioId}.m4a`, root);
+  if (await exists(target)) continue;
+  const temp = `${tmpdir()}/little-leaf-${letter.audioId}.aiff`;
+  await exec('say', ['-v', 'Samantha', '-r', '145', '-o', temp, `${letter.upper}.`]);
+  await exec('afconvert', ['-f', 'm4af', '-d', 'aac ', temp, target.pathname]);
+}
+await writeMediaIndex();
+
+console.log(`All ${words.length} words and ${alphabet.length} letter names are ready.`);

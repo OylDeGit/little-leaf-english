@@ -15,6 +15,10 @@ async function coreFiles() {
       'data.js',
       'vocabulary.js',
       'media.js',
+      'dialogues.js',
+      'scene-content.js',
+      'scenes.js',
+      'navigation.js',
       'icon.svg',
       'manifest.webmanifest',
     ]

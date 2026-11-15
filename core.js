@@ -1,3 +1,4 @@
+import { sceneMap } from './scenes.js';
 import { wordMap } from './data.js';
 export const KEY = 'little-leaf:v1';
 export const dayKey = (date = new Date()) =>
@@ -7,7 +8,8 @@ export const emptyState = () => ({
   records: {},
   days: {},
   favorites: [],
-  settings: { goal: 10, rate: 0.85, showChinese: true },
+  contacts: {},
+  settings: { goal: 10, rate: 0.85, showChinese: true, autoNext: false },
   updatedAt: 0,
 });
 export const normalize = (s) =>
@@ -16,6 +18,31 @@ export const normalize = (s) =>
     .toLowerCase()
     .replace(/[.!?]+$/, '')
     .replace(/\s+/g, ' ');
+// Contact is a first encounter, not a correct answer or a mastery event.
+export function contactWord(state, id, now = Date.now()) {
+  if (!wordMap.has(id)) return false;
+  state.contacts ||= {};
+  if (state.contacts[id]) return false;
+  state.contacts[id] = now;
+  state.updatedAt = Math.max(state.updatedAt || 0, now);
+  return true;
+}
+export function learningStats(state) {
+  return {
+    contacted: new Set([...Object.keys(state.contacts || {}), ...Object.keys(state.records)]).size,
+    practiced: Object.keys(state.records).length,
+    mastered: Object.values(state.records).filter(r => r.level >= 3).length,
+  };
+}
+export function lessonWords(state, pool, now = Date.now()) {
+  const unique = [...new Map(pool.map(w => [w.id, w])).values()];
+  const due = unique.filter(w => state.records[w.id]?.due <= now)
+    .sort((a,b) => state.records[a.id].due - state.records[b.id].due);
+  const touched = unique.filter(w => state.contacts?.[w.id] && !state.records[w.id]);
+  const fresh = unique.filter(w => !state.contacts?.[w.id] && !state.records[w.id]);
+  const later = unique.filter(w => state.records[w.id]?.due > now);
+  return [...due, ...touched, ...fresh, ...later].slice(0, 5);
+}
 export function answer(state, id, correct, now = Date.now()) {
   if (!wordMap.has(id)) throw Error('Unknown word');
   const old = state.records[id] || { seen: 0, correct: 0, wrong: 0, level: 0 };
@@ -86,6 +113,13 @@ export function validateBackup(input) {
     if (!validDay(day) || !Number.isSafeInteger(n) || n < 0 || n > 100000) throw Error('每日记录无效');
     s.days[day] = n;
   }
+  if (input.contacts != null && (typeof input.contacts !== 'object' || Array.isArray(input.contacts)))
+    throw Error('接触记录无效');
+  for (const [id, at] of Object.entries(input.contacts || {})) {
+    if (!wordMap.has(id)) continue;
+    if (!Number.isSafeInteger(at) || at <= 0 || at > 4102444800000) throw Error('接触记录无效');
+    s.contacts[id] = at;
+  }
   s.favorites = Array.isArray(input.favorites)
     ? [...new Set(input.favorites.filter((id) => wordMap.has(id)))]
     : [];
@@ -93,6 +127,7 @@ export function validateBackup(input) {
     if ([5, 10, 15, 20].includes(input.settings.goal)) s.settings.goal = input.settings.goal;
     if ([0.7, 0.85, 1].includes(input.settings.rate)) s.settings.rate = input.settings.rate;
     if (typeof input.settings.showChinese === 'boolean') s.settings.showChinese = input.settings.showChinese;
+    if (typeof input.settings.autoNext === 'boolean') s.settings.autoNext = input.settings.autoNext;
   }
   s.updatedAt = Number.isSafeInteger(input.updatedAt) && input.updatedAt >= 0 ? input.updatedAt : 0;
   return s;
@@ -104,6 +139,9 @@ export function mergeBackup(current, incoming) {
     if (!s.records[id] || r.updatedAt > s.records[id].updatedAt) s.records[id] = r;
   for (const [day, n] of Object.entries(other.days)) s.days[day] = Math.max(s.days[day] || 0, n);
   s.favorites = [...new Set([...s.favorites, ...other.favorites])];
+  s.contacts ||= {};
+  for (const [id, at] of Object.entries(other.contacts))
+    s.contacts[id] = s.contacts[id] ? Math.min(s.contacts[id], at) : at;
   s.updatedAt = Math.max(s.updatedAt, other.updatedAt);
   return s;
 }
@@ -136,21 +174,21 @@ export function shuffle(items, rng = Math.random) {
 export function matchesSpelling(word, text) {
   return [word.word, ...(word.variants || [])].some((v) => normalize(v) === normalize(text));
 }
-export function quizOptions(target, pool, rng = Math.random) {
+export function quizOptions(target, pool, rng = Math.random, strictPool = false) {
   const prohibited = new Set([target.word, ...(target.variants || [])].map(normalize));
-  const unique = new Set([target.emoji]);
+  const unique = new Set([target.imageKey || target.emoji]);
   const acceptable = (w) =>
     w.id !== target.id &&
     !prohibited.has(normalize(w.word)) &&
     !(w.variants || []).some((v) => prohibited.has(normalize(v)));
   const candidates = [
     ...shuffle(pool.filter(acceptable), rng),
-    ...shuffle([...wordMap.values()].filter(acceptable), rng),
+    ...(strictPool ? [] : shuffle([...wordMap.values()].filter(acceptable), rng)),
   ];
   const others = [];
   for (const w of candidates) {
-    if (unique.has(w.emoji)) continue;
-    unique.add(w.emoji);
+    if (unique.has(w.imageKey || w.emoji)) continue;
+    unique.add(w.imageKey || w.emoji);
     others.push(w);
     if (others.length === 3) break;
   }
@@ -165,15 +203,22 @@ export function validateSession(raw) {
     !raw ||
     raw.version !== 1 ||
     !['listen', 'spell'].includes(raw.type) ||
-    !['theme', 'daily', 'due', 'favorites', 'retry'].includes(raw.source)
+    !['theme', 'daily', 'due', 'favorites', 'retry', 'scene', 'lesson'].includes(raw.source)
   )
     throw Error('练习记录无效');
+  if (raw.source === 'scene' && !sceneMap.has(raw.sceneId)) throw Error('场景记录无效');
+  if (raw.sceneId != null && (!sceneMap.has(raw.sceneId) || !Array.isArray(raw.pool) || raw.pool.some(id => !sceneMap.get(raw.sceneId).wordIds.includes(id)))) throw Error('场景词集无效');
   const validIds = (v, max) =>
     Array.isArray(v) &&
     v.length > 0 &&
     v.length <= max &&
     v.every((id) => wordMap.has(id)) &&
     new Set(v).size === v.length;
+  if (raw.lessonIds != null && (!validIds(raw.lessonIds, 5) ||
+    !Array.isArray(raw.pool) || raw.pool.some(id => !raw.lessonIds.includes(id))))
+    throw Error('小课堂词组无效');
+  if (raw.source === 'lesson' && (!raw.lessonIds || raw.queue?.length > 3))
+    throw Error('小课堂练习无效');
   if (
     !validIds(raw.queue, 10) ||
     !validIds(raw.pool, wordMap.size) ||
@@ -196,7 +241,7 @@ export function validateSession(raw) {
   const options = raw.options || [];
   if (
     raw.type === 'listen' &&
-    (!validIds(options, 4) || options.length !== 4 || !options.includes(raw.queue[raw.position]))
+    (!validIds(options, 4) || ((!raw.lessonIds && !raw.sceneId) && options.length !== 4) || !options.includes(raw.queue[raw.position]) || (raw.lessonIds && options.some(id => !raw.lessonIds.includes(id))) || (raw.sceneId && options.some(id => !sceneMap.get(raw.sceneId).wordIds.includes(id))))
   )
     throw Error('选项无效');
   const lastCorrect = raw.answered ? results.at(-1).correct : undefined;
@@ -204,6 +249,9 @@ export function validateSession(raw) {
     version: 1,
     type: raw.type,
     source: raw.source,
+    sceneId: raw.sceneId || null,
+    sceneScroll: Number.isFinite(raw.sceneScroll) && raw.sceneScroll >= 0 ? Math.min(raw.sceneScroll, 100000) : 0,
+    lessonIds: raw.lessonIds || null,
     queue: raw.queue,
     pool: raw.pool,
     categoryId: typeof raw.categoryId === 'string' ? raw.categoryId : null,

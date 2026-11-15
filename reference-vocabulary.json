@@ -1,0 +1,2538 @@
+{
+  "notes": [
+    "仅收录主页面可清晰辨认的教学标注；不推测裁切的客厅左侧标注，不将侧边目录标签作为该页词汇。",
+    "字母表的示例词用于认识字母；hourglass 等词不作为规则自然拼读例子。",
+    "family 中 I 为展示与搜索别名，me 为宾格词条；二者不作为拼写变体。"
+  ],
+  "entries": [
+    {
+      "photo": 1,
+      "sceneId": "clothes",
+      "group": "包包与配饰",
+      "originalEnglish": "backpack",
+      "originalChinese": "书包",
+      "wordId": "backpack",
+      "english": "backpack"
+    },
+    {
+      "photo": 1,
+      "sceneId": "clothes",
+      "group": "包包与配饰",
+      "originalEnglish": "handbag",
+      "originalChinese": "手提包",
+      "wordId": "handbag",
+      "english": "handbag"
+    },
+    {
+      "photo": 1,
+      "sceneId": "clothes",
+      "group": "包包与配饰",
+      "originalEnglish": "hat",
+      "originalChinese": "帽子",
+      "wordId": "hat",
+      "english": "hat"
+    },
+    {
+      "photo": 1,
+      "sceneId": "clothes",
+      "group": "包包与配饰",
+      "originalEnglish": "mittens",
+      "originalChinese": "连指手套",
+      "wordId": "mittens",
+      "english": "mittens"
+    },
+    {
+      "photo": 1,
+      "sceneId": "clothes",
+      "group": "包包与配饰",
+      "originalEnglish": "scarf",
+      "originalChinese": "围巾",
+      "wordId": "scarf",
+      "english": "scarf"
+    },
+    {
+      "photo": 1,
+      "sceneId": "clothes",
+      "group": "衣橱",
+      "originalEnglish": "vest",
+      "originalChinese": "背心",
+      "wordId": "vest",
+      "english": "tank top"
+    },
+    {
+      "photo": 1,
+      "sceneId": "clothes",
+      "group": "衣橱",
+      "originalEnglish": "shirt",
+      "originalChinese": "衬衫",
+      "wordId": "shirt",
+      "english": "shirt"
+    },
+    {
+      "photo": 1,
+      "sceneId": "clothes",
+      "group": "衣橱",
+      "originalEnglish": "T-shirt",
+      "originalChinese": "T恤",
+      "wordId": "t-shirt",
+      "english": "T-shirt"
+    },
+    {
+      "photo": 1,
+      "sceneId": "clothes",
+      "group": "衣橱",
+      "originalEnglish": "dress",
+      "originalChinese": "连衣裙",
+      "wordId": "dress",
+      "english": "dress"
+    },
+    {
+      "photo": 1,
+      "sceneId": "clothes",
+      "group": "衣橱",
+      "originalEnglish": "pants",
+      "originalChinese": "长裤",
+      "wordId": "pants",
+      "english": "pants"
+    },
+    {
+      "photo": 1,
+      "sceneId": "clothes",
+      "group": "衣橱",
+      "originalEnglish": "jeans",
+      "originalChinese": "牛仔裤",
+      "wordId": "jeans",
+      "english": "jeans"
+    },
+    {
+      "photo": 1,
+      "sceneId": "clothes",
+      "group": "衣橱",
+      "originalEnglish": "skirt",
+      "originalChinese": "裙子",
+      "wordId": "skirt",
+      "english": "skirt"
+    },
+    {
+      "photo": 1,
+      "sceneId": "clothes",
+      "group": "衣橱",
+      "originalEnglish": "sweater",
+      "originalChinese": "毛衣",
+      "wordId": "sweater",
+      "english": "sweater"
+    },
+    {
+      "photo": 1,
+      "sceneId": "clothes",
+      "group": "衣橱",
+      "originalEnglish": "coat",
+      "originalChinese": "外套",
+      "wordId": "coat",
+      "english": "coat"
+    },
+    {
+      "photo": 1,
+      "sceneId": "clothes",
+      "group": "衣橱",
+      "originalEnglish": "shorts",
+      "originalChinese": "短裤",
+      "wordId": "shorts",
+      "english": "shorts"
+    },
+    {
+      "photo": 1,
+      "sceneId": "clothes",
+      "group": "衣橱",
+      "originalEnglish": "underpants",
+      "originalChinese": "内裤",
+      "wordId": "underpants",
+      "english": "underpants"
+    },
+    {
+      "photo": 1,
+      "sceneId": "clothes",
+      "group": "衣橱",
+      "originalEnglish": "socks",
+      "originalChinese": "袜子",
+      "wordId": "socks",
+      "english": "socks"
+    },
+    {
+      "photo": 1,
+      "sceneId": "clothes",
+      "group": "鞋架",
+      "originalEnglish": "boots",
+      "originalChinese": "靴子",
+      "wordId": "boots",
+      "english": "boots"
+    },
+    {
+      "photo": 1,
+      "sceneId": "clothes",
+      "group": "鞋架",
+      "originalEnglish": "sneakers",
+      "originalChinese": "运动鞋",
+      "wordId": "sneakers",
+      "english": "sneakers"
+    },
+    {
+      "photo": 1,
+      "sceneId": "clothes",
+      "group": "鞋架",
+      "originalEnglish": "leather shoes",
+      "originalChinese": "皮鞋",
+      "wordId": "leather-shoes",
+      "english": "leather shoes"
+    },
+    {
+      "photo": 1,
+      "sceneId": "clothes",
+      "group": "鞋架",
+      "originalEnglish": "sandals",
+      "originalChinese": "凉鞋",
+      "wordId": "sandals",
+      "english": "sandals"
+    },
+    {
+      "photo": 1,
+      "sceneId": "clothes",
+      "group": "鞋架",
+      "originalEnglish": "rain boots",
+      "originalChinese": "雨靴",
+      "wordId": "rain-boots",
+      "english": "rain boots"
+    },
+    {
+      "photo": 2,
+      "sceneId": "living-room",
+      "group": "电视墙",
+      "originalEnglish": "television",
+      "originalChinese": "电视",
+      "wordId": "television",
+      "english": "television"
+    },
+    {
+      "photo": 2,
+      "sceneId": "living-room",
+      "group": "电视墙",
+      "originalEnglish": "clock",
+      "originalChinese": "时钟",
+      "wordId": "clock",
+      "english": "clock"
+    },
+    {
+      "photo": 2,
+      "sceneId": "living-room",
+      "group": "电视墙",
+      "originalEnglish": "photo",
+      "originalChinese": "照片",
+      "wordId": "photo",
+      "english": "photo"
+    },
+    {
+      "photo": 2,
+      "sceneId": "living-room",
+      "group": "电视墙",
+      "originalEnglish": "decoration",
+      "originalChinese": "装饰品",
+      "wordId": "decoration",
+      "english": "decoration"
+    },
+    {
+      "photo": 2,
+      "sceneId": "living-room",
+      "group": "电视墙",
+      "originalEnglish": "socket",
+      "originalChinese": "插座",
+      "wordId": "socket",
+      "english": "socket"
+    },
+    {
+      "photo": 2,
+      "sceneId": "living-room",
+      "group": "电视墙",
+      "originalEnglish": "charger",
+      "originalChinese": "充电器",
+      "wordId": "charger",
+      "english": "charger"
+    },
+    {
+      "photo": 2,
+      "sceneId": "living-room",
+      "group": "电视墙",
+      "originalEnglish": "wall",
+      "originalChinese": "墙壁",
+      "wordId": "wall",
+      "english": "wall"
+    },
+    {
+      "photo": 2,
+      "sceneId": "living-room",
+      "group": "沙发与茶几",
+      "originalEnglish": "sofa",
+      "originalChinese": "沙发",
+      "wordId": "sofa",
+      "english": "sofa"
+    },
+    {
+      "photo": 2,
+      "sceneId": "living-room",
+      "group": "沙发与茶几",
+      "originalEnglish": "cushion",
+      "originalChinese": "靠垫",
+      "wordId": "cushion",
+      "english": "cushion"
+    },
+    {
+      "photo": 2,
+      "sceneId": "living-room",
+      "group": "沙发与茶几",
+      "originalEnglish": "table",
+      "originalChinese": "桌子",
+      "wordId": "table",
+      "english": "table"
+    },
+    {
+      "photo": 2,
+      "sceneId": "living-room",
+      "group": "沙发与茶几",
+      "originalEnglish": "tissue",
+      "originalChinese": "纸巾",
+      "wordId": "tissue",
+      "english": "tissue"
+    },
+    {
+      "photo": 2,
+      "sceneId": "living-room",
+      "group": "沙发与茶几",
+      "originalEnglish": "cell phone",
+      "originalChinese": "手机",
+      "wordId": "cell-phone",
+      "english": "cell phone"
+    },
+    {
+      "photo": 2,
+      "sceneId": "living-room",
+      "group": "沙发与茶几",
+      "originalEnglish": "remote control",
+      "originalChinese": "遥控器",
+      "wordId": "remote-control",
+      "english": "remote control"
+    },
+    {
+      "photo": 2,
+      "sceneId": "living-room",
+      "group": "房间一角",
+      "originalEnglish": "plant",
+      "originalChinese": "植物",
+      "wordId": "plant",
+      "english": "plant"
+    },
+    {
+      "photo": 2,
+      "sceneId": "living-room",
+      "group": "房间一角",
+      "originalEnglish": "floor lamp",
+      "originalChinese": "落地灯",
+      "wordId": "floor-lamp",
+      "english": "floor lamp"
+    },
+    {
+      "photo": 2,
+      "sceneId": "living-room",
+      "group": "房间一角",
+      "originalEnglish": "floor",
+      "originalChinese": "地板",
+      "wordId": "floor",
+      "english": "floor"
+    },
+    {
+      "photo": 2,
+      "sceneId": "living-room",
+      "group": "房间一角",
+      "originalEnglish": "sweeping robot",
+      "originalChinese": "扫地机器人",
+      "wordId": "robot-vacuum",
+      "english": "robot vacuum"
+    },
+    {
+      "photo": 2,
+      "sceneId": "living-room",
+      "group": "房间一角",
+      "originalEnglish": "shoe cabinet",
+      "originalChinese": "鞋柜",
+      "wordId": "shoe-cabinet",
+      "english": "shoe cabinet"
+    },
+    {
+      "photo": 2,
+      "sceneId": "living-room",
+      "group": "房间一角",
+      "originalEnglish": "trash can",
+      "originalChinese": "垃圾桶",
+      "wordId": "trash-can",
+      "english": "trash can"
+    },
+    {
+      "photo": 3,
+      "sceneId": "vehicles",
+      "group": "海陆空出行",
+      "originalEnglish": "ship",
+      "originalChinese": "轮船",
+      "wordId": "ship",
+      "english": "ship"
+    },
+    {
+      "photo": 3,
+      "sceneId": "vehicles",
+      "group": "海陆空出行",
+      "originalEnglish": "plane",
+      "originalChinese": "飞机",
+      "wordId": "airplane",
+      "english": "airplane"
+    },
+    {
+      "photo": 3,
+      "sceneId": "vehicles",
+      "group": "海陆空出行",
+      "originalEnglish": "high-speed train",
+      "originalChinese": "高速列车",
+      "wordId": "high-speed-train",
+      "english": "high-speed train"
+    },
+    {
+      "photo": 3,
+      "sceneId": "vehicles",
+      "group": "海陆空出行",
+      "originalEnglish": "car",
+      "originalChinese": "汽车",
+      "wordId": "car",
+      "english": "car"
+    },
+    {
+      "photo": 3,
+      "sceneId": "vehicles",
+      "group": "海陆空出行",
+      "originalEnglish": "jeep",
+      "originalChinese": "吉普车",
+      "wordId": "jeep",
+      "english": "jeep"
+    },
+    {
+      "photo": 3,
+      "sceneId": "vehicles",
+      "group": "海陆空出行",
+      "originalEnglish": "taxi",
+      "originalChinese": "出租车",
+      "wordId": "taxi",
+      "english": "taxi"
+    },
+    {
+      "photo": 3,
+      "sceneId": "vehicles",
+      "group": "海陆空出行",
+      "originalEnglish": "bus",
+      "originalChinese": "公交车",
+      "wordId": "bus",
+      "english": "bus"
+    },
+    {
+      "photo": 3,
+      "sceneId": "vehicles",
+      "group": "海陆空出行",
+      "originalEnglish": "school bus",
+      "originalChinese": "校车",
+      "wordId": "school-bus",
+      "english": "school bus"
+    },
+    {
+      "photo": 3,
+      "sceneId": "vehicles",
+      "group": "海陆空出行",
+      "originalEnglish": "subway",
+      "originalChinese": "地铁",
+      "wordId": "subway",
+      "english": "subway"
+    },
+    {
+      "photo": 3,
+      "sceneId": "vehicles",
+      "group": "海陆空出行",
+      "originalEnglish": "bicycle",
+      "originalChinese": "自行车",
+      "wordId": "bicycle",
+      "english": "bicycle"
+    },
+    {
+      "photo": 3,
+      "sceneId": "vehicles",
+      "group": "海陆空出行",
+      "originalEnglish": "electric scooter",
+      "originalChinese": "电动车",
+      "wordId": "electric-scooter",
+      "english": "electric scooter"
+    },
+    {
+      "photo": 3,
+      "sceneId": "vehicles",
+      "group": "海陆空出行",
+      "originalEnglish": "van",
+      "originalChinese": "面包车",
+      "wordId": "van",
+      "english": "van"
+    },
+    {
+      "photo": 3,
+      "sceneId": "vehicles",
+      "group": "城市服务",
+      "originalEnglish": "ambulance",
+      "originalChinese": "救护车",
+      "wordId": "ambulance",
+      "english": "ambulance"
+    },
+    {
+      "photo": 3,
+      "sceneId": "vehicles",
+      "group": "城市服务",
+      "originalEnglish": "police car",
+      "originalChinese": "警车",
+      "wordId": "police-car",
+      "english": "police car"
+    },
+    {
+      "photo": 3,
+      "sceneId": "vehicles",
+      "group": "城市服务",
+      "originalEnglish": "fire engine",
+      "originalChinese": "消防车",
+      "wordId": "fire-engine",
+      "english": "fire engine"
+    },
+    {
+      "photo": 3,
+      "sceneId": "vehicles",
+      "group": "城市服务",
+      "originalEnglish": "cargo van",
+      "originalChinese": "货车",
+      "wordId": "cargo-van",
+      "english": "cargo van"
+    },
+    {
+      "photo": 3,
+      "sceneId": "vehicles",
+      "group": "城市服务",
+      "originalEnglish": "truck",
+      "originalChinese": "卡车",
+      "wordId": "truck",
+      "english": "truck"
+    },
+    {
+      "photo": 3,
+      "sceneId": "vehicles",
+      "group": "城市服务",
+      "originalEnglish": "cash truck",
+      "originalChinese": "运钞车",
+      "wordId": "cash-truck",
+      "english": "armored truck"
+    },
+    {
+      "photo": 3,
+      "sceneId": "vehicles",
+      "group": "城市服务",
+      "originalEnglish": "water truck",
+      "originalChinese": "洒水车",
+      "wordId": "water-truck",
+      "english": "water truck"
+    },
+    {
+      "photo": 3,
+      "sceneId": "vehicles",
+      "group": "城市服务",
+      "originalEnglish": "garbage truck",
+      "originalChinese": "垃圾车",
+      "wordId": "garbage-truck",
+      "english": "garbage truck"
+    },
+    {
+      "photo": 3,
+      "sceneId": "vehicles",
+      "group": "建筑工地",
+      "originalEnglish": "road roller",
+      "originalChinese": "压路机",
+      "wordId": "road-roller",
+      "english": "road roller"
+    },
+    {
+      "photo": 3,
+      "sceneId": "vehicles",
+      "group": "建筑工地",
+      "originalEnglish": "dump truck",
+      "originalChinese": "翻斗车",
+      "wordId": "dump-truck",
+      "english": "dump truck"
+    },
+    {
+      "photo": 3,
+      "sceneId": "vehicles",
+      "group": "建筑工地",
+      "originalEnglish": "bulldozer",
+      "originalChinese": "推土机",
+      "wordId": "bulldozer",
+      "english": "bulldozer"
+    },
+    {
+      "photo": 3,
+      "sceneId": "vehicles",
+      "group": "建筑工地",
+      "originalEnglish": "digger",
+      "originalChinese": "挖掘机",
+      "wordId": "excavator",
+      "english": "excavator"
+    },
+    {
+      "photo": 3,
+      "sceneId": "vehicles",
+      "group": "建筑工地",
+      "originalEnglish": "concrete mixer truck",
+      "originalChinese": "混凝土搅拌车",
+      "wordId": "concrete-mixer-truck",
+      "english": "concrete mixer truck"
+    },
+    {
+      "photo": 4,
+      "sceneId": "supermarket",
+      "group": "蔬菜货架",
+      "originalEnglish": "eggplant",
+      "originalChinese": "茄子",
+      "wordId": "eggplant",
+      "english": "eggplant"
+    },
+    {
+      "photo": 4,
+      "sceneId": "supermarket",
+      "group": "蔬菜货架",
+      "originalEnglish": "broccoli",
+      "originalChinese": "西兰花",
+      "wordId": "broccoli",
+      "english": "broccoli"
+    },
+    {
+      "photo": 4,
+      "sceneId": "supermarket",
+      "group": "蔬菜货架",
+      "originalEnglish": "garlic",
+      "originalChinese": "大蒜",
+      "wordId": "garlic",
+      "english": "garlic"
+    },
+    {
+      "photo": 4,
+      "sceneId": "supermarket",
+      "group": "蔬菜货架",
+      "originalEnglish": "green onion",
+      "originalChinese": "大葱",
+      "wordId": "green-onion",
+      "english": "green onion"
+    },
+    {
+      "photo": 4,
+      "sceneId": "supermarket",
+      "group": "蔬菜货架",
+      "originalEnglish": "corn",
+      "originalChinese": "玉米",
+      "wordId": "corn",
+      "english": "corn"
+    },
+    {
+      "photo": 4,
+      "sceneId": "supermarket",
+      "group": "蔬菜货架",
+      "originalEnglish": "carrot",
+      "originalChinese": "胡萝卜",
+      "wordId": "carrot",
+      "english": "carrot"
+    },
+    {
+      "photo": 4,
+      "sceneId": "supermarket",
+      "group": "蔬菜货架",
+      "originalEnglish": "tomato",
+      "originalChinese": "番茄",
+      "wordId": "tomato",
+      "english": "tomato"
+    },
+    {
+      "photo": 4,
+      "sceneId": "supermarket",
+      "group": "蔬菜货架",
+      "originalEnglish": "potato",
+      "originalChinese": "土豆",
+      "wordId": "potato",
+      "english": "potato"
+    },
+    {
+      "photo": 4,
+      "sceneId": "supermarket",
+      "group": "蔬菜货架",
+      "originalEnglish": "chili",
+      "originalChinese": "辣椒",
+      "wordId": "chili",
+      "english": "chili pepper"
+    },
+    {
+      "photo": 4,
+      "sceneId": "supermarket",
+      "group": "蔬菜货架",
+      "originalEnglish": "ginger",
+      "originalChinese": "姜",
+      "wordId": "ginger",
+      "english": "ginger"
+    },
+    {
+      "photo": 4,
+      "sceneId": "supermarket",
+      "group": "蔬菜货架",
+      "originalEnglish": "onion",
+      "originalChinese": "洋葱",
+      "wordId": "onion",
+      "english": "onion"
+    },
+    {
+      "photo": 4,
+      "sceneId": "supermarket",
+      "group": "蔬菜货架",
+      "originalEnglish": "cabbage",
+      "originalChinese": "卷心菜",
+      "wordId": "cabbage",
+      "english": "cabbage"
+    },
+    {
+      "photo": 4,
+      "sceneId": "supermarket",
+      "group": "蔬菜货架",
+      "originalEnglish": "bamboo shoot",
+      "originalChinese": "竹笋",
+      "wordId": "bamboo-shoot",
+      "english": "bamboo shoot"
+    },
+    {
+      "photo": 4,
+      "sceneId": "supermarket",
+      "group": "水果货架",
+      "originalEnglish": "blueberry",
+      "originalChinese": "蓝莓",
+      "wordId": "blueberry",
+      "english": "blueberry"
+    },
+    {
+      "photo": 4,
+      "sceneId": "supermarket",
+      "group": "水果货架",
+      "originalEnglish": "strawberry",
+      "originalChinese": "草莓",
+      "wordId": "strawberry",
+      "english": "strawberry"
+    },
+    {
+      "photo": 4,
+      "sceneId": "supermarket",
+      "group": "水果货架",
+      "originalEnglish": "lemon",
+      "originalChinese": "柠檬",
+      "wordId": "lemon",
+      "english": "lemon"
+    },
+    {
+      "photo": 4,
+      "sceneId": "supermarket",
+      "group": "水果货架",
+      "originalEnglish": "grape",
+      "originalChinese": "葡萄",
+      "wordId": "grape",
+      "english": "grape"
+    },
+    {
+      "photo": 4,
+      "sceneId": "supermarket",
+      "group": "水果货架",
+      "originalEnglish": "cherry",
+      "originalChinese": "樱桃",
+      "wordId": "cherry",
+      "english": "cherry"
+    },
+    {
+      "photo": 4,
+      "sceneId": "supermarket",
+      "group": "水果货架",
+      "originalEnglish": "pear",
+      "originalChinese": "梨",
+      "wordId": "pear",
+      "english": "pear"
+    },
+    {
+      "photo": 4,
+      "sceneId": "supermarket",
+      "group": "水果货架",
+      "originalEnglish": "peach",
+      "originalChinese": "桃子",
+      "wordId": "peach",
+      "english": "peach"
+    },
+    {
+      "photo": 4,
+      "sceneId": "supermarket",
+      "group": "水果货架",
+      "originalEnglish": "coconut",
+      "originalChinese": "椰子",
+      "wordId": "coconut",
+      "english": "coconut"
+    },
+    {
+      "photo": 4,
+      "sceneId": "supermarket",
+      "group": "水果货架",
+      "originalEnglish": "pineapple",
+      "originalChinese": "菠萝",
+      "wordId": "pineapple",
+      "english": "pineapple"
+    },
+    {
+      "photo": 4,
+      "sceneId": "supermarket",
+      "group": "水果货架",
+      "originalEnglish": "durian",
+      "originalChinese": "榴梿（榴莲）",
+      "wordId": "durian",
+      "english": "durian"
+    },
+    {
+      "photo": 4,
+      "sceneId": "supermarket",
+      "group": "水果货架",
+      "originalEnglish": "mango",
+      "originalChinese": "杧果（芒果）",
+      "wordId": "mango",
+      "english": "mango"
+    },
+    {
+      "photo": 4,
+      "sceneId": "supermarket",
+      "group": "挑选水果",
+      "originalEnglish": "apple",
+      "originalChinese": "苹果",
+      "wordId": "apple",
+      "english": "apple"
+    },
+    {
+      "photo": 4,
+      "sceneId": "supermarket",
+      "group": "挑选水果",
+      "originalEnglish": "orange",
+      "originalChinese": "橙子",
+      "wordId": "orange",
+      "english": "orange"
+    },
+    {
+      "photo": 4,
+      "sceneId": "supermarket",
+      "group": "挑选水果",
+      "originalEnglish": "banana",
+      "originalChinese": "香蕉",
+      "wordId": "banana",
+      "english": "banana"
+    },
+    {
+      "photo": 5,
+      "sceneId": "city",
+      "group": "出发去探索",
+      "originalEnglish": "airport",
+      "originalChinese": "机场",
+      "wordId": "airport",
+      "english": "airport"
+    },
+    {
+      "photo": 5,
+      "sceneId": "city",
+      "group": "出发去探索",
+      "originalEnglish": "zoo",
+      "originalChinese": "动物园",
+      "wordId": "zoo",
+      "english": "zoo"
+    },
+    {
+      "photo": 5,
+      "sceneId": "city",
+      "group": "出发去探索",
+      "originalEnglish": "cinema",
+      "originalChinese": "电影院",
+      "wordId": "cinema",
+      "english": "movie theater"
+    },
+    {
+      "photo": 5,
+      "sceneId": "city",
+      "group": "出发去探索",
+      "originalEnglish": "hotel",
+      "originalChinese": "酒店",
+      "wordId": "hotel",
+      "english": "hotel"
+    },
+    {
+      "photo": 5,
+      "sceneId": "city",
+      "group": "出发去探索",
+      "originalEnglish": "museum",
+      "originalChinese": "博物馆",
+      "wordId": "museum",
+      "english": "museum"
+    },
+    {
+      "photo": 5,
+      "sceneId": "city",
+      "group": "出发去探索",
+      "originalEnglish": "library",
+      "originalChinese": "图书馆",
+      "wordId": "library",
+      "english": "library"
+    },
+    {
+      "photo": 5,
+      "sceneId": "city",
+      "group": "出发去探索",
+      "originalEnglish": "bank",
+      "originalChinese": "银行",
+      "wordId": "bank",
+      "english": "bank"
+    },
+    {
+      "photo": 5,
+      "sceneId": "city",
+      "group": "出发去探索",
+      "originalEnglish": "bus stop",
+      "originalChinese": "公共汽车站",
+      "wordId": "bus-stop",
+      "english": "bus stop"
+    },
+    {
+      "photo": 5,
+      "sceneId": "city",
+      "group": "出发去探索",
+      "originalEnglish": "subway station",
+      "originalChinese": "地铁站",
+      "wordId": "subway-station",
+      "english": "subway station"
+    },
+    {
+      "photo": 5,
+      "sceneId": "city",
+      "group": "出发去探索",
+      "originalEnglish": "street",
+      "originalChinese": "街道",
+      "wordId": "street",
+      "english": "street"
+    },
+    {
+      "photo": 5,
+      "sceneId": "city",
+      "group": "城市里的帮助",
+      "originalEnglish": "fire station",
+      "originalChinese": "消防站",
+      "wordId": "fire-station",
+      "english": "fire station"
+    },
+    {
+      "photo": 5,
+      "sceneId": "city",
+      "group": "城市里的帮助",
+      "originalEnglish": "post office",
+      "originalChinese": "邮局",
+      "wordId": "post-office",
+      "english": "post office"
+    },
+    {
+      "photo": 5,
+      "sceneId": "city",
+      "group": "城市里的帮助",
+      "originalEnglish": "police station",
+      "originalChinese": "派出所",
+      "wordId": "police-station",
+      "english": "police station"
+    },
+    {
+      "photo": 5,
+      "sceneId": "city",
+      "group": "一起去生活",
+      "originalEnglish": "park",
+      "originalChinese": "公园",
+      "wordId": "park",
+      "english": "park"
+    },
+    {
+      "photo": 5,
+      "sceneId": "city",
+      "group": "一起去生活",
+      "originalEnglish": "kindergarten",
+      "originalChinese": "幼儿园",
+      "wordId": "kindergarten",
+      "english": "kindergarten"
+    },
+    {
+      "photo": 5,
+      "sceneId": "city",
+      "group": "一起去生活",
+      "originalEnglish": "shopping mall",
+      "originalChinese": "购物中心",
+      "wordId": "shopping-mall",
+      "english": "shopping mall"
+    },
+    {
+      "photo": 5,
+      "sceneId": "city",
+      "group": "一起去生活",
+      "originalEnglish": "restaurant",
+      "originalChinese": "餐厅",
+      "wordId": "restaurant",
+      "english": "restaurant"
+    },
+    {
+      "photo": 5,
+      "sceneId": "city",
+      "group": "一起去生活",
+      "originalEnglish": "supermarket",
+      "originalChinese": "超市",
+      "wordId": "supermarket",
+      "english": "supermarket"
+    },
+    {
+      "photo": 6,
+      "sceneId": "bathroom",
+      "group": "洗澡时间",
+      "originalEnglish": "shower curtain",
+      "originalChinese": "浴帘",
+      "wordId": "shower-curtain",
+      "english": "shower curtain"
+    },
+    {
+      "photo": 6,
+      "sceneId": "bathroom",
+      "group": "洗澡时间",
+      "originalEnglish": "body wash",
+      "originalChinese": "沐浴露",
+      "wordId": "body-wash",
+      "english": "body wash"
+    },
+    {
+      "photo": 6,
+      "sceneId": "bathroom",
+      "group": "洗澡时间",
+      "originalEnglish": "shampoo",
+      "originalChinese": "洗发水",
+      "wordId": "shampoo",
+      "english": "shampoo"
+    },
+    {
+      "photo": 6,
+      "sceneId": "bathroom",
+      "group": "洗澡时间",
+      "originalEnglish": "shower cap",
+      "originalChinese": "浴帽",
+      "wordId": "shower-cap",
+      "english": "shower cap"
+    },
+    {
+      "photo": 6,
+      "sceneId": "bathroom",
+      "group": "洗澡时间",
+      "originalEnglish": "shower head",
+      "originalChinese": "花洒",
+      "wordId": "shower-head",
+      "english": "shower head"
+    },
+    {
+      "photo": 6,
+      "sceneId": "bathroom",
+      "group": "洗澡时间",
+      "originalEnglish": "bathtub",
+      "originalChinese": "浴缸",
+      "wordId": "bathtub",
+      "english": "bathtub"
+    },
+    {
+      "photo": 6,
+      "sceneId": "bathroom",
+      "group": "洗澡时间",
+      "originalEnglish": "bath toy",
+      "originalChinese": "洗澡玩具",
+      "wordId": "bath-toy",
+      "english": "bath toy"
+    },
+    {
+      "photo": 6,
+      "sceneId": "bathroom",
+      "group": "洗澡时间",
+      "originalEnglish": "bath towel",
+      "originalChinese": "浴巾",
+      "wordId": "bath-towel",
+      "english": "bath towel"
+    },
+    {
+      "photo": 6,
+      "sceneId": "bathroom",
+      "group": "洗澡时间",
+      "originalEnglish": "mat",
+      "originalChinese": "地垫",
+      "wordId": "mat",
+      "english": "mat"
+    },
+    {
+      "photo": 6,
+      "sceneId": "bathroom",
+      "group": "洗漱台",
+      "originalEnglish": "mirror",
+      "originalChinese": "镜子",
+      "wordId": "mirror",
+      "english": "mirror"
+    },
+    {
+      "photo": 6,
+      "sceneId": "bathroom",
+      "group": "洗漱台",
+      "originalEnglish": "liquid soap",
+      "originalChinese": "洗手液",
+      "wordId": "liquid-soap",
+      "english": "liquid soap"
+    },
+    {
+      "photo": 6,
+      "sceneId": "bathroom",
+      "group": "洗漱台",
+      "originalEnglish": "faucet",
+      "originalChinese": "水龙头",
+      "wordId": "faucet",
+      "english": "faucet"
+    },
+    {
+      "photo": 6,
+      "sceneId": "bathroom",
+      "group": "洗漱台",
+      "originalEnglish": "toothbrush",
+      "originalChinese": "牙刷",
+      "wordId": "toothbrush",
+      "english": "toothbrush"
+    },
+    {
+      "photo": 6,
+      "sceneId": "bathroom",
+      "group": "洗漱台",
+      "originalEnglish": "toothpaste",
+      "originalChinese": "牙膏",
+      "wordId": "toothpaste",
+      "english": "toothpaste"
+    },
+    {
+      "photo": 6,
+      "sceneId": "bathroom",
+      "group": "洗漱台",
+      "originalEnglish": "soap",
+      "originalChinese": "肥皂",
+      "wordId": "soap",
+      "english": "soap"
+    },
+    {
+      "photo": 6,
+      "sceneId": "bathroom",
+      "group": "洗漱台",
+      "originalEnglish": "sink",
+      "originalChinese": "洗手池",
+      "wordId": "sink",
+      "english": "sink"
+    },
+    {
+      "photo": 6,
+      "sceneId": "bathroom",
+      "group": "洗漱台",
+      "originalEnglish": "hairdryer",
+      "originalChinese": "吹风机",
+      "wordId": "hairdryer",
+      "english": "hair dryer"
+    },
+    {
+      "photo": 6,
+      "sceneId": "bathroom",
+      "group": "洗漱台",
+      "originalEnglish": "comb",
+      "originalChinese": "梳子",
+      "wordId": "comb",
+      "english": "comb"
+    },
+    {
+      "photo": 6,
+      "sceneId": "bathroom",
+      "group": "清洁角",
+      "originalEnglish": "toilet",
+      "originalChinese": "马桶",
+      "wordId": "toilet",
+      "english": "toilet"
+    },
+    {
+      "photo": 6,
+      "sceneId": "bathroom",
+      "group": "清洁角",
+      "originalEnglish": "toilet paper",
+      "originalChinese": "卫生纸",
+      "wordId": "toilet-paper",
+      "english": "toilet paper"
+    },
+    {
+      "photo": 6,
+      "sceneId": "bathroom",
+      "group": "清洁角",
+      "originalEnglish": "toilet brush",
+      "originalChinese": "马桶刷",
+      "wordId": "toilet-brush",
+      "english": "toilet brush"
+    },
+    {
+      "photo": 6,
+      "sceneId": "bathroom",
+      "group": "清洁角",
+      "originalEnglish": "laundry detergent",
+      "originalChinese": "洗衣液",
+      "wordId": "laundry-detergent",
+      "english": "laundry detergent"
+    },
+    {
+      "photo": 6,
+      "sceneId": "bathroom",
+      "group": "清洁角",
+      "originalEnglish": "washing machine",
+      "originalChinese": "洗衣机",
+      "wordId": "washing-machine",
+      "english": "washing machine"
+    },
+    {
+      "photo": 6,
+      "sceneId": "bathroom",
+      "group": "清洁角",
+      "originalEnglish": "laundry basket",
+      "originalChinese": "脏衣篮",
+      "wordId": "laundry-basket",
+      "english": "laundry basket"
+    },
+    {
+      "photo": 7,
+      "sceneId": "bedroom",
+      "group": "暖暖的床",
+      "originalEnglish": "bed",
+      "originalChinese": "床",
+      "wordId": "bed",
+      "english": "bed"
+    },
+    {
+      "photo": 7,
+      "sceneId": "bedroom",
+      "group": "暖暖的床",
+      "originalEnglish": "pillow",
+      "originalChinese": "枕头",
+      "wordId": "pillow",
+      "english": "pillow"
+    },
+    {
+      "photo": 7,
+      "sceneId": "bedroom",
+      "group": "暖暖的床",
+      "originalEnglish": "pajamas",
+      "originalChinese": "睡衣",
+      "wordId": "pajamas",
+      "english": "pajamas"
+    },
+    {
+      "photo": 7,
+      "sceneId": "bedroom",
+      "group": "暖暖的床",
+      "originalEnglish": "quilt",
+      "originalChinese": "被子",
+      "wordId": "quilt",
+      "english": "quilt"
+    },
+    {
+      "photo": 7,
+      "sceneId": "bedroom",
+      "group": "暖暖的床",
+      "originalEnglish": "sheet",
+      "originalChinese": "床单",
+      "wordId": "sheet",
+      "english": "sheet"
+    },
+    {
+      "photo": 7,
+      "sceneId": "bedroom",
+      "group": "暖暖的床",
+      "originalEnglish": "alarm clock",
+      "originalChinese": "闹钟",
+      "wordId": "alarm-clock",
+      "english": "alarm clock"
+    },
+    {
+      "photo": 7,
+      "sceneId": "bedroom",
+      "group": "暖暖的床",
+      "originalEnglish": "night table",
+      "originalChinese": "床头柜",
+      "wordId": "nightstand",
+      "english": "nightstand"
+    },
+    {
+      "photo": 7,
+      "sceneId": "bedroom",
+      "group": "暖暖的床",
+      "originalEnglish": "slippers",
+      "originalChinese": "拖鞋",
+      "wordId": "slippers",
+      "english": "slippers"
+    },
+    {
+      "photo": 7,
+      "sceneId": "bedroom",
+      "group": "衣柜与窗边",
+      "originalEnglish": "window",
+      "originalChinese": "窗户",
+      "wordId": "window",
+      "english": "window"
+    },
+    {
+      "photo": 7,
+      "sceneId": "bedroom",
+      "group": "衣柜与窗边",
+      "originalEnglish": "curtain",
+      "originalChinese": "窗帘",
+      "wordId": "curtain",
+      "english": "curtain"
+    },
+    {
+      "photo": 7,
+      "sceneId": "bedroom",
+      "group": "衣柜与窗边",
+      "originalEnglish": "wardrobe",
+      "originalChinese": "衣柜",
+      "wordId": "wardrobe",
+      "english": "wardrobe"
+    },
+    {
+      "photo": 7,
+      "sceneId": "bedroom",
+      "group": "衣柜与窗边",
+      "originalEnglish": "hanger",
+      "originalChinese": "衣架",
+      "wordId": "hanger",
+      "english": "hanger"
+    },
+    {
+      "photo": 7,
+      "sceneId": "bedroom",
+      "group": "衣柜与窗边",
+      "originalEnglish": "clothes",
+      "originalChinese": "衣服",
+      "wordId": "clothing",
+      "english": "clothes"
+    },
+    {
+      "photo": 7,
+      "sceneId": "bedroom",
+      "group": "衣柜与窗边",
+      "originalEnglish": "coat rack",
+      "originalChinese": "衣帽架",
+      "wordId": "coat-rack",
+      "english": "coat rack"
+    },
+    {
+      "photo": 7,
+      "sceneId": "bedroom",
+      "group": "衣柜与窗边",
+      "originalEnglish": "air conditioner",
+      "originalChinese": "空调",
+      "wordId": "air-conditioner",
+      "english": "air conditioner"
+    },
+    {
+      "photo": 7,
+      "sceneId": "bedroom",
+      "group": "小小学习角",
+      "originalEnglish": "table lamp",
+      "originalChinese": "台灯",
+      "wordId": "table-lamp",
+      "english": "table lamp"
+    },
+    {
+      "photo": 7,
+      "sceneId": "bedroom",
+      "group": "小小学习角",
+      "originalEnglish": "chair",
+      "originalChinese": "椅子",
+      "wordId": "chair",
+      "english": "chair"
+    },
+    {
+      "photo": 7,
+      "sceneId": "bedroom",
+      "group": "小小学习角",
+      "originalEnglish": "desk",
+      "originalChinese": "书桌",
+      "wordId": "desk",
+      "english": "desk"
+    },
+    {
+      "photo": 7,
+      "sceneId": "bedroom",
+      "group": "小小学习角",
+      "originalEnglish": "rug",
+      "originalChinese": "小地毯",
+      "wordId": "rug",
+      "english": "rug"
+    },
+    {
+      "photo": 8,
+      "sceneId": "kitchen",
+      "group": "烹饪区",
+      "originalEnglish": "rice cooker",
+      "originalChinese": "电饭锅",
+      "wordId": "rice-cooker",
+      "english": "rice cooker"
+    },
+    {
+      "photo": 8,
+      "sceneId": "kitchen",
+      "group": "烹饪区",
+      "originalEnglish": "microwave oven",
+      "originalChinese": "微波炉",
+      "wordId": "microwave-oven",
+      "english": "microwave oven"
+    },
+    {
+      "photo": 8,
+      "sceneId": "kitchen",
+      "group": "烹饪区",
+      "originalEnglish": "oven",
+      "originalChinese": "烤箱",
+      "wordId": "oven",
+      "english": "oven"
+    },
+    {
+      "photo": 8,
+      "sceneId": "kitchen",
+      "group": "烹饪区",
+      "originalEnglish": "cooker hood",
+      "originalChinese": "抽油烟机",
+      "wordId": "range-hood",
+      "english": "range hood"
+    },
+    {
+      "photo": 8,
+      "sceneId": "kitchen",
+      "group": "烹饪区",
+      "originalEnglish": "gas stove",
+      "originalChinese": "燃气灶",
+      "wordId": "gas-stove",
+      "english": "gas stove"
+    },
+    {
+      "photo": 8,
+      "sceneId": "kitchen",
+      "group": "烹饪区",
+      "originalEnglish": "kettle",
+      "originalChinese": "烧水壶",
+      "wordId": "kettle",
+      "english": "kettle"
+    },
+    {
+      "photo": 8,
+      "sceneId": "kitchen",
+      "group": "烹饪区",
+      "originalEnglish": "pot",
+      "originalChinese": "锅",
+      "wordId": "pot",
+      "english": "pot"
+    },
+    {
+      "photo": 8,
+      "sceneId": "kitchen",
+      "group": "烹饪区",
+      "originalEnglish": "pan",
+      "originalChinese": "平底锅",
+      "wordId": "pan",
+      "english": "pan"
+    },
+    {
+      "photo": 8,
+      "sceneId": "kitchen",
+      "group": "烹饪区",
+      "originalEnglish": "spatula",
+      "originalChinese": "锅铲",
+      "wordId": "spatula",
+      "english": "spatula"
+    },
+    {
+      "photo": 8,
+      "sceneId": "kitchen",
+      "group": "调味与清洗",
+      "originalEnglish": "oil",
+      "originalChinese": "油",
+      "wordId": "oil",
+      "english": "oil"
+    },
+    {
+      "photo": 8,
+      "sceneId": "kitchen",
+      "group": "调味与清洗",
+      "originalEnglish": "salt",
+      "originalChinese": "盐",
+      "wordId": "salt",
+      "english": "salt"
+    },
+    {
+      "photo": 8,
+      "sceneId": "kitchen",
+      "group": "调味与清洗",
+      "originalEnglish": "sugar",
+      "originalChinese": "糖",
+      "wordId": "sugar",
+      "english": "sugar"
+    },
+    {
+      "photo": 8,
+      "sceneId": "kitchen",
+      "group": "调味与清洗",
+      "originalEnglish": "soy sauce",
+      "originalChinese": "酱油",
+      "wordId": "soy-sauce",
+      "english": "soy sauce"
+    },
+    {
+      "photo": 8,
+      "sceneId": "kitchen",
+      "group": "调味与清洗",
+      "originalEnglish": "sponge",
+      "originalChinese": "海绵",
+      "wordId": "sponge",
+      "english": "sponge"
+    },
+    {
+      "photo": 8,
+      "sceneId": "kitchen",
+      "group": "调味与清洗",
+      "originalEnglish": "dish detergent",
+      "originalChinese": "洗洁精",
+      "wordId": "dish-detergent",
+      "english": "dish detergent"
+    },
+    {
+      "photo": 8,
+      "sceneId": "kitchen",
+      "group": "调味与清洗",
+      "originalEnglish": "dishwasher",
+      "originalChinese": "洗碗机",
+      "wordId": "dishwasher",
+      "english": "dishwasher"
+    },
+    {
+      "photo": 8,
+      "sceneId": "kitchen",
+      "group": "调味与清洗",
+      "originalEnglish": "refrigerator",
+      "originalChinese": "冰箱",
+      "wordId": "refrigerator",
+      "english": "refrigerator"
+    },
+    {
+      "photo": 8,
+      "sceneId": "kitchen",
+      "group": "料理台",
+      "originalEnglish": "apron",
+      "originalChinese": "围裙",
+      "wordId": "apron",
+      "english": "apron"
+    },
+    {
+      "photo": 8,
+      "sceneId": "kitchen",
+      "group": "料理台",
+      "originalEnglish": "teapot",
+      "originalChinese": "茶壶",
+      "wordId": "teapot",
+      "english": "teapot"
+    },
+    {
+      "photo": 8,
+      "sceneId": "kitchen",
+      "group": "料理台",
+      "originalEnglish": "cup",
+      "originalChinese": "杯子",
+      "wordId": "cup",
+      "english": "cup"
+    },
+    {
+      "photo": 8,
+      "sceneId": "kitchen",
+      "group": "料理台",
+      "originalEnglish": "kitchen knife",
+      "originalChinese": "菜刀",
+      "wordId": "kitchen-knife",
+      "english": "kitchen knife"
+    },
+    {
+      "photo": 8,
+      "sceneId": "kitchen",
+      "group": "料理台",
+      "originalEnglish": "cutting board",
+      "originalChinese": "砧板",
+      "wordId": "cutting-board",
+      "english": "cutting board"
+    },
+    {
+      "photo": 8,
+      "sceneId": "kitchen",
+      "group": "料理台",
+      "originalEnglish": "blender",
+      "originalChinese": "破壁机",
+      "wordId": "blender",
+      "english": "blender"
+    },
+    {
+      "photo": 9,
+      "sceneId": "family",
+      "group": "爸爸的家人",
+      "originalEnglish": "grandfather/grandpa",
+      "originalChinese": "爷爷",
+      "wordId": "grandfather",
+      "english": "grandfather"
+    },
+    {
+      "photo": 9,
+      "sceneId": "family",
+      "group": "爸爸的家人",
+      "originalEnglish": "grandmother/grandma",
+      "originalChinese": "奶奶",
+      "wordId": "grandmother",
+      "english": "grandmother"
+    },
+    {
+      "photo": 9,
+      "sceneId": "family",
+      "group": "爸爸的家人",
+      "originalEnglish": "grandparents",
+      "originalChinese": "祖父母",
+      "wordId": "grandparents",
+      "english": "grandparents"
+    },
+    {
+      "photo": 9,
+      "sceneId": "family",
+      "group": "爸爸的家人",
+      "originalEnglish": "aunt",
+      "originalChinese": "姑姑",
+      "wordId": "aunt",
+      "english": "aunt"
+    },
+    {
+      "photo": 9,
+      "sceneId": "family",
+      "group": "爸爸的家人",
+      "originalEnglish": "uncle",
+      "originalChinese": "伯伯/叔叔",
+      "wordId": "uncle",
+      "english": "uncle"
+    },
+    {
+      "photo": 9,
+      "sceneId": "family",
+      "group": "妈妈的家人",
+      "originalEnglish": "grandfather/grandpa",
+      "originalChinese": "外公",
+      "wordId": "grandfather",
+      "english": "grandfather"
+    },
+    {
+      "photo": 9,
+      "sceneId": "family",
+      "group": "妈妈的家人",
+      "originalEnglish": "grandmother/grandma",
+      "originalChinese": "外婆",
+      "wordId": "grandmother",
+      "english": "grandmother"
+    },
+    {
+      "photo": 9,
+      "sceneId": "family",
+      "group": "妈妈的家人",
+      "originalEnglish": "grandparents",
+      "originalChinese": "外祖父母",
+      "wordId": "grandparents",
+      "english": "grandparents"
+    },
+    {
+      "photo": 9,
+      "sceneId": "family",
+      "group": "妈妈的家人",
+      "originalEnglish": "uncle",
+      "originalChinese": "舅舅",
+      "wordId": "uncle",
+      "english": "uncle"
+    },
+    {
+      "photo": 9,
+      "sceneId": "family",
+      "group": "妈妈的家人",
+      "originalEnglish": "aunt",
+      "originalChinese": "姨妈",
+      "wordId": "aunt",
+      "english": "aunt"
+    },
+    {
+      "photo": 9,
+      "sceneId": "family",
+      "group": "爸爸和妈妈",
+      "originalEnglish": "father/dad",
+      "originalChinese": "爸爸",
+      "wordId": "father",
+      "english": "father"
+    },
+    {
+      "photo": 9,
+      "sceneId": "family",
+      "group": "爸爸和妈妈",
+      "originalEnglish": "mother/mom",
+      "originalChinese": "妈妈",
+      "wordId": "mother",
+      "english": "mother"
+    },
+    {
+      "photo": 9,
+      "sceneId": "family",
+      "group": "我们一起长大",
+      "originalEnglish": "sister",
+      "originalChinese": "姐姐/妹妹",
+      "wordId": "sister",
+      "english": "sister"
+    },
+    {
+      "photo": 9,
+      "sceneId": "family",
+      "group": "我们一起长大",
+      "originalEnglish": "I/me",
+      "originalChinese": "我",
+      "wordId": "me",
+      "english": "me"
+    },
+    {
+      "photo": 9,
+      "sceneId": "family",
+      "group": "我们一起长大",
+      "originalEnglish": "brother",
+      "originalChinese": "哥哥/弟弟",
+      "wordId": "brother",
+      "english": "brother"
+    },
+    {
+      "photo": 9,
+      "sceneId": "family",
+      "group": "我们一起长大",
+      "originalEnglish": "cousin",
+      "originalChinese": "堂兄弟姐妹",
+      "wordId": "cousin",
+      "english": "cousin"
+    },
+    {
+      "photo": 9,
+      "sceneId": "family",
+      "group": "我们一起长大",
+      "originalEnglish": "cousin",
+      "originalChinese": "表兄弟姐妹",
+      "wordId": "cousin",
+      "english": "cousin"
+    },
+    {
+      "photo": 9,
+      "sceneId": "family",
+      "group": "我们一起长大",
+      "originalEnglish": "pet",
+      "originalChinese": "宠物",
+      "wordId": "pet",
+      "english": "pet"
+    },
+    {
+      "photo": 10,
+      "sceneId": "zoo",
+      "group": "树林里的朋友",
+      "originalEnglish": "koala",
+      "originalChinese": "树袋熊",
+      "wordId": "koala",
+      "english": "koala"
+    },
+    {
+      "photo": 10,
+      "sceneId": "zoo",
+      "group": "树林里的朋友",
+      "originalEnglish": "gorilla",
+      "originalChinese": "大猩猩",
+      "wordId": "gorilla",
+      "english": "gorilla"
+    },
+    {
+      "photo": 10,
+      "sceneId": "zoo",
+      "group": "树林里的朋友",
+      "originalEnglish": "monkey",
+      "originalChinese": "猴子",
+      "wordId": "monkey",
+      "english": "monkey"
+    },
+    {
+      "photo": 10,
+      "sceneId": "zoo",
+      "group": "树林里的朋友",
+      "originalEnglish": "squirrel",
+      "originalChinese": "松鼠",
+      "wordId": "squirrel",
+      "english": "squirrel"
+    },
+    {
+      "photo": 10,
+      "sceneId": "zoo",
+      "group": "树林里的朋友",
+      "originalEnglish": "panda",
+      "originalChinese": "大熊猫",
+      "wordId": "panda",
+      "english": "panda"
+    },
+    {
+      "photo": 10,
+      "sceneId": "zoo",
+      "group": "草原与沙地",
+      "originalEnglish": "kangaroo",
+      "originalChinese": "袋鼠",
+      "wordId": "kangaroo",
+      "english": "kangaroo"
+    },
+    {
+      "photo": 10,
+      "sceneId": "zoo",
+      "group": "草原与沙地",
+      "originalEnglish": "camel",
+      "originalChinese": "骆驼",
+      "wordId": "camel",
+      "english": "camel"
+    },
+    {
+      "photo": 10,
+      "sceneId": "zoo",
+      "group": "草原与沙地",
+      "originalEnglish": "ostrich",
+      "originalChinese": "鸵鸟",
+      "wordId": "ostrich",
+      "english": "ostrich"
+    },
+    {
+      "photo": 10,
+      "sceneId": "zoo",
+      "group": "草原与沙地",
+      "originalEnglish": "giraffe",
+      "originalChinese": "长颈鹿",
+      "wordId": "giraffe",
+      "english": "giraffe"
+    },
+    {
+      "photo": 10,
+      "sceneId": "zoo",
+      "group": "草原与沙地",
+      "originalEnglish": "zebra",
+      "originalChinese": "斑马",
+      "wordId": "zebra",
+      "english": "zebra"
+    },
+    {
+      "photo": 10,
+      "sceneId": "zoo",
+      "group": "草原与沙地",
+      "originalEnglish": "deer",
+      "originalChinese": "鹿",
+      "wordId": "deer",
+      "english": "deer"
+    },
+    {
+      "photo": 10,
+      "sceneId": "zoo",
+      "group": "草原与沙地",
+      "originalEnglish": "alpaca",
+      "originalChinese": "羊驼",
+      "wordId": "alpaca",
+      "english": "alpaca"
+    },
+    {
+      "photo": 10,
+      "sceneId": "zoo",
+      "group": "水边的伙伴",
+      "originalEnglish": "flamingo",
+      "originalChinese": "火烈鸟",
+      "wordId": "flamingo",
+      "english": "flamingo"
+    },
+    {
+      "photo": 10,
+      "sceneId": "zoo",
+      "group": "水边的伙伴",
+      "originalEnglish": "swan",
+      "originalChinese": "天鹅",
+      "wordId": "swan",
+      "english": "swan"
+    },
+    {
+      "photo": 10,
+      "sceneId": "zoo",
+      "group": "水边的伙伴",
+      "originalEnglish": "peacock",
+      "originalChinese": "孔雀",
+      "wordId": "peacock",
+      "english": "peacock"
+    },
+    {
+      "photo": 10,
+      "sceneId": "zoo",
+      "group": "水边的伙伴",
+      "originalEnglish": "hippo",
+      "originalChinese": "河马",
+      "wordId": "hippo",
+      "english": "hippo"
+    },
+    {
+      "photo": 10,
+      "sceneId": "zoo",
+      "group": "水边的伙伴",
+      "originalEnglish": "elephant",
+      "originalChinese": "大象",
+      "wordId": "elephant",
+      "english": "elephant"
+    },
+    {
+      "photo": 10,
+      "sceneId": "zoo",
+      "group": "认识野生动物",
+      "originalEnglish": "wolf",
+      "originalChinese": "狼",
+      "wordId": "wolf",
+      "english": "wolf"
+    },
+    {
+      "photo": 10,
+      "sceneId": "zoo",
+      "group": "认识野生动物",
+      "originalEnglish": "fox",
+      "originalChinese": "狐狸",
+      "wordId": "fox",
+      "english": "fox"
+    },
+    {
+      "photo": 10,
+      "sceneId": "zoo",
+      "group": "认识野生动物",
+      "originalEnglish": "leopard",
+      "originalChinese": "豹",
+      "wordId": "leopard",
+      "english": "leopard"
+    },
+    {
+      "photo": 10,
+      "sceneId": "zoo",
+      "group": "认识野生动物",
+      "originalEnglish": "lion",
+      "originalChinese": "狮子",
+      "wordId": "lion",
+      "english": "lion"
+    },
+    {
+      "photo": 10,
+      "sceneId": "zoo",
+      "group": "认识野生动物",
+      "originalEnglish": "tiger",
+      "originalChinese": "老虎",
+      "wordId": "tiger",
+      "english": "tiger"
+    },
+    {
+      "photo": 11,
+      "sceneId": "farm",
+      "group": "农场小屋",
+      "originalEnglish": "barn",
+      "originalChinese": "谷仓",
+      "wordId": "barn",
+      "english": "barn"
+    },
+    {
+      "photo": 11,
+      "sceneId": "farm",
+      "group": "农场小屋",
+      "originalEnglish": "sheep",
+      "originalChinese": "绵羊",
+      "wordId": "sheep",
+      "english": "sheep"
+    },
+    {
+      "photo": 11,
+      "sceneId": "farm",
+      "group": "农场小屋",
+      "originalEnglish": "rabbit",
+      "originalChinese": "兔子",
+      "wordId": "rabbit",
+      "english": "rabbit"
+    },
+    {
+      "photo": 11,
+      "sceneId": "farm",
+      "group": "农场小屋",
+      "originalEnglish": "fence",
+      "originalChinese": "栅栏",
+      "wordId": "fence",
+      "english": "fence"
+    },
+    {
+      "photo": 11,
+      "sceneId": "farm",
+      "group": "农场小屋",
+      "originalEnglish": "hen",
+      "originalChinese": "母鸡",
+      "wordId": "hen",
+      "english": "hen"
+    },
+    {
+      "photo": 11,
+      "sceneId": "farm",
+      "group": "农场小屋",
+      "originalEnglish": "rooster",
+      "originalChinese": "公鸡",
+      "wordId": "rooster",
+      "english": "rooster"
+    },
+    {
+      "photo": 11,
+      "sceneId": "farm",
+      "group": "农场小屋",
+      "originalEnglish": "chick",
+      "originalChinese": "小鸡",
+      "wordId": "chick",
+      "english": "chick"
+    },
+    {
+      "photo": 11,
+      "sceneId": "farm",
+      "group": "马厩与牧场",
+      "originalEnglish": "cat",
+      "originalChinese": "猫",
+      "wordId": "cat",
+      "english": "cat"
+    },
+    {
+      "photo": 11,
+      "sceneId": "farm",
+      "group": "马厩与牧场",
+      "originalEnglish": "horse",
+      "originalChinese": "马",
+      "wordId": "horse",
+      "english": "horse"
+    },
+    {
+      "photo": 11,
+      "sceneId": "farm",
+      "group": "马厩与牧场",
+      "originalEnglish": "cow",
+      "originalChinese": "奶牛",
+      "wordId": "cow",
+      "english": "cow"
+    },
+    {
+      "photo": 11,
+      "sceneId": "farm",
+      "group": "马厩与牧场",
+      "originalEnglish": "donkey",
+      "originalChinese": "驴",
+      "wordId": "donkey",
+      "english": "donkey"
+    },
+    {
+      "photo": 11,
+      "sceneId": "farm",
+      "group": "马厩与牧场",
+      "originalEnglish": "goat",
+      "originalChinese": "山羊",
+      "wordId": "goat",
+      "english": "goat"
+    },
+    {
+      "photo": 11,
+      "sceneId": "farm",
+      "group": "马厩与牧场",
+      "originalEnglish": "pig",
+      "originalChinese": "猪",
+      "wordId": "pig",
+      "english": "pig"
+    },
+    {
+      "photo": 11,
+      "sceneId": "farm",
+      "group": "马厩与牧场",
+      "originalEnglish": "dog",
+      "originalChinese": "狗",
+      "wordId": "dog",
+      "english": "dog"
+    },
+    {
+      "photo": 11,
+      "sceneId": "farm",
+      "group": "农忙时间",
+      "originalEnglish": "farmer",
+      "originalChinese": "农民",
+      "wordId": "farmer",
+      "english": "farmer"
+    },
+    {
+      "photo": 11,
+      "sceneId": "farm",
+      "group": "农忙时间",
+      "originalEnglish": "tractor",
+      "originalChinese": "拖拉机",
+      "wordId": "tractor",
+      "english": "tractor"
+    },
+    {
+      "photo": 11,
+      "sceneId": "farm",
+      "group": "农忙时间",
+      "originalEnglish": "mower",
+      "originalChinese": "割草机",
+      "wordId": "mower",
+      "english": "lawn mower"
+    },
+    {
+      "photo": 11,
+      "sceneId": "farm",
+      "group": "池塘边",
+      "originalEnglish": "duck",
+      "originalChinese": "鸭子",
+      "wordId": "duck",
+      "english": "duck"
+    },
+    {
+      "photo": 11,
+      "sceneId": "farm",
+      "group": "池塘边",
+      "originalEnglish": "duckling",
+      "originalChinese": "小鸭子",
+      "wordId": "duckling",
+      "english": "duckling"
+    },
+    {
+      "photo": 11,
+      "sceneId": "farm",
+      "group": "池塘边",
+      "originalEnglish": "goose",
+      "originalChinese": "鹅",
+      "wordId": "goose",
+      "english": "goose"
+    },
+    {
+      "photo": 12,
+      "sceneId": "alphabet",
+      "group": "A–G",
+      "originalEnglish": "acorn",
+      "originalChinese": "橡子",
+      "wordId": "acorn",
+      "english": "acorn"
+    },
+    {
+      "photo": 12,
+      "sceneId": "alphabet",
+      "group": "A–G",
+      "originalEnglish": "balloon",
+      "originalChinese": "气球",
+      "wordId": "balloon",
+      "english": "balloon"
+    },
+    {
+      "photo": 12,
+      "sceneId": "alphabet",
+      "group": "A–G",
+      "originalEnglish": "can",
+      "originalChinese": "罐头",
+      "wordId": "can",
+      "english": "can"
+    },
+    {
+      "photo": 12,
+      "sceneId": "alphabet",
+      "group": "A–G",
+      "originalEnglish": "door",
+      "originalChinese": "门",
+      "wordId": "door",
+      "english": "door"
+    },
+    {
+      "photo": 12,
+      "sceneId": "alphabet",
+      "group": "A–G",
+      "originalEnglish": "envelope",
+      "originalChinese": "信封",
+      "wordId": "envelope",
+      "english": "envelope"
+    },
+    {
+      "photo": 12,
+      "sceneId": "alphabet",
+      "group": "A–G",
+      "originalEnglish": "fan",
+      "originalChinese": "扇子",
+      "wordId": "fan",
+      "english": "fan"
+    },
+    {
+      "photo": 12,
+      "sceneId": "alphabet",
+      "group": "A–G",
+      "originalEnglish": "gift",
+      "originalChinese": "礼物",
+      "wordId": "gift",
+      "english": "gift"
+    },
+    {
+      "photo": 12,
+      "sceneId": "alphabet",
+      "group": "H–N",
+      "originalEnglish": "hourglass",
+      "originalChinese": "沙漏",
+      "wordId": "hourglass",
+      "english": "hourglass"
+    },
+    {
+      "photo": 12,
+      "sceneId": "alphabet",
+      "group": "H–N",
+      "originalEnglish": "ice",
+      "originalChinese": "冰块",
+      "wordId": "ice",
+      "english": "ice"
+    },
+    {
+      "photo": 12,
+      "sceneId": "alphabet",
+      "group": "H–N",
+      "originalEnglish": "juice",
+      "originalChinese": "果汁",
+      "wordId": "juice",
+      "english": "juice"
+    },
+    {
+      "photo": 12,
+      "sceneId": "alphabet",
+      "group": "H–N",
+      "originalEnglish": "key",
+      "originalChinese": "钥匙",
+      "wordId": "key",
+      "english": "key"
+    },
+    {
+      "photo": 12,
+      "sceneId": "alphabet",
+      "group": "H–N",
+      "originalEnglish": "lock",
+      "originalChinese": "锁",
+      "wordId": "lock",
+      "english": "lock"
+    },
+    {
+      "photo": 12,
+      "sceneId": "alphabet",
+      "group": "H–N",
+      "originalEnglish": "mop",
+      "originalChinese": "拖把",
+      "wordId": "mop",
+      "english": "mop"
+    },
+    {
+      "photo": 12,
+      "sceneId": "alphabet",
+      "group": "H–N",
+      "originalEnglish": "net",
+      "originalChinese": "网",
+      "wordId": "net",
+      "english": "net"
+    },
+    {
+      "photo": 12,
+      "sceneId": "alphabet",
+      "group": "O–T",
+      "originalEnglish": "owl",
+      "originalChinese": "猫头鹰",
+      "wordId": "owl",
+      "english": "owl"
+    },
+    {
+      "photo": 12,
+      "sceneId": "alphabet",
+      "group": "O–T",
+      "originalEnglish": "pumpkin",
+      "originalChinese": "南瓜",
+      "wordId": "pumpkin",
+      "english": "pumpkin"
+    },
+    {
+      "photo": 12,
+      "sceneId": "alphabet",
+      "group": "O–T",
+      "originalEnglish": "queen",
+      "originalChinese": "女王",
+      "wordId": "queen",
+      "english": "queen"
+    },
+    {
+      "photo": 12,
+      "sceneId": "alphabet",
+      "group": "O–T",
+      "originalEnglish": "ring",
+      "originalChinese": "戒指",
+      "wordId": "ring",
+      "english": "ring"
+    },
+    {
+      "photo": 12,
+      "sceneId": "alphabet",
+      "group": "O–T",
+      "originalEnglish": "sunglasses",
+      "originalChinese": "太阳镜",
+      "wordId": "sunglasses",
+      "english": "sunglasses"
+    },
+    {
+      "photo": 12,
+      "sceneId": "alphabet",
+      "group": "O–T",
+      "originalEnglish": "tea",
+      "originalChinese": "茶",
+      "wordId": "tea",
+      "english": "tea"
+    },
+    {
+      "photo": 12,
+      "sceneId": "alphabet",
+      "group": "U–Z",
+      "originalEnglish": "umbrella",
+      "originalChinese": "雨伞",
+      "wordId": "umbrella",
+      "english": "umbrella"
+    },
+    {
+      "photo": 12,
+      "sceneId": "alphabet",
+      "group": "U–Z",
+      "originalEnglish": "vase",
+      "originalChinese": "花瓶",
+      "wordId": "vase",
+      "english": "vase"
+    },
+    {
+      "photo": 12,
+      "sceneId": "alphabet",
+      "group": "U–Z",
+      "originalEnglish": "watch",
+      "originalChinese": "手表",
+      "wordId": "watch",
+      "english": "watch"
+    },
+    {
+      "photo": 12,
+      "sceneId": "alphabet",
+      "group": "U–Z",
+      "originalEnglish": "X-ray",
+      "originalChinese": "X光照片",
+      "wordId": "x-ray",
+      "english": "X-ray"
+    },
+    {
+      "photo": 12,
+      "sceneId": "alphabet",
+      "group": "U–Z",
+      "originalEnglish": "yo-yo",
+      "originalChinese": "悠悠球",
+      "wordId": "yo-yo",
+      "english": "yo-yo"
+    },
+    {
+      "photo": 12,
+      "sceneId": "alphabet",
+      "group": "U–Z",
+      "originalEnglish": "zipper",
+      "originalChinese": "拉链",
+      "wordId": "zipper",
+      "english": "zipper"
+    },
+    {
+      "photo": 13,
+      "sceneId": "mealtime",
+      "group": "摆好餐具",
+      "originalEnglish": "spoon",
+      "originalChinese": "勺子",
+      "wordId": "spoon",
+      "english": "spoon"
+    },
+    {
+      "photo": 13,
+      "sceneId": "mealtime",
+      "group": "摆好餐具",
+      "originalEnglish": "plate",
+      "originalChinese": "盘子",
+      "wordId": "plate",
+      "english": "plate"
+    },
+    {
+      "photo": 13,
+      "sceneId": "mealtime",
+      "group": "摆好餐具",
+      "originalEnglish": "fork",
+      "originalChinese": "叉子",
+      "wordId": "fork",
+      "english": "fork"
+    },
+    {
+      "photo": 13,
+      "sceneId": "mealtime",
+      "group": "摆好餐具",
+      "originalEnglish": "bowl",
+      "originalChinese": "碗",
+      "wordId": "bowl",
+      "english": "bowl"
+    },
+    {
+      "photo": 13,
+      "sceneId": "mealtime",
+      "group": "摆好餐具",
+      "originalEnglish": "chopsticks",
+      "originalChinese": "筷子",
+      "wordId": "chopsticks",
+      "english": "chopsticks"
+    },
+    {
+      "photo": 13,
+      "sceneId": "mealtime",
+      "group": "今天吃什么",
+      "originalEnglish": "steak",
+      "originalChinese": "牛排",
+      "wordId": "steak",
+      "english": "steak"
+    },
+    {
+      "photo": 13,
+      "sceneId": "mealtime",
+      "group": "今天吃什么",
+      "originalEnglish": "rice",
+      "originalChinese": "米饭",
+      "wordId": "rice",
+      "english": "rice"
+    },
+    {
+      "photo": 13,
+      "sceneId": "mealtime",
+      "group": "今天吃什么",
+      "originalEnglish": "shrimp",
+      "originalChinese": "虾",
+      "wordId": "shrimp",
+      "english": "shrimp"
+    },
+    {
+      "photo": 13,
+      "sceneId": "mealtime",
+      "group": "今天吃什么",
+      "originalEnglish": "chicken",
+      "originalChinese": "鸡肉",
+      "wordId": "chicken-meat",
+      "english": "chicken"
+    },
+    {
+      "photo": 13,
+      "sceneId": "mealtime",
+      "group": "今天吃什么",
+      "originalEnglish": "pork",
+      "originalChinese": "猪肉",
+      "wordId": "pork",
+      "english": "pork"
+    },
+    {
+      "photo": 13,
+      "sceneId": "mealtime",
+      "group": "今天吃什么",
+      "originalEnglish": "crab",
+      "originalChinese": "螃蟹",
+      "wordId": "crab",
+      "english": "crab"
+    },
+    {
+      "photo": 13,
+      "sceneId": "mealtime",
+      "group": "今天吃什么",
+      "originalEnglish": "vegetable",
+      "originalChinese": "蔬菜",
+      "wordId": "vegetable",
+      "english": "vegetable"
+    },
+    {
+      "photo": 13,
+      "sceneId": "mealtime",
+      "group": "今天吃什么",
+      "originalEnglish": "fish",
+      "originalChinese": "鱼",
+      "wordId": "fish",
+      "english": "fish"
+    },
+    {
+      "photo": 13,
+      "sceneId": "mealtime",
+      "group": "今天吃什么",
+      "originalEnglish": "clam",
+      "originalChinese": "蛤蜊",
+      "wordId": "clam",
+      "english": "clam"
+    },
+    {
+      "photo": 13,
+      "sceneId": "mealtime",
+      "group": "热乎乎的饭菜",
+      "originalEnglish": "steamed bread",
+      "originalChinese": "馒头",
+      "wordId": "steamed-bun",
+      "english": "steamed bun"
+    },
+    {
+      "photo": 13,
+      "sceneId": "mealtime",
+      "group": "热乎乎的饭菜",
+      "originalEnglish": "egg",
+      "originalChinese": "鸡蛋",
+      "wordId": "egg",
+      "english": "egg"
+    },
+    {
+      "photo": 13,
+      "sceneId": "mealtime",
+      "group": "热乎乎的饭菜",
+      "originalEnglish": "noodles",
+      "originalChinese": "面条",
+      "wordId": "noodles",
+      "english": "noodles"
+    },
+    {
+      "photo": 13,
+      "sceneId": "mealtime",
+      "group": "热乎乎的饭菜",
+      "originalEnglish": "soup",
+      "originalChinese": "汤",
+      "wordId": "soup",
+      "english": "soup"
+    }
+  ]
+}

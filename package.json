@@ -1,12 +1,13 @@
 {
   "name": "little-leaf-english",
-  "version": "2.6.0",
+  "version": "2.8.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "node build.mjs && python3 -m http.server 4173 --directory dist",
     "test": "node --test test.mjs",
     "build": "node build.mjs && node verify-build.mjs",
+    "prepare:illustrations": "node prepare-illustrations.mjs",
     "prepare:assets": "node prepare-assets.mjs"
   }
 }

@@ -3,7 +3,7 @@ import { vocabulary } from './vocabulary.js';
 import { cp, mkdir, rm, readFile, writeFile, readdir } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 const hash = (bytes) => createHash('sha256').update(bytes).digest('hex').slice(0, 12);
-const modules = ['app.js', 'core.js', 'data.js', 'vocabulary.js', 'media.js', 'dialogues.js'];
+const modules = ['app.js', 'core.js', 'data.js', 'vocabulary.js', 'media.js', 'dialogues.js', 'scene-content.js', 'scenes.js', 'navigation.js'];
 const source = Object.fromEntries(
   await Promise.all(modules.map(async (f) => [f, await readFile(f, 'utf8')])),
 );
@@ -27,7 +27,8 @@ for (const folder of ['images', 'audio'])
       media.push(target);
     }
   }
-const version = hash(JSON.stringify(source) + css + html + workerSource + JSON.stringify([...paths]));
+const notices = await readFile('ATTRIBUTION.md', 'utf8') + await readFile('licenses/fluent-emoji-LICENSE.txt', 'utf8');
+const version = hash(JSON.stringify(source) + css + html + workerSource + notices + JSON.stringify([...paths]));
 for (const file of modules) {
   let text = source[file].replace(
     /from (['"])(\.\/[^'"]+\.js)\1/g,
@@ -66,6 +67,11 @@ for (const file of modules) {
       ) +
       ';\n';
   }
+  if (file === 'media.js') text += '\nexport const imageKeys=' + JSON.stringify(Object.fromEntries(
+    [...paths].filter(([p]) => p.includes('/images/')).map(([p,t]) => [
+      p.split('/').pop().replace(/\.svg$/, ''), t.split('/').pop().slice(0,12),
+    ]),
+  )) + ';\n';
   await writeFile(`dist/${file}`, text);
 }
 await writeFile(
@@ -77,6 +83,7 @@ await writeFile(
 await writeFile('dist/style.css', css);
 for (const file of ['icon.svg', 'manifest.webmanifest', '.nojekyll', 'ATTRIBUTION.md'])
   await cp(file, `dist/${file}`);
+await cp('licenses', 'dist/licenses', { recursive: true });
 const core = [
   './',
   'index.html',
@@ -84,6 +91,8 @@ const core = [
   ...modules.map((f) => `${f}?v=${version}`),
   'icon.svg',
   'manifest.webmanifest',
+  'ATTRIBUTION.md',
+  'licenses/fluent-emoji-LICENSE.txt',
 ];
 await writeFile('dist/offline-assets.json', JSON.stringify([...core, ...media]));
 const worker = workerSource

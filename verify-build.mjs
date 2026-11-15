@@ -14,7 +14,7 @@ for (const word of vocabulary.flatMap((c) => c.words))
     assert.ok(files.includes(file), word.id);
     assert.match(file, /assets\/(images|audio)\/[a-f0-9]{12}\.(svg|m4a)$/);
   }
-for (const file of ['app.js', 'core.js', 'data.js', 'vocabulary.js', 'media.js', 'dialogues.js']) {
+for (const file of ['app.js', 'core.js', 'data.js', 'vocabulary.js', 'media.js', 'dialogues.js', 'scene-content.js', 'scenes.js', 'navigation.js']) {
   const text = await readFile(new URL(file, root), 'utf8');
   for (const m of text.matchAll(/from ['"](.+?)['"]/g)) {
     assert.ok(m[1].endsWith(`?v=${release.version}`), m[1]);
@@ -29,7 +29,7 @@ const sw = await readFile(new URL('sw.js', root), 'utf8');
 assert.ok(sw.includes(`const RELEASE = '${release.version}'`));
 assert.ok(!sw.includes('const CORE_FILES = null;'));
 const dataSize = (await stat(new URL('media.js', root))).size;
-assert.ok(dataSize < 70000);
+assert.ok(dataSize < 100000);
 console.log(
   `Verified build ${release.version}: complete media, versioned module graph, offline manifest and worker.`,
 );
@@ -41,3 +41,18 @@ for (const line of dialogues.flatMap((d) => d.lines)) {
   assert.match(line.audio, /^assets\/audio\/[a-f0-9]{12}\.m4a$/);
   assert.ok(files.includes(line.audio));
 }
+
+const { alphabet, scenes } = await import(new URL(`scenes.js?test=${release.version}`, root));
+assert.equal(scenes.length, 13);
+for (const letter of alphabet) {
+  assert.ok(files.includes(media.audioSources[letter.audioId]), letter.upper);
+}
+
+const notice = await readFile(new URL('licenses/fluent-emoji-LICENSE.txt', root), 'utf8');
+assert.ok(notice.includes('MIT License') && notice.includes('Microsoft Corporation'));
+assert.ok(files.includes('ATTRIBUTION.md'));
+assert.ok(files.includes('licenses/fluent-emoji-LICENSE.txt'));
+for (const word of vocabulary.flatMap(c => c.words)) {
+  assert.equal(media.imageKeys[word.id], media.imageSources[word.id].split('/').pop().slice(0,12));
+}
+assert.ok(!files.includes('illustration-sources.json'), 'Full provenance is authoring metadata, not a runtime dependency');
