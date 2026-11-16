@@ -43,6 +43,7 @@ for (const line of dialogues.flatMap((d) => d.lines)) {
 }
 
 const { alphabet, scenes } = await import(new URL(`scenes.js?test=${release.version}`, root));
+assert.ok(files.includes(media.audioSources.fireworks), 'Celebration sound must work offline');
 assert.equal(scenes.length, 13);
 for (const letter of alphabet) {
   assert.ok(files.includes(media.audioSources[letter.audioId]), letter.upper);

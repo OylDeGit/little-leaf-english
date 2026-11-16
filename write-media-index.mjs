@@ -12,6 +12,7 @@ export async function writeMediaIndex() {
   const audioSources = Object.fromEntries([
     ...words.map(w => [w.id, 'assets/audio/' + w.id + '.m4a']),
     ...alphabet.map(l => [l.audioId, 'assets/audio/' + l.audioId + '.m4a']),
+    ['fireworks', 'assets/audio/fireworks.m4a'],
   ]);
   const imageSources = Object.fromEntries(words.map(w => [w.id, 'assets/images/' + w.id + '.svg']));
   await writeFile(new URL('media.js', import.meta.url),

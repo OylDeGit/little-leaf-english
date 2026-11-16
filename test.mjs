@@ -24,6 +24,13 @@ import {
 } from './core.js';
 import { validateLesson, validateView, routeFor, parseRoute } from './navigation.js';
 
+test('the original fireworks sound is a small local M4A in the authoring media index', () => {
+  assert.equal(audioSources.fireworks,'assets/audio/fireworks.m4a');
+  const clip=readFileSync(new URL(audioSources.fireworks,import.meta.url));
+  assert.ok(clip.length>1000 && clip.length<32768);
+  assert.ok(clip.subarray(0,40).includes(Buffer.from('ftyp')));
+});
+
 test('orange fireworks require a completed ten-question listening round with every answer correct', () => {
   const round={type:'listen',queue:Array(10).fill('apple'),position:10,results:Array.from({length:10},()=>({correct:true}))};
   assert.equal(perfectListeningRound(round),true);

@@ -551,7 +551,8 @@ export const audioSources={
   "letter-w": "assets/audio/letter-w.m4a",
   "letter-x": "assets/audio/letter-x.m4a",
   "letter-y": "assets/audio/letter-y.m4a",
-  "letter-z": "assets/audio/letter-z.m4a"
+  "letter-z": "assets/audio/letter-z.m4a",
+  "fireworks": "assets/audio/fireworks.m4a"
 };
 export const imageSources={
   "apple": "assets/images/apple.svg",

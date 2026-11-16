@@ -130,6 +130,7 @@ function setPlaying(id,playing) {
   });
 }
 function stopMedia() {
+  stopFireworkSound();
   clearTimeout(autoNextTimer); playToken++;
   document.querySelectorAll('.speaking').forEach(node=>{
     node.classList.remove('speaking');node.setAttribute('aria-busy','false');
@@ -153,6 +154,8 @@ function cachedAudio(id) {
 function preloadNearby() {
   if(session&&['listen','spell'].includes(mode))
     session.queue.slice(session.position,session.position+2).forEach(w=>cachedAudio(w.id));
+  if(session?.type==='listen'&&session.queue.length===10&&session.position>=8)
+    cachedAudio('fireworks');
 }
 function recordContact(id) {
   if(!contactWord(state,id)) return;
@@ -542,11 +545,26 @@ function continueQuestion(){
 
 function clearFireworks(){
   clearTimeout(fireworksTimer);
+  stopFireworkSound();
   document.querySelector('.orange-fireworks')?.remove();
+}
+function stopFireworkSound(){
+  document.querySelectorAll('audio.fireworks-audio').forEach(clip=>{clip.pause();clip.remove();});
+}
+function playFireworkSound(){
+  const clip=cachedAudio('fireworks');
+  clip.className='fireworks-audio';clip.hidden=true;clip.volume=.25;
+  clip.currentTime=0;clip.playbackRate=1;
+  clip.onended=()=>clip.remove();
+  document.body.append(clip);
+  clip.play().catch(()=>clip.remove());
 }
 function celebratePerfectRound(){
   clearFireworks();
-  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches || document.hidden) return;
+  if(document.hidden) return;
+  playFireworkSound();
+  fireworksTimer=setTimeout(clearFireworks,3800);
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const layer=document.createElement('div');
   layer.className='orange-fireworks';layer.setAttribute('aria-hidden','true');
   const colors=['#ff8a1c','#ffb347','#ef6c16','#ffd08a'];
@@ -564,7 +582,6 @@ function celebratePerfectRound(){
     layer.append(burst);
   }
   document.body.append(layer);
-  fireworksTimer=setTimeout(clearFireworks,3600);
 }
 
 function scheduleAutoNext() {
@@ -637,7 +654,7 @@ function settings() {
     .map(([v, t]) => `<option value="${v}" ${state.settings.rate === v ? 'selected' : ''}>${t}</option>`)
     .join(
       '',
-    )}</select></label><label class="setting-row"><span>答对后自动下一题<small>默认手动；重听时会等播放结束</small></span><input id="auto-next" type="checkbox" ${state.settings.autoNext?'checked':''}></label><div class="settings-block"><h3>带着小叶子去旅行</h3><p>下载离线学习内容后，场景插图、单词、字母名和生活对话音频可断网使用；例句朗读使用设备语音，是否离线可用由系统决定。</p>${btn('下载 / 更新离线内容', 'offline', 'secondary', 'id="offline-btn"')}<p id="offline-status" role="status"></p><p class="small">手机浏览器菜单可尝试“添加到主屏幕”；安装支持由浏览器决定。</p></div><div class="settings-block"><h3>把成长好好收藏</h3><p>学习进度保存在当前浏览器，不会自动同步。建议定期备份，或用备份换设备。</p><div class="button-row">${btn('导出进度备份', 'export', 'secondary')}<label class="secondary import-label">合并导入备份<input id="import-file" type="file" accept="application/json,.json"></label></div><p class="small">导入按单词保留较新记录，每日次数取较大值，收藏合并。当前学习设置不变。</p></div><div class="settings-block attribution"><p>原创双语词库 · 插图：原创 SVG、<a href="https://github.com/microsoft/fluentui-emoji" target="_blank" rel="noopener">Fluent Emoji</a>（MIT）与 <a href="https://github.com/jdecked/twemoji" target="_blank" rel="noopener">Twemoji</a>（CC BY 4.0）<br>不含广告，无需账号。无需麦克风。<br>词库 ${words.length} 词 · ${categories.length} 主题 · 13 场景 · v2.8.4</p><a href="https://github.com/OylDeGit/little-leaf-english" target="_blank" rel="noopener">查看 GitHub 项目 ↗</a></div>`;
+    )}</select></label><label class="setting-row"><span>答对后自动下一题<small>默认手动；重听时会等播放结束</small></span><input id="auto-next" type="checkbox" ${state.settings.autoNext?'checked':''}></label><div class="settings-block"><h3>带着小叶子去旅行</h3><p>下载离线学习内容后，场景插图、单词、字母名和生活对话音频可断网使用；例句朗读使用设备语音，是否离线可用由系统决定。</p>${btn('下载 / 更新离线内容', 'offline', 'secondary', 'id="offline-btn"')}<p id="offline-status" role="status"></p><p class="small">手机浏览器菜单可尝试“添加到主屏幕”；安装支持由浏览器决定。</p></div><div class="settings-block"><h3>把成长好好收藏</h3><p>学习进度保存在当前浏览器，不会自动同步。建议定期备份，或用备份换设备。</p><div class="button-row">${btn('导出进度备份', 'export', 'secondary')}<label class="secondary import-label">合并导入备份<input id="import-file" type="file" accept="application/json,.json"></label></div><p class="small">导入按单词保留较新记录，每日次数取较大值，收藏合并。当前学习设置不变。</p></div><div class="settings-block attribution"><p>原创双语词库 · 插图：原创 SVG、<a href="https://github.com/microsoft/fluentui-emoji" target="_blank" rel="noopener">Fluent Emoji</a>（MIT）与 <a href="https://github.com/jdecked/twemoji" target="_blank" rel="noopener">Twemoji</a>（CC BY 4.0）<br>不含广告，无需账号。无需麦克风。<br>词库 ${words.length} 词 · ${categories.length} 主题 · 13 场景 · v2.8.5</p><a href="https://github.com/OylDeGit/little-leaf-english" target="_blank" rel="noopener">查看 GitHub 项目 ↗</a></div>`;
   modal.showModal();
 }
 async function offlineDownload() {
