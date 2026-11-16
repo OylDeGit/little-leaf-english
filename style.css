@@ -3397,7 +3397,7 @@ dialog .secondary {
 .word-detail-dialog .button-row { flex-wrap:wrap; }
 .setting-row>span>small { display:block; font-size:12px; font-weight:400; margin-top:7px; }
 .setting-row input[type=checkbox] { width:24px; height:24px; accent-color:#4b7a40; }
-.quiz .feedback { min-height:120px; }
+.quiz:not(.listening-quiz) .feedback { min-height:120px; }
 @media(min-width:901px) { .selected-word-bar { bottom:24px; left:260px; right:32px; } }
 @media(max-width:650px) {
   .start-learning-card { padding:22px; gap:10px; }
@@ -3433,3 +3433,36 @@ dialog .secondary {
   .filter-row .chip { font-size:14px; color:#4f6649; }
   .listen-label { font-size:12px; }
 }
+
+/* Listening: keep the choices and manual continuation in one compact card. */
+.listening-quiz { max-width:620px; padding:20px; scroll-margin-top:80px; }
+.listening-quiz .quiz-top { font-size:13px; color:#52664d; }
+.listening-quiz>.category-progress { margin:8px 0 0; height:5px; }
+.listening-prompt { display:flex; align-items:center; justify-content:space-between; gap:10px; margin:12px 0; }
+.listening-quiz .listening-prompt h2 { margin:0; font-size:21px; line-height:1.4; }
+.listening-quiz .sound-button { min-height:44px; margin:0; padding:8px 12px; font-size:14px; flex-shrink:0; }
+.listening-quiz .quiz-options { max-width:none; gap:10px; }
+.listening-quiz .quiz-option { height:150px; min-height:0; padding:8px 10px; gap:5px; overflow:hidden; }
+.listening-quiz .quiz-option img { width:82px; height:82px; flex-shrink:0; }
+.listening-quiz .quiz-option-label { display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; overflow:hidden; min-height:36px; font-size:13px; line-height:18px; overflow-wrap:anywhere; }
+.listening-quiz .quiz-option[data-action^="answer:"] .quiz-option-label { visibility:hidden; }
+.listening-quiz .listening-feedback { display:flex; align-items:center; justify-content:space-between; gap:10px; position:static; min-height:70px; margin-top:10px; padding:8px 12px; box-shadow:none; text-align:left; }
+.listening-answer { flex:1; min-width:0; }
+.listening-quiz .listening-feedback strong { font-size:14px; line-height:1.4; }
+.listening-quiz .listening-feedback p { font-size:15px; line-height:1.4; margin:2px 0 0; overflow-wrap:anywhere; }
+.listening-quiz .listening-feedback .primary { min-width:88px; width:auto; min-height:44px; padding:8px 12px; font-size:14px; flex-shrink:0; }
+.listening-hint { color:#52664d; font-size:14px; line-height:1.5; }
+@media(max-width:650px) {
+  .listening-quiz { padding:12px; scroll-margin-top:72px; }
+  .listening-prompt { margin:10px 0; gap:6px; }
+  .listening-quiz .listening-prompt h2 { font-size:18px; }
+  .listening-quiz .sound-button { font-size:13px; padding:7px 9px; }
+  .listening-quiz .quiz-options { gap:8px; }
+  .listening-quiz .quiz-option { height:118px; padding:6px; gap:3px; }
+  .listening-quiz .quiz-option img { width:64px; height:64px; }
+  .listening-quiz .quiz-option-label { font-size:12px; line-height:16px; min-height:32px; }
+  .listening-quiz .listening-feedback { min-height:70px; padding:7px 9px; margin-top:8px; gap:8px; }
+}
+
+.listening-quiz .quiz-option-label svg { display:none; }
+.workspace:has(.listening-quiz) { overflow-anchor:none; }
