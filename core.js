@@ -1,6 +1,11 @@
 import { sceneMap } from './scenes.js';
 import { wordMap } from './data.js';
 export const KEY = 'little-leaf:v1';
+export function perfectListeningRound(session) {
+  return session?.type === 'listen' && session.queue?.length === 10 &&
+    session.position === 10 && session.results?.length === 10 &&
+    session.results.every(result => result.correct === true);
+}
 export const dayKey = (date = new Date()) =>
   `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 export const emptyState = () => ({

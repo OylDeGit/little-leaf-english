@@ -8,6 +8,7 @@ import {
   contactWord,
   learningStats,
   lessonWords,
+  perfectListeningRound,
   emptyState,
   validateBackup,
   mergeBackup,
@@ -114,7 +115,7 @@ function save() {
     return false;
   }
 }
-let toastTimer, autoNextTimer;
+let toastTimer, autoNextTimer, fireworksTimer;
 function toast(t, duration = 4000) {
   $('#toast').textContent = t;
   $('#toast').classList.add('visible');
@@ -212,6 +213,7 @@ function nav(n) {
 }
 
 function render() {
+  clearFireworks();
   document.body.classList.toggle('hide-dialogue-chinese', !dialogueChinese);
   document.body.classList.toggle('hide-translations',!state.settings.showChinese);
   document.body.classList.toggle(
@@ -498,7 +500,7 @@ function quizView() {
     if(session.lessonIds) return `<section class="quiz-intro panel lesson-complete"><span class="intro-emoji">🌱</span><h2>这组词，又熟悉一点了！</h2>
       <p>本组 ${session.lessonIds.length} 个词 · 完成 ${session.queue.length} 题 · 答对 ${session.correct} 题</p><p>点读足迹和练习结果都已保存。</p>
       <div class="button-row">${btn('下一小组','lesson-next')}${session.results.some(r=>!r.correct)?btn('再练错题','retry','secondary'):''}${btn('再听这组词','lesson-resume','secondary')}${btn('回到首页','home','text-button')}</div></section>`;
-    return `<section class="quiz-intro panel"><span class="intro-emoji">🌟</span><span class="eyebrow">LITTLE STEPS, BIG DISCOVERIES</span><h2>又长出了一片新叶子！</h2><p>完成 ${session.queue.length} 题 · 答对 ${session.correct} 题</p><div class="result-score">${Math.round((session.correct / session.queue.length) * 100)}<small>%</small></div><p>需要巩固的单词已加入复习安排。</p>${btn('回到首页 ' + icon('arrow'), 'home')}${session.results.some((r) => !r.correct) ? btn('再练错题', 'retry', 'secondary') : ''}${btn('再练一轮', 'begin', 'secondary')}</section>`;
+    return `<section class="quiz-intro panel ${perfectListeningRound(session)?'perfect-round':''}"><span class="intro-emoji">${perfectListeningRound(session)?'✦':'🌟'}</span><span class="eyebrow">LITTLE STEPS, BIG DISCOVERIES</span><h2>${perfectListeningRound(session)?'10 题全对，太棒了！':'又长出了一片新叶子！'}</h2><p>完成 ${session.queue.length} 题 · 答对 ${session.correct} 题</p><div class="result-score">${Math.round((session.correct / session.queue.length) * 100)}<small>%</small></div><p>需要巩固的单词已加入复习安排。</p>${btn('回到首页 ' + icon('arrow'), 'home')}${session.results.some((r) => !r.correct) ? btn('再练错题', 'retry', 'secondary') : ''}${btn('再练一轮', 'begin', 'secondary')}</section>`;
   }
   prepareQuestion();
   const w = session.queue[session.position];
@@ -535,6 +537,34 @@ function continueQuestion(){
   if(session.position<session.queue.length) prepareQuestion();
   else if(session.lessonIds&&activeLesson){activeLesson.completed=true;saveLesson();}
   persistSession();updateQuiz();queueViewSave();playQuestion();
+  if(perfectListeningRound(session)) celebratePerfectRound();
+}
+
+function clearFireworks(){
+  clearTimeout(fireworksTimer);
+  document.querySelector('.orange-fireworks')?.remove();
+}
+function celebratePerfectRound(){
+  clearFireworks();
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches || document.hidden) return;
+  const layer=document.createElement('div');
+  layer.className='orange-fireworks';layer.setAttribute('aria-hidden','true');
+  const colors=['#ff8a1c','#ffb347','#ef6c16','#ffd08a'];
+  const bursts=[[22,32,0],[78,30,450],[50,48,950],[22,60,1450],[80,58,1900]];
+  for(const [x,y,delay] of bursts){
+    const burst=document.createElement('div');
+    burst.className='firework-burst';
+    burst.style.cssText=`left:${x}%;top:${y}%;--delay:${delay}ms`;
+    for(let i=0;i<20;i++){
+      const angle=i*Math.PI*2/20,radius=i%2?82:110;
+      const spark=document.createElement('i');spark.className='firework-spark';
+      spark.style.cssText=`--dx:${Math.round(Math.cos(angle)*radius)}px;--dy:${Math.round(Math.sin(angle)*radius)}px;--spark:${colors[i%colors.length]};--angle:${angle}rad;--spark-delay:${delay+400}ms`;
+      burst.append(spark);
+    }
+    layer.append(burst);
+  }
+  document.body.append(layer);
+  fireworksTimer=setTimeout(clearFireworks,3600);
 }
 
 function scheduleAutoNext() {
@@ -567,7 +597,7 @@ function scheduleAutoNext() {
   }, 1500);
 }
 modal.addEventListener('close', scheduleAutoNext);
-document.addEventListener('visibilitychange',()=>{if(document.hidden) stopMedia();else scheduleAutoNext();});
+document.addEventListener('visibilitychange',()=>{if(document.hidden){stopMedia();clearFireworks();}else scheduleAutoNext();});
 function submitAnswer(id, typed) {
   if (!session || session.answered) return;
   stopMedia();
@@ -607,7 +637,7 @@ function settings() {
     .map(([v, t]) => `<option value="${v}" ${state.settings.rate === v ? 'selected' : ''}>${t}</option>`)
     .join(
       '',
-    )}</select></label><label class="setting-row"><span>答对后自动下一题<small>默认手动；重听时会等播放结束</small></span><input id="auto-next" type="checkbox" ${state.settings.autoNext?'checked':''}></label><div class="settings-block"><h3>带着小叶子去旅行</h3><p>下载离线学习内容后，场景插图、单词、字母名和生活对话音频可断网使用；例句朗读使用设备语音，是否离线可用由系统决定。</p>${btn('下载 / 更新离线内容', 'offline', 'secondary', 'id="offline-btn"')}<p id="offline-status" role="status"></p><p class="small">手机浏览器菜单可尝试“添加到主屏幕”；安装支持由浏览器决定。</p></div><div class="settings-block"><h3>把成长好好收藏</h3><p>学习进度保存在当前浏览器，不会自动同步。建议定期备份，或用备份换设备。</p><div class="button-row">${btn('导出进度备份', 'export', 'secondary')}<label class="secondary import-label">合并导入备份<input id="import-file" type="file" accept="application/json,.json"></label></div><p class="small">导入按单词保留较新记录，每日次数取较大值，收藏合并。当前学习设置不变。</p></div><div class="settings-block attribution"><p>原创双语词库 · 插图：原创 SVG、<a href="https://github.com/microsoft/fluentui-emoji" target="_blank" rel="noopener">Fluent Emoji</a>（MIT）与 <a href="https://github.com/jdecked/twemoji" target="_blank" rel="noopener">Twemoji</a>（CC BY 4.0）<br>不含广告，无需账号。无需麦克风。<br>词库 ${words.length} 词 · ${categories.length} 主题 · 13 场景 · v2.8.3</p><a href="https://github.com/OylDeGit/little-leaf-english" target="_blank" rel="noopener">查看 GitHub 项目 ↗</a></div>`;
+    )}</select></label><label class="setting-row"><span>答对后自动下一题<small>默认手动；重听时会等播放结束</small></span><input id="auto-next" type="checkbox" ${state.settings.autoNext?'checked':''}></label><div class="settings-block"><h3>带着小叶子去旅行</h3><p>下载离线学习内容后，场景插图、单词、字母名和生活对话音频可断网使用；例句朗读使用设备语音，是否离线可用由系统决定。</p>${btn('下载 / 更新离线内容', 'offline', 'secondary', 'id="offline-btn"')}<p id="offline-status" role="status"></p><p class="small">手机浏览器菜单可尝试“添加到主屏幕”；安装支持由浏览器决定。</p></div><div class="settings-block"><h3>把成长好好收藏</h3><p>学习进度保存在当前浏览器，不会自动同步。建议定期备份，或用备份换设备。</p><div class="button-row">${btn('导出进度备份', 'export', 'secondary')}<label class="secondary import-label">合并导入备份<input id="import-file" type="file" accept="application/json,.json"></label></div><p class="small">导入按单词保留较新记录，每日次数取较大值，收藏合并。当前学习设置不变。</p></div><div class="settings-block attribution"><p>原创双语词库 · 插图：原创 SVG、<a href="https://github.com/microsoft/fluentui-emoji" target="_blank" rel="noopener">Fluent Emoji</a>（MIT）与 <a href="https://github.com/jdecked/twemoji" target="_blank" rel="noopener">Twemoji</a>（CC BY 4.0）<br>不含广告，无需账号。无需麦克风。<br>词库 ${words.length} 词 · ${categories.length} 主题 · 13 场景 · v2.8.4</p><a href="https://github.com/OylDeGit/little-leaf-english" target="_blank" rel="noopener">查看 GitHub 项目 ↗</a></div>`;
   modal.showModal();
 }
 async function offlineDownload() {

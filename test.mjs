@@ -20,8 +20,20 @@ import {
   contactWord,
   learningStats,
   lessonWords,
+  perfectListeningRound,
 } from './core.js';
 import { validateLesson, validateView, routeFor, parseRoute } from './navigation.js';
+
+test('orange fireworks require a completed ten-question listening round with every answer correct', () => {
+  const round={type:'listen',queue:Array(10).fill('apple'),position:10,results:Array.from({length:10},()=>({correct:true}))};
+  assert.equal(perfectListeningRound(round),true);
+  assert.equal(perfectListeningRound({...round,position:9}),false);
+  assert.equal(perfectListeningRound({...round,queue:round.queue.slice(0,3),position:3,results:round.results.slice(0,3)}),false);
+  assert.equal(perfectListeningRound({...round,type:'spell'}),false);
+  assert.equal(perfectListeningRound({...round,results:round.results.map((r,i)=>i===9?{correct:false}:r)}),false);
+  assert.equal(perfectListeningRound({...round,results:[]}),false);
+  assert.equal(perfectListeningRound(null),false);
+});
 
 test('first contact is idempotent and never changes scores, review records or daily counts', () => {
   const s = emptyState();
