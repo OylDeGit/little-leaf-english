@@ -4,7 +4,7 @@ export const VIEW_KEY = 'little-leaf:view:v1';
 export const DRAFT_KEY = 'little-leaf:drafts:v1';
 export const LESSON_KEY = 'little-leaf:lesson:v1';
 const pages = ['home', 'themes', 'review', 'progress', 'dialogues'];
-const modes = ['cards', 'scene', 'listen', 'spell', 'sentences', 'lesson'];
+const modes = ['cards', 'scene', 'listen', 'sentences', 'lesson'];
 export function validateLesson(raw) {
   if (!raw || !Array.isArray(raw.ids) || !raw.ids.length || raw.ids.length > 5 ||
     new Set(raw.ids).size !== raw.ids.length || raw.ids.some(id => !wordMap.has(id))) return null;
@@ -31,7 +31,7 @@ export function validateView(raw) {
     scroll: Number.isFinite(raw.scroll) ? Math.max(0,Math.min(100000,raw.scroll)) : 0,
     selectedSceneWord: wordMap.has(raw.selectedSceneWord) ? raw.selectedSceneWord : null,
     lesson: validateLesson(raw.lesson),
-    practice: raw.practice || null,
+    practice: raw.practice?.type === 'spell' ? null : raw.practice || null,
   };
 }
 export function routeFor(view) {

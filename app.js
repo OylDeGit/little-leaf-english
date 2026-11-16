@@ -39,7 +39,10 @@ try {
 let savedSession = null;
 try {
   const raw = localStorage.getItem(SESSION_KEY);
-  if (raw) savedSession = validateSession(JSON.parse(raw));
+  if (raw) {
+    const checked=validateSession(JSON.parse(raw));
+    if(checked.type!=='spell') savedSession=checked;
+  }
 } catch {
   try {
     localStorage.removeItem(SESSION_KEY);
@@ -343,9 +346,9 @@ function wordCard(w) {
 function studyHeading(){return `<div class="study-heading">${btn(icon('back')+'返回学习内容','back-study','text-button')}<h1>${esc(category.name)}</h1></div>`;}
 function modeTabs(){
   const primary=category.sceneId?'scene':'cards';
-  const labels={scene:'场景点读',cards:'词卡',listen:'听音选图',sentences:'例句学习',spell:'拼写'};
+  const labels={scene:'场景点读',cards:'词卡',listen:'听音选图',sentences:'例句学习'};
   const button=id=>btn(labels[id],`mode:${id}`,mode===id?'selected':'',`aria-pressed="${mode===id}"`);
-  const more=['cards','sentences','spell'].filter(id=>id!==primary);
+  const more=['cards','sentences'].filter(id=>id!==primary);
   return `<div class="mode-tabs" role="group" aria-label="学习模式">${button(primary)}${button('listen')}<details class="more-modes" ${more.includes(mode)?'open':''}><summary>更多学习</summary><div>${more.map(button).join('')}</div></details></div>`;
 }
 
@@ -368,6 +371,7 @@ function sentenceCard() {
   return `<section class="reading panel sentence-card" aria-label="例句学习" tabindex="-1"><div class="reading-top"><span>${index + 1} / ${category.words.length}</span><span>把单词放进句子里</span></div>${img(w, 'reading-image')}<h2>${esc(w.zh)}</h2><div class="example sentence-example"><p>${esc(parts.before)}${showAnswer ? `<mark>${esc(parts.target)}</mark>` : '<span class="sentence-gap" aria-label="待补全单词">____</span>'}${esc(parts.after)}</p></div><div class="button-row sentence-controls">${btn(icon('sound') + '听例句', `sentence:${w.id}`, 'primary')}${showAnswer ? btn(icon('sound') + '听单词', `speak:${w.id}`, 'secondary') : ''}</div>${showAnswer ? `<p class="small muted">先听一遍，留意标出的关键词，再试着补全句子。</p>${sentenceFeedback !== null ? `<div class="feedback ${sentenceFeedback.correct ? 'good' : 'retry'}" role="status"><strong>${sentenceFeedback.correct ? '填对了！' : '再看一遍完整例句'}</strong><p>你填写的是：${esc(sentenceFeedback.typed)}</p></div>` : ''}${btn(sentenceFeedback !== null ? '再练一次' : '隐藏关键词，做填空', 'sentence-try', 'secondary')}` : `<form id="sentence-form"><label for="sentence-answer">补全句子里的英文关键词</label><div class="spell-input"><input id="sentence-answer" autocomplete="off" autocapitalize="none" spellcheck="false" enterkeyhint="done" maxlength="100" placeholder="写出图里的英文"><button class="primary">检查答案</button></div></form>`}<p class="small muted">每词本轮首次填空计入复习，重试不重复记分。例句语音使用设备语音。</p><div class="reading-nav">${btn('上一个', 'previous', 'secondary', index === 0 ? 'disabled' : '')}${btn('下一个', 'next', 'secondary', index === category.words.length - 1 ? 'disabled' : '')}</div></section>`;
 }
 function startQuiz(pool, type = 'listen', source = 'theme', config = {}) {
+  if(type==='spell') return; // Temporarily hidden; keep existing progress compatible.
   stopMedia();
   if (!pool.length) {
     toast('这里暂时没有可练习的单词');
@@ -435,7 +439,7 @@ function serializePractice(value=session){
     pool:(value.pool||currentPool()).map(w=>w.id),categoryId:category?.id==='session'?null:category?.id};
 }
 function restorePractice(raw){
-  if(!raw) return null;
+  if(!raw || raw.type==='spell') return null;
   try {
     let checked;
     if(Array.isArray(raw.queue)&&raw.position===raw.queue.length){
@@ -587,7 +591,7 @@ function settings() {
     .map(([v, t]) => `<option value="${v}" ${state.settings.rate === v ? 'selected' : ''}>${t}</option>`)
     .join(
       '',
-    )}</select></label><label class="setting-row"><span>答对后自动下一题<small>默认手动；重听时会等播放结束</small></span><input id="auto-next" type="checkbox" ${state.settings.autoNext?'checked':''}></label><div class="settings-block"><h3>带着小叶子去旅行</h3><p>下载离线学习内容后，场景插图、单词、字母名和生活对话音频可断网使用；例句朗读使用设备语音，是否离线可用由系统决定。</p>${btn('下载 / 更新离线内容', 'offline', 'secondary', 'id="offline-btn"')}<p id="offline-status" role="status"></p><p class="small">手机浏览器菜单可尝试“添加到主屏幕”；安装支持由浏览器决定。</p></div><div class="settings-block"><h3>把成长好好收藏</h3><p>学习进度保存在当前浏览器，不会自动同步。建议定期备份，或用备份换设备。</p><div class="button-row">${btn('导出进度备份', 'export', 'secondary')}<label class="secondary import-label">合并导入备份<input id="import-file" type="file" accept="application/json,.json"></label></div><p class="small">导入按单词保留较新记录，每日次数取较大值，收藏合并。当前学习设置不变。</p></div><div class="settings-block attribution"><p>原创双语词库 · 插图：原创 SVG、<a href="https://github.com/microsoft/fluentui-emoji" target="_blank" rel="noopener">Fluent Emoji</a>（MIT）与 <a href="https://github.com/jdecked/twemoji" target="_blank" rel="noopener">Twemoji</a>（CC BY 4.0）<br>不含广告，无需账号。无需麦克风。<br>词库 ${words.length} 词 · ${categories.length} 主题 · 13 场景 · v2.8.0</p><a href="https://github.com/OylDeGit/little-leaf-english" target="_blank" rel="noopener">查看 GitHub 项目 ↗</a></div>`;
+    )}</select></label><label class="setting-row"><span>答对后自动下一题<small>默认手动；重听时会等播放结束</small></span><input id="auto-next" type="checkbox" ${state.settings.autoNext?'checked':''}></label><div class="settings-block"><h3>带着小叶子去旅行</h3><p>下载离线学习内容后，场景插图、单词、字母名和生活对话音频可断网使用；例句朗读使用设备语音，是否离线可用由系统决定。</p>${btn('下载 / 更新离线内容', 'offline', 'secondary', 'id="offline-btn"')}<p id="offline-status" role="status"></p><p class="small">手机浏览器菜单可尝试“添加到主屏幕”；安装支持由浏览器决定。</p></div><div class="settings-block"><h3>把成长好好收藏</h3><p>学习进度保存在当前浏览器，不会自动同步。建议定期备份，或用备份换设备。</p><div class="button-row">${btn('导出进度备份', 'export', 'secondary')}<label class="secondary import-label">合并导入备份<input id="import-file" type="file" accept="application/json,.json"></label></div><p class="small">导入按单词保留较新记录，每日次数取较大值，收藏合并。当前学习设置不变。</p></div><div class="settings-block attribution"><p>原创双语词库 · 插图：原创 SVG、<a href="https://github.com/microsoft/fluentui-emoji" target="_blank" rel="noopener">Fluent Emoji</a>（MIT）与 <a href="https://github.com/jdecked/twemoji" target="_blank" rel="noopener">Twemoji</a>（CC BY 4.0）<br>不含广告，无需账号。无需麦克风。<br>词库 ${words.length} 词 · ${categories.length} 主题 · 13 场景 · v2.8.1</p><a href="https://github.com/OylDeGit/little-leaf-english" target="_blank" rel="noopener">查看 GitHub 项目 ↗</a></div>`;
   modal.showModal();
 }
 async function offlineDownload() {
@@ -751,6 +755,7 @@ document.addEventListener('click', (e) => {
       state.updatedAt=Date.now();save();updateFavorite(id);
       break;
     case 'mode': {
+      if(id==='spell') break;
       if(mode===id) break;
       stopMedia();
       const raw={categoryId:category?.id==='session'?null:category?.id,sceneId:category?.sceneId,source:category?.sceneId?'scene':category?.practiceSource||'theme',type:id};

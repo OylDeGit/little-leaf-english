@@ -81,6 +81,10 @@ test('lesson and view bookmarks validate context, deduplicate IDs and bound stor
   assert.equal(view.search.length,100);
   assert.equal(view.lesson.ids.length,2);
   assert.equal(validateView({page:'unknown'}),null);
+  const oldSpelling=validateView({page:'themes',sceneId:'supermarket',mode:'spell',practice:{type:'spell'}});
+  assert.equal(oldSpelling.mode,'scene');
+  assert.equal(oldSpelling.practice,null);
+  assert.equal(validateView({page:'themes',categoryId:'fruit',mode:'spell'}).mode,'cards');
 });
 test('known scene, category and list routes round-trip and malformed hashes fall back safely', () => {
   for(const scene of sceneMap.values()){
