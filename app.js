@@ -348,8 +348,8 @@ function modeTabs(){
   const primary=category.sceneId?'scene':'cards';
   const labels={scene:'场景点读',cards:'词卡',listen:'听音选图',sentences:'例句学习'};
   const button=id=>btn(labels[id],`mode:${id}`,mode===id?'selected':'',`aria-pressed="${mode===id}"`);
-  const more=['cards','sentences'].filter(id=>id!==primary);
-  return `<div class="mode-tabs" role="group" aria-label="学习模式">${button(primary)}${button('listen')}<details class="more-modes" ${more.includes(mode)?'open':''}><summary>更多学习</summary><div>${more.map(button).join('')}</div></details></div>`;
+  const modes=[primary,'listen',...['cards','sentences'].filter(id=>id!==primary)];
+  return `<div class="mode-tabs" role="group" aria-label="学习模式">${modes.map(button).join('')}</div>`;
 }
 
 
@@ -591,7 +591,7 @@ function settings() {
     .map(([v, t]) => `<option value="${v}" ${state.settings.rate === v ? 'selected' : ''}>${t}</option>`)
     .join(
       '',
-    )}</select></label><label class="setting-row"><span>答对后自动下一题<small>默认手动；重听时会等播放结束</small></span><input id="auto-next" type="checkbox" ${state.settings.autoNext?'checked':''}></label><div class="settings-block"><h3>带着小叶子去旅行</h3><p>下载离线学习内容后，场景插图、单词、字母名和生活对话音频可断网使用；例句朗读使用设备语音，是否离线可用由系统决定。</p>${btn('下载 / 更新离线内容', 'offline', 'secondary', 'id="offline-btn"')}<p id="offline-status" role="status"></p><p class="small">手机浏览器菜单可尝试“添加到主屏幕”；安装支持由浏览器决定。</p></div><div class="settings-block"><h3>把成长好好收藏</h3><p>学习进度保存在当前浏览器，不会自动同步。建议定期备份，或用备份换设备。</p><div class="button-row">${btn('导出进度备份', 'export', 'secondary')}<label class="secondary import-label">合并导入备份<input id="import-file" type="file" accept="application/json,.json"></label></div><p class="small">导入按单词保留较新记录，每日次数取较大值，收藏合并。当前学习设置不变。</p></div><div class="settings-block attribution"><p>原创双语词库 · 插图：原创 SVG、<a href="https://github.com/microsoft/fluentui-emoji" target="_blank" rel="noopener">Fluent Emoji</a>（MIT）与 <a href="https://github.com/jdecked/twemoji" target="_blank" rel="noopener">Twemoji</a>（CC BY 4.0）<br>不含广告，无需账号。无需麦克风。<br>词库 ${words.length} 词 · ${categories.length} 主题 · 13 场景 · v2.8.1</p><a href="https://github.com/OylDeGit/little-leaf-english" target="_blank" rel="noopener">查看 GitHub 项目 ↗</a></div>`;
+    )}</select></label><label class="setting-row"><span>答对后自动下一题<small>默认手动；重听时会等播放结束</small></span><input id="auto-next" type="checkbox" ${state.settings.autoNext?'checked':''}></label><div class="settings-block"><h3>带着小叶子去旅行</h3><p>下载离线学习内容后，场景插图、单词、字母名和生活对话音频可断网使用；例句朗读使用设备语音，是否离线可用由系统决定。</p>${btn('下载 / 更新离线内容', 'offline', 'secondary', 'id="offline-btn"')}<p id="offline-status" role="status"></p><p class="small">手机浏览器菜单可尝试“添加到主屏幕”；安装支持由浏览器决定。</p></div><div class="settings-block"><h3>把成长好好收藏</h3><p>学习进度保存在当前浏览器，不会自动同步。建议定期备份，或用备份换设备。</p><div class="button-row">${btn('导出进度备份', 'export', 'secondary')}<label class="secondary import-label">合并导入备份<input id="import-file" type="file" accept="application/json,.json"></label></div><p class="small">导入按单词保留较新记录，每日次数取较大值，收藏合并。当前学习设置不变。</p></div><div class="settings-block attribution"><p>原创双语词库 · 插图：原创 SVG、<a href="https://github.com/microsoft/fluentui-emoji" target="_blank" rel="noopener">Fluent Emoji</a>（MIT）与 <a href="https://github.com/jdecked/twemoji" target="_blank" rel="noopener">Twemoji</a>（CC BY 4.0）<br>不含广告，无需账号。无需麦克风。<br>词库 ${words.length} 词 · ${categories.length} 主题 · 13 场景 · v2.8.2</p><a href="https://github.com/OylDeGit/little-leaf-english" target="_blank" rel="noopener">查看 GitHub 项目 ↗</a></div>`;
   modal.showModal();
 }
 async function offlineDownload() {
