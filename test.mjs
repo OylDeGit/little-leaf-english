@@ -68,7 +68,7 @@ test('contact footprints survive backup import and preserve the earliest encount
   assert.equal(merged.contacts.pear, 1794210000000);
   const legacy = emptyState(); delete legacy.contacts; delete legacy.settings.autoNext;
   assert.deepEqual(validateBackup(legacy).contacts, {});
-  assert.equal(validateBackup(legacy).settings.autoNext, false);
+  assert.equal(validateBackup(legacy).settings.autoNext, true);
   assert.throws(()=>validateBackup({...s, contacts:{apple:'yesterday'}}));
   assert.deepEqual(validateBackup({...s, contacts:{missing:1794210000000}}).contacts, {});
 });
@@ -101,9 +101,9 @@ test('lesson and view bookmarks validate context, deduplicate IDs and bound stor
   assert.equal(view.lesson.ids.length,2);
   assert.equal(validateView({page:'unknown'}),null);
   const oldSpelling=validateView({page:'themes',sceneId:'supermarket',mode:'spell',practice:{type:'spell'}});
-  assert.equal(oldSpelling.mode,'scene');
-  assert.equal(oldSpelling.practice,null);
-  assert.equal(validateView({page:'themes',categoryId:'fruit',mode:'spell'}).mode,'cards');
+  assert.equal(oldSpelling.mode,'spell');
+  assert.equal(oldSpelling.practice.type,'spell');
+  assert.equal(validateView({page:'themes',categoryId:'fruit',mode:'spell'}).mode,'spell');
 });
 test('known scene, category and list routes round-trip and malformed hashes fall back safely', () => {
   for(const scene of sceneMap.values()){
@@ -605,4 +605,84 @@ test('quiz pictures are deduplicated by actual image content rather than emoji l
   assert.equal(new Set(options.map(w => w.imageKey)).size, 4);
   assert.equal(wordMap.get('coffee').imageKey, wordMap.get('cup').imageKey);
   assert.ok(!quizOptions(wordMap.get('cup'), words).some(w => w.id === 'coffee'));
+});
+
+// The small daily lesson and rewards share the existing version-1 progress.
+import { dailyPlan, allocateLesson, homeGuide, learningRewards, validateDialogueRound } from './learning.js';
+import { dialogues as learningDialogues } from './dialogues.js';
+test('daily allocation is stable, limited to five across themes, and rolls over by local date',()=>{
+ const s=emptyState(),date=new Date(2026,10,22,23,50),pool=words.slice(0,12);
+ assert.equal(allocateLesson(s,pool.slice(0,2),date).length,2);
+ assert.equal(allocateLesson(s,pool,date).length,3);
+ const ids=[...dailyPlan(s,date).ids];assert.equal(new Set(ids).size,5);
+ assert.deepEqual(allocateLesson(s,words,date),[]);
+ assert.deepEqual(dailyPlan(validateBackup(s),date).ids,ids);
+ assert.equal(dailyPlan(s,new Date(2026,10,23,0,1)).remaining,5);
+ assert.deepEqual(s.records,{});assert.deepEqual(s.days,{});
+});
+test('daily lessons prefer genuinely new words, do not allocate previously contacted words as new',()=>{
+ const s=emptyState(),date=new Date(2026,10,22);
+ contactWord(s,'apple',date.getTime());
+ assert.deepEqual(allocateLesson(s,['apple','pear','banana'].map(id=>wordMap.get(id)),date).map(w=>w.id),['pear','banana']);
+});
+test('home priority respects pending quiz, unfinished lesson, review and daily cap',()=>{
+ const s=emptyState(),now=new Date(2026,10,22),lesson={ids:['apple'],completed:false},pending={type:'listen',position:0,queue:['apple']};
+ assert.equal(homeGuide(s,pending,lesson,false,now).kind,'resume');
+ assert.equal(homeGuide(s,{...pending,type:'spell'},lesson,false,now).kind,'lesson-resume');
+ assert.equal(homeGuide(s,{...pending,type:'spell'},lesson,true,now).kind,'resume');
+ answer(s,'apple',false,now.getTime()-86400000);
+ assert.equal(homeGuide(s,null,null,false,now).kind,'due');
+ s.records={};allocateLesson(s,words,now);
+ assert.equal(homeGuide(s,null,null,false,now).kind,'scene-list');
+});
+test('stars use formal daily counts retroactively, once per day, without streak penalties',()=>{
+ const s=emptyState();s.days={'2026-11-01':3,'2026-11-03':300,'2026-11-22':2};
+ let r=learningRewards(s,new Date(2026,10,22));assert.equal(r.stars,2);assert.equal(r.today,2);assert.equal(r.stickers.filter(v=>v.unlocked).length,1);
+ s.days['2026-11-22']=3;r=learningRewards(s,new Date(2026,10,22));assert.equal(r.stars,3);assert.equal(r.stickers.filter(v=>v.unlocked).length,2);
+ assert.equal(learningRewards(s,new Date(2026,11,1)).stars,3);
+});
+test('new optional progress fields are validated and merge without replacing the current daily assignment',()=>{
+ const a=emptyState(),b=emptyState();a.dailyLessonWords={'2026-11-22':['apple']};b.dailyLessonWords={'2026-11-22':['pear'],'2026-11-21':['banana']};
+ const id=learningDialogues[0].id;a.dialogueCompletions[id]={completedAt:1794210000000,bestCorrect:3};b.dialogueCompletions[id]={completedAt:1794210000100,bestCorrect:1};
+ const merged=mergeBackup(a,b);assert.deepEqual(merged.dailyLessonWords['2026-11-22'],['apple']);assert.deepEqual(merged.dailyLessonWords['2026-11-21'],['banana']);assert.equal(merged.dialogueCompletions[id].bestCorrect,3);
+ for(const bad of [{'2026-02-30':['apple']},{'2026-11-22':['apple','apple']},{'2026-11-22':['missing']},{'2026-11-22':words.slice(0,6).map(w=>w.id)}])assert.throws(()=>validateBackup({...a,dailyLessonWords:bad}));
+ const old=emptyState();delete old.dailyLessonWords;delete old.dialogueCompletions;old.settings.rate=.85;old.settings.autoNext=false;
+ assert.equal(validateBackup(old).settings.rate,.85);assert.equal(validateBackup(old).settings.autoNext,false);assert.deepEqual(validateBackup(old).dailyLessonWords,{});
+ assert.equal(emptyState().settings.rate,1);
+});
+test('dialogue draft validates ordered first answers, canonical options and completion, rejecting corruption',()=>{
+ const d=learningDialogues[0],options=d.lines[1].options;
+ const initial={steps:[0,1,2],position:0,answered:false,chosen:null,options,results:[],correct:99};
+ assert.equal(validateDialogueRound(d.id,initial).correct,0);
+ const answered={...initial,answered:true,chosen:0,results:[{step:0,correct:false}]};assert.equal(validateDialogueRound(d.id,answered).correct,0);
+ assert.equal(validateDialogueRound(d.id,{...answered,results:[]}),null);
+ assert.equal(validateDialogueRound(d.id,{...initial,options:[...options.slice(1),{en:'injected',zh:'bad'}]}),null);
+ assert.equal(validateDialogueRound(d.id,{...initial,steps:[0,0]}),null);
+ const done={...answered,position:3,results:[0,1,2].map(step=>({step,correct:true})),options:d.lines[5].options};assert.equal(validateDialogueRound(d.id,done).step,3);
+});
+
+import { compactM4a } from './compact-m4a.mjs';
+test('M4A compaction preserves AAC payload and patches chunk offsets without another lossy encode',()=>{
+ const atom=(name,data=Buffer.alloc(0))=>{const b=Buffer.alloc(8+data.length);b.writeUInt32BE(b.length);b.write(name,4);data.copy(b,8);return b;};
+ const stcoData=Buffer.alloc(12);stcoData.writeUInt32BE(1,4);
+ const moov=()=>atom('moov',atom('trak',atom('mdia',atom('minf',atom('stbl',atom('stco',stcoData))))));
+ const ftyp=atom('ftyp',Buffer.from('M4A ')),free=atom('free',Buffer.alloc(2048)),payload=Buffer.from([1,3,5,7,9]);
+ stcoData.writeUInt32BE(ftyp.length+moov().length+free.length+8,8);
+ const before=Buffer.concat([ftyp,moov(),free,atom('mdat',payload)]),after=compactM4a(before);
+ assert.equal(after.length,before.length-free.length);
+ const stco=after.indexOf(Buffer.from('stco'));const offset=after.readUInt32BE(stco+12);
+ assert.deepEqual(after.subarray(offset),payload);
+ assert.deepEqual(compactM4a(after),after);
+});
+test('dialogue draft corruption fails safely when a stored option is null',()=>{
+ const d=learningDialogues[0];assert.equal(validateDialogueRound(d.id,{steps:[0],position:0,answered:false,options:[null],results:[]}),null);
+});
+import { recordPracticeAnswer } from './core.js';
+test('gentle correction rounds leave daily counts, first scores and review schedule unchanged, including after draft validation',()=>{
+ const s=emptyState(),now=1794210000000;answer(s,'apple',false,now);const before=structuredClone(s);
+ const raw={version:1,type:'listen',source:'retry',retryOnly:true,queue:['apple'],pool:['apple','pear','banana','grape'],position:0,answered:false,results:[],options:['apple','pear','banana','grape']};
+ const draft=validateSession(raw);assert.equal(draft.retryOnly,true);
+ assert.equal(recordPracticeAnswer(s,draft,'apple',true,now+100),false);assert.deepEqual(s,before);
+ assert.equal(validateSession({...raw,source:'theme'}).retryOnly,false);
+ recordPracticeAnswer(s,{retryOnly:false},'pear',true,now);assert.equal(s.records.pear.seen,1);
 });

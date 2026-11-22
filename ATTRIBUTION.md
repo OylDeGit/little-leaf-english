@@ -4,12 +4,12 @@
 
 - 部分保留的单词插图来自 Twemoji v15.1.0，Copyright Twitter, Inc. and other contributors；由 jdecked/twemoji 维护，采用 CC BY 4.0。来源：https://github.com/jdecked/twemoji/tree/v15.1.0/assets/svg 。许可：https://creativecommons.org/licenses/by/4.0/ 。原图未修改，仅在界面中缩放和旋转；发布时文件名按内容哈希重命名。
 - rectangle、oval、pink、gray、gold、pentagon、hexagon、cube、crescent、eleven、twelve 的 SVG 及网站图标为本项目原创。
-- 340 个词条的中文释义和英文例句由本项目编写，不代表官方考试词表，未经过外部教师逐条审校。
-- 预置单词音频由 macOS Samantha 系统语音合成，不是真人录音；例句朗读使用访问者设备的浏览器语音。
+- 526 个词条的中文释义和英文例句由本项目编写，不代表官方考试词表，未经过外部教师逐条审校。
+- 旧版预置单词音频曾由 macOS Samantha 合成；v3 已全部替换，详见下文。
 
 - 新增的数字图卡，以及 plum、pomegranate、papaya、lime、apricot、radish、peas、eraser、glue、stapler、head、neck、knee、shoulder 的 SVG 为本项目原创。
 
-- 8 组购物和点餐短对话、中文释义及回应选择题为项目原创；48 段预置对话音频使用 macOS Samantha 合成。对话中的价格为教学示例。
+- 8 组购物和点餐短对话、中文释义及回应选择题为项目原创；48 段预置对话音频在旧版使用 macOS Samantha 合成，v3 已全部替换。对话中的价格为教学示例。
 
 ## v2.7 场景内容与新增资源
 
@@ -24,3 +24,11 @@
 - 本次未使用 Mulberry、OpenMoji 或 ARASAAC 的图片。
 - 当前 526 张词卡图片包括：322 张 Fluent Emoji Flat、56 张保留的 Twemoji、148 张本项目原创 SVG。旧版来源记录保留供追溯。
 - illustration-review.json 记录全部 526 个词条的替换或保留决定、原因、字节数和前后哈希。词条 ID、教学文字、发音文件和进度键保持原有定义。
+
+## v3 自然美音
+
+- 526 段单词、526 段例句、26 段字母名和 48 段对话使用 Kokoro-82M v1.0 预生成，共 1126 段。单词、例句和店员使用 af_heart，自然美音；顾客使用 am_fenrir。属于合成语音，不是真人录音，不宣称教师逐条审音。
+- 官方模型：[hexgrad/Kokoro-82M](https://huggingface.co/hexgrad/Kokoro-82M)；制作使用 [onnx-community/Kokoro-82M-v1.0-ONNX](https://huggingface.co/onnx-community/Kokoro-82M-v1.0-ONNX)，Apache 2.0；[完整许可](licenses/kokoro-LICENSE.txt)。推理工具 kokoro-js 1.2.1 同为 Apache 2.0。
+- 制作模型 SHA-256、逐段文本、角色、时长、峰值、文件哈希与编码参数见源码中的 audio-provenance.json；模型和制作工具不随网站下载。
+- 输出 AAC 64 kbps、24 kHz 单声道 M4A，去除容器空白填充但不重新压缩音频；图片仍为轻量 SVG，无外部音频服务和浏览器机械语音回退。
+- 孩子／家长入口、小组学习、温和重试和贴纸激励参考用户指定的句有用项目的产品思路，独立实现于本地网页；未引入其云服务配置、账户或私有资源。

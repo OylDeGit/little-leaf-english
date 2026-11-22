@@ -18,6 +18,7 @@ export async function writeMediaIndex() {
   await writeFile(new URL('media.js', import.meta.url),
     '// Generated local resource paths and image fingerprints. No runtime CDN dependency.\n' +
     'export const audioSources=' + JSON.stringify(audioSources, null, 2) + ';\n' +
+    'export const sentenceSources=' + JSON.stringify(Object.fromEntries(words.map(w=>[w.id,'assets/audio/sentence-'+w.id+'.m4a'])),null,2)+';\n' +
     'export const imageSources=' + JSON.stringify(imageSources, null, 2) + ';\n' +
     'export const imageKeys=' + JSON.stringify(imageKeys, null, 2) + ';\n');
 }

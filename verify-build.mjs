@@ -10,11 +10,11 @@ assert.equal(release.themes, vocabulary.length);
 for (const file of files) await access(new URL(file.split('?')[0] || 'index.html', root));
 const media = await import(new URL(`media.js?test=${release.version}`, root));
 for (const word of vocabulary.flatMap((c) => c.words))
-  for (const file of [media.imageSources[word.id], media.audioSources[word.id]]) {
+  for (const file of [media.imageSources[word.id], media.audioSources[word.id], media.sentenceSources[word.id]]) {
     assert.ok(files.includes(file), word.id);
     assert.match(file, /assets\/(images|audio)\/[a-f0-9]{12}\.(svg|m4a)$/);
   }
-for (const file of ['app.js', 'core.js', 'data.js', 'vocabulary.js', 'media.js', 'dialogues.js', 'scene-content.js', 'scenes.js', 'navigation.js']) {
+for (const file of ['app.js', 'core.js', 'data.js', 'vocabulary.js', 'media.js', 'dialogues.js', 'scene-content.js', 'scenes.js', 'navigation.js', 'learning.js']) {
   const text = await readFile(new URL(file, root), 'utf8');
   for (const m of text.matchAll(/from ['"](.+?)['"]/g)) {
     assert.ok(m[1].endsWith(`?v=${release.version}`), m[1]);
@@ -57,3 +57,11 @@ for (const word of vocabulary.flatMap(c => c.words)) {
   assert.equal(media.imageKeys[word.id], media.imageSources[word.id].split('/').pop().slice(0,12));
 }
 assert.ok(!files.includes('illustration-sources.json'), 'Full provenance is authoring metadata, not a runtime dependency');
+
+const mediaBytes=(await Promise.all(files.filter(f=>f.startsWith('assets/')).map(async f=>(await stat(new URL(f,root))).size))).reduce((a,b)=>a+b,0);
+assert.ok(mediaBytes<=15*1024*1024,`Offline media must stay <=15 MiB; got ${mediaBytes}`);
+const appSource=await readFile(new URL('app.js',root),'utf8');
+assert.ok(!appSource.includes('SpeechSynthesisUtterance'), 'Natural local audio must not fall back to mechanical browser voices');
+assert.ok(!files.some(f=>/onnx|voice-runtime|model_quantized|audio-provenance/.test(f)));
+assert.ok((await readFile(new URL('licenses/kokoro-LICENSE.txt',root),'utf8')).includes('Apache License'));
+console.log(`Offline media ${(mediaBytes/1048576).toFixed(2)} MiB; natural word, sentence, letter and dialogue audio included.`);

@@ -1,10 +1,11 @@
 import { categoryMap, wordMap } from './data.js';
+import { dialogues } from './dialogues.js';
 import { sceneMap } from './scenes.js';
 export const VIEW_KEY = 'little-leaf:view:v1';
 export const DRAFT_KEY = 'little-leaf:drafts:v1';
 export const LESSON_KEY = 'little-leaf:lesson:v1';
-const pages = ['home', 'themes', 'review', 'progress', 'dialogues'];
-const modes = ['cards', 'scene', 'listen', 'sentences', 'lesson'];
+const pages = ['home', 'themes', 'review', 'progress', 'dialogues', 'parent', 'rewards'];
+const modes = ['cards', 'scene', 'listen', 'sentences', 'lesson', 'spell'];
 export function validateLesson(raw) {
   if (!raw || !Array.isArray(raw.ids) || !raw.ids.length || raw.ids.length > 5 ||
     new Set(raw.ids).size !== raw.ids.length || raw.ids.some(id => !wordMap.has(id))) return null;
@@ -21,17 +22,18 @@ export function validateView(raw) {
   const categoryId = categoryMap.has(raw.categoryId) || raw.categoryId === 'session' ? raw.categoryId : null;
   return {
     page: raw.page, sceneId, categoryId,
+    dialogueId: dialogues.some(d=>d.id===raw.dialogueId)?raw.dialogueId:null,
     mode: modes.includes(raw.mode) ? raw.mode : sceneId ? 'scene' : 'cards',
     themeView: raw.themeView === 'scenes' ? 'scenes' : 'topics',
     search: typeof raw.search === 'string' ? raw.search.slice(0,100) : '',
     allSearch: typeof raw.allSearch === 'string' ? raw.allSearch.slice(0,100) : '',
     filter: ['all','new','learned','favorites'].includes(raw.filter) ? raw.filter : 'all',
-    shown: Number.isSafeInteger(raw.shown) ? Math.max(24, Math.min(wordMap.size, raw.shown)) : 24,
+    shown: Number.isSafeInteger(raw.shown) ? Math.max(8, Math.min(wordMap.size, raw.shown)) : 8,
     index: Number.isSafeInteger(raw.index) ? Math.max(0,raw.index) : 0,
     scroll: Number.isFinite(raw.scroll) ? Math.max(0,Math.min(100000,raw.scroll)) : 0,
     selectedSceneWord: wordMap.has(raw.selectedSceneWord) ? raw.selectedSceneWord : null,
     lesson: validateLesson(raw.lesson),
-    practice: raw.practice?.type === 'spell' ? null : raw.practice || null,
+    practice: raw.practice || null,
   };
 }
 export function routeFor(view) {

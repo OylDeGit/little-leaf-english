@@ -19,6 +19,7 @@ async function coreFiles() {
       'scene-content.js',
       'scenes.js',
       'navigation.js',
+      'learning.js',
       'icon.svg',
       'manifest.webmanifest',
     ]
@@ -106,6 +107,10 @@ self.addEventListener('message', (event) => {
           }
         }
         await Promise.all(Array.from({ length: 6 }, worker));
+        // Retire obsolete media only after the entire new offline pack succeeds.
+        const retained=new Set(files.filter(f=>f.startsWith('assets/')).map(url));
+        const mediaCache=await caches.open(MEDIA);
+        for(const request of await mediaCache.keys())if(request.url.startsWith(ROOT.href)&&!retained.has(request.url))await mediaCache.delete(request);
         port.postMessage({ done, total: files.length, finished: true });
       } catch (err) {
         port.postMessage({

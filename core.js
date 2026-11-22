@@ -1,3 +1,4 @@
+import { validateLearningFields, mergeLearningFields } from './learning.js';
 import { sceneMap } from './scenes.js';
 import { wordMap } from './data.js';
 export const KEY = 'little-leaf:v1';
@@ -14,7 +15,9 @@ export const emptyState = () => ({
   days: {},
   favorites: [],
   contacts: {},
-  settings: { goal: 10, rate: 0.85, showChinese: true, autoNext: false },
+  dailyLessonWords: {},
+  dialogueCompletions: {},
+  settings: { goal: 10, rate: 1, showChinese: true, autoNext: true },
   updatedAt: 0,
 });
 export const normalize = (s) =>
@@ -135,6 +138,7 @@ export function validateBackup(input) {
     if (typeof input.settings.autoNext === 'boolean') s.settings.autoNext = input.settings.autoNext;
   }
   s.updatedAt = Number.isSafeInteger(input.updatedAt) && input.updatedAt >= 0 ? input.updatedAt : 0;
+  Object.assign(s, validateLearningFields(input));
   return s;
 }
 export function mergeBackup(current, incoming) {
@@ -147,6 +151,7 @@ export function mergeBackup(current, incoming) {
   s.contacts ||= {};
   for (const [id, at] of Object.entries(other.contacts))
     s.contacts[id] = s.contacts[id] ? Math.min(s.contacts[id], at) : at;
+  Object.assign(s, mergeLearningFields(s, other));
   s.updatedAt = Math.max(s.updatedAt, other.updatedAt);
   return s;
 }
@@ -254,6 +259,7 @@ export function validateSession(raw) {
     version: 1,
     type: raw.type,
     source: raw.source,
+    retryOnly: raw.retryOnly === true && raw.source === 'retry',
     sceneId: raw.sceneId || null,
     sceneScroll: Number.isFinite(raw.sceneScroll) && raw.sceneScroll >= 0 ? Math.min(raw.sceneScroll, 100000) : 0,
     lessonIds: raw.lessonIds || null,
@@ -281,4 +287,10 @@ export function sentenceParts(word) {
     target: word.sentence.slice(at, at + word.word.length),
     after: word.sentence.slice(at + word.word.length),
   };
+}
+
+// Gentle correction rounds provide feedback while preserving formal records.
+export function recordPracticeAnswer(state, session, id, correct, now=Date.now()) {
+  if(session.retryOnly)return false;
+  answer(state,id,correct,now);return true;
 }

@@ -3,7 +3,7 @@ import { vocabulary } from './vocabulary.js';
 import { cp, mkdir, rm, readFile, writeFile, readdir } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 const hash = (bytes) => createHash('sha256').update(bytes).digest('hex').slice(0, 12);
-const modules = ['app.js', 'core.js', 'data.js', 'vocabulary.js', 'media.js', 'dialogues.js', 'scene-content.js', 'scenes.js', 'navigation.js'];
+const modules = ['app.js', 'core.js', 'data.js', 'vocabulary.js', 'media.js', 'dialogues.js', 'scene-content.js', 'scenes.js', 'navigation.js', 'learning.js'];
 const source = Object.fromEntries(
   await Promise.all(modules.map(async (f) => [f, await readFile(f, 'utf8')])),
 );
@@ -27,7 +27,7 @@ for (const folder of ['images', 'audio'])
       media.push(target);
     }
   }
-const notices = await readFile('ATTRIBUTION.md', 'utf8') + await readFile('licenses/fluent-emoji-LICENSE.txt', 'utf8');
+const notices = await readFile('ATTRIBUTION.md', 'utf8') + await readFile('licenses/fluent-emoji-LICENSE.txt','utf8') + await readFile('licenses/kokoro-LICENSE.txt','utf8');
 const version = hash(JSON.stringify(source) + css + html + workerSource + notices + JSON.stringify([...paths]));
 for (const file of modules) {
   let text = source[file].replace(
@@ -41,7 +41,7 @@ for (const file of modules) {
       JSON.stringify(
         Object.fromEntries(
           [...paths]
-            .filter(([p]) => p.includes('/audio/'))
+            .filter(([p]) => p.includes('/audio/')&&!p.includes('/sentence-')&&!p.includes('/dialogue-'))
             .map(([p, t]) => [
               p
                 .split('/')
@@ -51,6 +51,7 @@ for (const file of modules) {
             ]),
         ),
       ) +
+      ';\nexport const sentenceSources='+JSON.stringify(Object.fromEntries([...paths].filter(([p])=>p.includes('/sentence-')).map(([p,t])=>[p.split('/').pop().replace(/^sentence-/, '').replace(/\.m4a$/, ''),t])))+
       ';\nexport const imageSources=' +
       JSON.stringify(
         Object.fromEntries(
@@ -93,6 +94,7 @@ const core = [
   'manifest.webmanifest',
   'ATTRIBUTION.md',
   'licenses/fluent-emoji-LICENSE.txt',
+  'licenses/kokoro-LICENSE.txt',
 ];
 await writeFile('dist/offline-assets.json', JSON.stringify([...core, ...media]));
 const worker = workerSource

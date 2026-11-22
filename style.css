@@ -3490,3 +3490,31 @@ dialog .secondary {
   .orange-fireworks { display:none; }
   .firework-burst::before,.firework-spark { animation:none; }
 }
+
+/* Child-first learning and parent controls. */
+.child-summary,.home-more-links { display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:18px 0; }
+.child-review,.sticker-entry,.parent-gate,.round-summary { padding:24px;margin:20px 0; }
+.parent-gate { text-align:center;max-width:660px;margin:40px auto; }
+.parent-gate .button-row { justify-content:center; }
+.parent-shortcut { width:auto;min-width:48px;padding:0 10px;white-space:nowrap;font-size:13px; }
+#main>.panel:has(h2) { margin-bottom:20px; }
+.sticker-grid { display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:16px;margin:24px 0; }
+.sticker { text-align:center;padding:22px 10px;filter:grayscale(1);opacity:.65; }
+.sticker.unlocked { filter:none;opacity:1;background:#f3f8ed;border-color:#a5bd91; }
+.sticker>span { display:block;font-size:64px;line-height:1.4; }
+.sticker h2 { font-size:18px; }.sticker p { font-size:13px; }
+.round-summary { border-radius:16px;background:#f2f6ed;text-align:left; }
+.round-summary p { overflow-wrap:anywhere; }
+.listening-quiz .quiz-option-label[aria-hidden=true] { visibility:hidden; }
+@media(max-width:700px) {
+  .sticker-grid { grid-template-columns:repeat(2,minmax(0,1fr));gap:12px; }
+  .child-review,.sticker-entry,.parent-gate,.round-summary { padding:18px; }
+  .child-summary .secondary { font-size:13px; }
+  .parent-gate { margin:12px 0; }
+  .parent-gate .button-row { flex-direction:column;align-items:stretch; }
+  .top-meta .parent-shortcut { min-height:40px; }
+  .home-more-links>button { flex:1; }
+  #main>.panel { padding:18px; }
+  .listening-quiz .quiz-option { min-width:0; }
+  .sticker>span { font-size:52px; }
+}
