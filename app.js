@@ -235,8 +235,8 @@ function render() {
       btn(
         icon(i) + t,
         `nav:${id}`,
-        `nav-link ${(page === id || id === 'parent' && page === 'progress') ? 'active' : ''}`,
-        (page === id || id === 'parent' && page === 'progress') ? 'aria-current="page"' : '',
+        `nav-link ${(page === id || id === 'parent' && page === 'progress' || id === 'themes' && page === 'dialogues') ? 'active' : ''}`,
+        (page === id || id === 'parent' && page === 'progress' || id === 'themes' && page === 'dialogues') ? 'aria-current="page"' : '',
       ),
     )
     .join(
@@ -246,7 +246,7 @@ function render() {
     ['themes', 'grid', '发现'],
     ['parent', 'chart', '家长'],
   ]
-    .map(([id, i, t]) => btn(icon(i) + `<span>${t}</span>`, `nav:${id}`, (page === id || id === 'parent' && page === 'progress') ? 'active' : ''))
+    .map(([id, i, t]) => btn(icon(i) + `<span>${t}</span>`, `nav:${id}`, (page === id || id === 'parent' && page === 'progress' || id === 'themes' && page === 'dialogues') ? 'active' : ''))
     .join('')}</nav>`;
   preloadNearby();
 }
@@ -284,8 +284,13 @@ function categoryCard(c) {
       '',
     )}<span class="category-go">${icon('arrow')}</span></div><div class="category-info"><h3>${c.name}<small>${c.en}</small></h3><span class="word-count">${c.words.length} 个单词</span></div><div class="category-progress"><span style="width:${(done / c.words.length) * 100}%"></span></div><div class="category-foot"><span>${done ? '接触过 ' + done + ' 个' : '等待你的第一个发现'}</span><span>${Math.round((done / c.words.length) * 100)}%</span></div></button>`;
 }
+function exploreTabs(active) {
+  return `<div class="explore-tabs mode-tabs" role="group" aria-label="探索方式">${[
+    ['topics','主题词库','theme-list'],['scenes','场景学习','scene-list'],['dialogues','生活对话','nav:dialogues'],
+  ].map(([id,label,action])=>btn(label,action,active===id?'selected':'',`aria-pressed="${active===id}"`)).join('')}</div>`;
+}
 function themes() {
-  const tabs = `${btn('生活对话 '+icon('sound'),'nav:dialogues','secondary')}<div class="explore-tabs mode-tabs" role="group" aria-label="探索方式">${btn('主题词库', 'theme-view:topics', themeView === 'topics' ? 'selected' : '', `aria-pressed="${themeView === 'topics'}"`)}${btn('场景学习', 'theme-view:scenes', themeView === 'scenes' ? 'selected' : '', `aria-pressed="${themeView === 'scenes'}"`)}</div>`;
+  const tabs=exploreTabs(themeView);
   if (themeView === 'scenes') return `${heading('WORDS COME TO LIFE', '走进生活的小世界', '13 个场景 · 轻点物品听发音 · 让英语与生活相遇')}${tabs}${sceneList()}`;
   return `${heading('YOUR WORLD OF WORDS', '每一个主题，都是新发现', categories.length + ' 个生活主题 · ' + words.length + ' 个启蒙单词 · 随时点读')}${tabs}<label class="search global-search">${icon('search')}<input id="all-search" type="search" placeholder="搜索全部单词：中文 / English" aria-label="搜索全部单词" value="${esc(allSearch)}"></label><div id="all-results">${allSearch ? globalResults() : `<div class="category-grid">${categories.map(categoryCard).join('')}</div>`}</div>`;
 }
@@ -661,7 +666,7 @@ function settings() {
     .map(([v, t]) => `<option value="${v}" ${state.settings.rate === v ? 'selected' : ''}>${t}</option>`)
     .join(
       '',
-    )}</select></label><label class="setting-row"><span>答对后自动下一题<small>答对自动前进；答错停留；重听时等待播放结束</small></span><input id="auto-next" type="checkbox" ${state.settings.autoNext?'checked':''}></label><div class="settings-block"><h3>带着小叶子去旅行</h3><p>下载离线学习内容后，场景插图、单词、字母名和生活对话音频可断网使用；例句也使用预生成美音，可随完整离线内容下载。</p>${btn('下载 / 更新离线内容', 'offline', 'secondary', 'id="offline-btn"')}<p id="offline-status" role="status"></p><p class="small">手机浏览器菜单可尝试“添加到主屏幕”；安装支持由浏览器决定。</p></div><div class="settings-block"><h3>把成长好好收藏</h3><p>学习进度保存在当前浏览器，不会自动同步。建议定期备份，或用备份换设备。</p><div class="button-row">${btn('导出进度备份', 'export', 'secondary')}<label class="secondary import-label">合并导入备份<input id="import-file" type="file" accept="application/json,.json"></label></div><p class="small">导入按单词保留较新记录，每日次数取较大值，收藏合并。当前学习设置不变。</p></div><div class="settings-block attribution"><p>原创双语词库 · 插图：原创 SVG、<a href="https://github.com/microsoft/fluentui-emoji" target="_blank" rel="noopener">Fluent Emoji</a>（MIT）与 <a href="https://github.com/jdecked/twemoji" target="_blank" rel="noopener">Twemoji</a>（CC BY 4.0）<br>不含广告，无需账号。无需麦克风。<br>词库 ${words.length} 词 · ${categories.length} 主题 · 13 场景 · v3.1.0</p><a href="https://github.com/OylDeGit/little-leaf-english" target="_blank" rel="noopener">查看 GitHub 项目 ↗</a></div>`;
+    )}</select></label><label class="setting-row"><span>答对后自动下一题<small>答对自动前进；答错停留；重听时等待播放结束</small></span><input id="auto-next" type="checkbox" ${state.settings.autoNext?'checked':''}></label><div class="settings-block"><h3>带着小叶子去旅行</h3><p>下载离线学习内容后，场景插图、单词、字母名和生活对话音频可断网使用；例句也使用预生成美音，可随完整离线内容下载。</p>${btn('下载 / 更新离线内容', 'offline', 'secondary', 'id="offline-btn"')}<p id="offline-status" role="status"></p><p class="small">手机浏览器菜单可尝试“添加到主屏幕”；安装支持由浏览器决定。</p></div><div class="settings-block"><h3>把成长好好收藏</h3><p>学习进度保存在当前浏览器，不会自动同步。建议定期备份，或用备份换设备。</p><div class="button-row">${btn('导出进度备份', 'export', 'secondary')}<label class="secondary import-label">合并导入备份<input id="import-file" type="file" accept="application/json,.json"></label></div><p class="small">导入按单词保留较新记录，每日次数取较大值，收藏合并。当前学习设置不变。</p></div><div class="settings-block attribution"><p>原创双语词库 · 插图：原创 SVG、<a href="https://github.com/microsoft/fluentui-emoji" target="_blank" rel="noopener">Fluent Emoji</a>（MIT）与 <a href="https://github.com/jdecked/twemoji" target="_blank" rel="noopener">Twemoji</a>（CC BY 4.0）<br>不含广告，无需账号。无需麦克风。<br>词库 ${words.length} 词 · ${categories.length} 主题 · 13 场景 · v3.1.1</p><a href="https://github.com/OylDeGit/little-leaf-english" target="_blank" rel="noopener">查看 GitHub 项目 ↗</a></div>`;
   modal.showModal();
 }
 async function offlineDownload() {
@@ -1084,7 +1089,7 @@ document.addEventListener('submit', (event) => {
 });
 
 function dialogueView(){
- if(!dialogueLesson)return `${heading('LITTLE TALKS, REAL LIFE','生活里的小对话','先听一句，再试着接下一句；稍后回来也能继续。')}<div class="dialogue-grid">${dialogues.map(d=>`<button class="dialogue-topic panel" data-action="dialogue-open:${d.id}"><span class="dialogue-emoji" aria-hidden="true">${d.emoji}</span><small>${d.group}</small><h2>${esc(d.title)}</h2><p>${esc(d.lines[0].role)} ↔ ${esc(d.lines[1].role)}</p><span>${dialogueDrafts[d.id]?.step<3?'继续第 '+(dialogueDrafts[d.id].position+1)+' 轮':state.dialogueCompletions[d.id]?'已完成 · 最佳 '+state.dialogueCompletions[d.id].bestCorrect+'/3':'听对话，再试着回应 →'}</span></button>`).join('')}</div><p class="small muted">对话完成记录会保存在本机；对话不计入单词打卡次数。</p>`;
+ if(!dialogueLesson)return `${heading('LITTLE TALKS, REAL LIFE','生活里的小对话','先听一句，再试着接下一句；稍后回来也能继续。')}${exploreTabs('dialogues')}<div class="dialogue-grid">${dialogues.map(d=>`<button class="dialogue-topic panel" data-action="dialogue-open:${d.id}"><span class="dialogue-emoji" aria-hidden="true">${d.emoji}</span><small>${d.group}</small><h2>${esc(d.title)}</h2><p>${esc(d.lines[0].role)} ↔ ${esc(d.lines[1].role)}</p><span>${dialogueDrafts[d.id]?.step<3?'继续第 '+(dialogueDrafts[d.id].position+1)+' 轮':state.dialogueCompletions[d.id]?'已完成 · 最佳 '+state.dialogueCompletions[d.id].bestCorrect+'/3':'听对话，再试着回应 →'}</span></button>`).join('')}</div><p class="small muted">对话完成记录会保存在本机；对话不计入单词打卡次数。</p>`;
  const d=dialogueLesson,p=dialoguePractice,controls=`<div class="dialogue-toolbar">${btn('← 全部对话','nav:dialogues','text-button')}${btn(dialogueChinese?'隐藏中文':'显示中文','dialogue-chinese','secondary',`aria-pressed="${dialogueChinese}"`)}</div>`;
  if(!p)return `${controls}${heading(d.group,d.title,'点击每句话听发音，然后试着接下一句。')}<section class="dialogue-transcript" aria-label="完整对话">${d.lines.map((line,i)=>`<button class="dialogue-line panel ${i%2?'guest':''}" data-action="dialogue-play:${i}" aria-label="播放第 ${i+1} 句：${esc(line.en)}"><small>${esc(line.role)} ${icon('sound')}</small><strong>${esc(line.en)}</strong><span data-dialogue-translation>${esc(line.zh)}</span></button>`).join('')}</section><div class="dialogue-start">${btn(dialogueDrafts[d.id]?.step<3?'继续本轮回应':'试着回应 · 3 小题','dialogue-begin','primary')}</div>`;
  if(p.step>=3)return `${controls}<section class="panel dialogue-result"><span class="intro-emoji">🌟</span><h1>这段对话，练完啦！</h1><p>首次答对 ${p.correct} / ${p.steps.length} 题</p><p>可以再听完整对话，模仿说出每一句。</p><div class="button-row">${btn('再听完整对话','dialogue-read','primary')}${btn('重练回应','dialogue-begin','secondary')}${p.results.some(r=>!r.correct)?btn('只练答错的回应','dialogue-retry','secondary'):''}</div></section>`;

@@ -150,3 +150,8 @@ footer { padding:30px 24px 34px;color:#6f7d65;font-size:11px;line-height:1.8; }
 }
 
 @media(max-width:650px) { .home-heading .headline-ending { display:block; }.home-heading h1 { text-wrap:balance; } }
+
+/* The three discovery routes form one navigation group. */
+.explore-tabs.mode-tabs { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));width:100%;max-width:510px;gap:4px;margin:0 0 24px;padding:5px; }
+.explore-tabs.mode-tabs button { min-width:0;width:100%;min-height:44px;padding:10px 12px;white-space:nowrap;justify-content:center; }
+@media(max-width:650px) { .explore-tabs.mode-tabs { max-width:none;margin-bottom:20px;gap:3px;padding:4px; }.explore-tabs.mode-tabs button { font-size:12px;padding:9px 6px; } }
