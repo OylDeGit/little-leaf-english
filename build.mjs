@@ -7,7 +7,7 @@ const modules = ['app.js', 'core.js', 'data.js', 'vocabulary.js', 'media.js', 'd
 const source = Object.fromEntries(
   await Promise.all(modules.map(async (f) => [f, await readFile(f, 'utf8')])),
 );
-const css = await readFile('style.css', 'utf8'),
+const css = await readFile('style.css', 'utf8') + '\n' + await readFile('design.css', 'utf8'),
   html = await readFile('index.html', 'utf8');
 const workerSource = await readFile('sw.js', 'utf8');
 await rm('dist', { recursive: true, force: true });

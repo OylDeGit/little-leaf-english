@@ -54,7 +54,7 @@ try {
 const SPELLING_DRAFT_KEY='little-leaf:advanced:v1';
 let savedSpelling=savedSession?.type==='spell'?savedSession:null;
 try{const raw=localStorage.getItem(SPELLING_DRAFT_KEY);if(!savedSpelling&&raw){const checked=validateSession(JSON.parse(raw));if(checked.type==='spell')savedSpelling=checked;}if(savedSpelling)localStorage.setItem(SPELLING_DRAFT_KEY,JSON.stringify(savedSpelling));}catch{}
-let parentOpen=false, advancedPractice=false, correction=null, dialogueCorrection=false;
+let advancedPractice=false, correction=null, dialogueCorrection=false;
 const dialogueDrafts={};
 try { const raw=JSON.parse(localStorage.getItem(DIALOGUE_DRAFT_KEY)||'{}');
   for(const d of dialogues){const round=validateDialogueRound(d.id,raw[d.id]);if(round)dialogueDrafts[d.id]=round;}
@@ -210,8 +210,6 @@ function visibleWords() {
 
 function nav(n) {
   saveDialogueDraft();
-  if(['parent','progress'].includes(n)){if(n==='progress'&&!parentOpen)n='parent';}
-  else parentOpen=false;
   stopMedia();dialogueLesson=null;dialoguePractice=null;page=n;category=null;session=null;
   index=0;search='';filter='all';
   const bookmark=n==='themes'&&browseViews.get('list:'+themeView);
@@ -237,18 +235,18 @@ function render() {
       btn(
         icon(i) + t,
         `nav:${id}`,
-        `nav-link ${page === id ? 'active' : ''}`,
-        page === id ? 'aria-current="page"' : '',
+        `nav-link ${(page === id || id === 'parent' && page === 'progress') ? 'active' : ''}`,
+        (page === id || id === 'parent' && page === 'progress') ? 'aria-current="page"' : '',
       ),
     )
     .join(
       '',
-    )}</nav><div class="sidebar-bottom"><div class="grow-note"><span>🌱</span><strong>每天一点，自然生长</strong><p>每一个新单词，<br>都是一片小小的新叶子。</p></div>${btn(icon('settings') + '家长中心', 'nav:parent', 'nav-link')}<small>给好奇心，一点生长的空间</small></div></aside><div class="workspace"><header class="topbar"><div class="breadcrumb">我的学习空间 <span>/</span> <strong>${category ? esc(category.name) : { home: '学习首页', themes: '探索主题', review: '我的复习', dialogues: '生活对话', parent: '家长中心', rewards: '小动物贴纸册', progress: '成长记录' }[page]}</strong></div><div class="top-meta">${page === 'dialogues' && dialoguePractice ? btn(icon('back'), 'nav:dialogues', 'icon-button study-exit', 'aria-label="退出对话练习"') : ''}${category && !['cards', 'scene'].includes(mode) ? btn(icon('back'), 'back-study', 'icon-button study-exit', 'aria-label="退出练习，返回学习内容"') : ''}<span class="streak">${icon('sun')} 连续学习 ${streak(state)} 天</span><button class="avatar parent-shortcut" data-action="nav:parent" aria-label="进入家长中心">家长</button></div></header><main id="main" tabindex="-1">${category ? renderCategory() : page === 'home' ? home() : page === 'themes' ? themes() : page === 'review' ? review() : page === 'dialogues' ? dialogueView() : page === 'rewards' ? rewardsView() : page === 'parent' || (page === 'progress' && !parentOpen) ? parentView() : progress(learned)}</main><footer>让英语，从看见、听见，到自然说出口。<span>Little steps. Big discoveries.</span></footer></div><nav class="mobile-nav" aria-label="主导航">${[
+    )}</nav><div class="sidebar-bottom"><div class="grow-note"><span>🌱</span><strong>每天一点，自然生长</strong><p>每一个新单词，<br>都是一片小小的新叶子。</p></div><small>给好奇心，一点生长的空间</small></div></aside><div class="workspace"><header class="topbar"><div class="breadcrumb">我的学习空间 <span>/</span> <strong>${category ? esc(category.name) : { home: '学习首页', themes: '探索主题', review: '我的复习', dialogues: '生活对话', parent: '家长中心', rewards: '小动物贴纸册', progress: '成长记录' }[page]}</strong></div><div class="top-meta">${page === 'dialogues' && dialoguePractice ? btn(icon('back'), 'nav:dialogues', 'icon-button study-exit', 'aria-label="退出对话练习"') : ''}${category && !['cards', 'scene'].includes(mode) ? btn(icon('back'), 'back-study', 'icon-button study-exit', 'aria-label="退出练习，返回学习内容"') : ''}<span class="streak">${icon('sun')} 连续学习 ${streak(state)} 天</span><button class="avatar parent-shortcut" data-action="nav:parent" aria-label="进入家长中心">家长</button></div></header><main id="main" tabindex="-1">${category ? renderCategory() : page === 'home' ? home() : page === 'themes' ? themes() : page === 'review' ? review() : page === 'dialogues' ? dialogueView() : page === 'rewards' ? rewardsView() : page === 'parent' ? parentView() : progress(learned)}</main><footer>让英语，从看见、听见，到自然说出口。<span>Little steps. Big discoveries.</span></footer></div><nav class="mobile-nav" aria-label="主导航">${[
     ['home', 'home', '首页'],
     ['themes', 'grid', '发现'],
     ['parent', 'chart', '家长'],
   ]
-    .map(([id, i, t]) => btn(icon(i) + `<span>${t}</span>`, `nav:${id}`, page === id ? 'active' : ''))
+    .map(([id, i, t]) => btn(icon(i) + `<span>${t}</span>`, `nav:${id}`, (page === id || id === 'parent' && page === 'progress') ? 'active' : ''))
     .join('')}</nav>`;
   preloadNearby();
 }
@@ -261,18 +259,17 @@ function stageSummary() {
   return `<section class="stage-summary" aria-label="学习足迹">${[['contacted','接触过'],['practiced','练习过'],['mastered','已巩固']].map(([key,label])=>`<div><strong data-stage-count="${key}">${stats[key]}</strong><span>${label}</span></div>`).join('')}</section>`;
 }
 function home() {
-  const guide=homeGuide(state,resumablePractice(),activeLesson,advancedPractice), rewards=learningRewards(state), plan=dailyPlan(state);
-  return `${heading('HELLO, LITTLE EXPLORER','今天，玩一会儿英语吧 🌱','听一听 · 看一看 · 慢慢学')}
-  <div class="child-summary">${btn('⭐ '+rewards.stars+' 颗星 · 贴纸册','nav:rewards','secondary')}${btn('家长中心','nav:parent','text-button')}</div>
-  <section class="start-learning-card"><div><span class="pill">每天最多安排 5 个词</span><h2>${guide.title}</h2><p>${guide.note}</p><p class="small">今日已安排 ${plan.ids.length} / 5 个词，不必一次学完。</p>${btn(guide.title+' '+icon('arrow'),guide.kind,'primary')}</div><div class="start-learning-art" aria-hidden="true">${img(wordMap.get('apple'))}${img(wordMap.get('butterfly'))}</div></section>
-  <section class="child-review panel"><h2>复习旧朋友</h2><p>${dueWords(state,words).length?'有 '+dueWords(state,words).length+' 个词等你再见一面。':'今天暂时不用复习，旧朋友下次在这里等你。'}</p><div class="button-row">${btn(dueWords(state,words).length?'去复习':activeLesson&&!activeLesson.completed?'继续小课堂':plan.remaining?'认识今天的词':'自由认识单词',dueWords(state,words).length?'due':activeLesson&&!activeLesson.completed?'lesson-resume':plan.remaining?'lesson-today':'theme-list','secondary')}${btn('我的收藏与复习','nav:review','text-button')}</div></section>
-  <section class="sticker-entry panel"><h2>我的小动物贴纸册 🐰</h2><p>${rewards.today>=3?'今天的小星星已点亮，休息一下也很棒！':'今天认真练习 '+rewards.today+' / 3 次，就能点亮一颗星。答错也算努力！'}</p>${btn('看看小动物朋友','nav:rewards','secondary')}</section>
-  <div class="section-title"><h2>到生活里找一找</h2>${btn('更多场景','scene-list','text-button')}</div><div class="scene-catalog home-scenes">${scenes.filter(s=>['clothes','supermarket','zoo','mealtime'].includes(s.id)).map(sceneCover).join('')}</div>
-  <div class="home-more-links">${btn('全部主题','theme-list','secondary')}${btn('生活对话','nav:dialogues','secondary')}</div>`;
+  const guide=homeGuide(state,resumablePractice(),activeLesson,advancedPractice), rewards=learningRewards(state), plan=dailyPlan(state),due=dueWords(state,words).length;
+  const reviewAction=due?'due':activeLesson&&!activeLesson.completed?'lesson-resume':plan.remaining?'lesson-today':'theme-list';
+  return `<div class="home-heading"><div><p class="eyebrow">A LITTLE EVERY DAY</p><h1><span>让好奇心，</span><span class="headline-ending">长出新叶子</span><span class="title-leaf">${icon('leaf')}</span></h1><p class="muted">听见一个词，发现一个小世界。</p></div>${btn(icon('star')+'<span><strong>'+rewards.stars+'</strong> 颗星</span>'+icon('arrow'),'nav:rewards','star-pass','aria-label="'+rewards.stars+' 颗星，打开贴纸册"')}</div>
+  <section class="start-learning-card"><div class="lesson-copy"><span class="lesson-kicker"><i></i> 今天的小小探索</span><h2>${guide.title}</h2><p>${esc(guide.note)}</p><div class="today-word-track"><span>今日词单 <strong>${plan.ids.length}<small> / 5</small></strong></span><div class="word-track" aria-label="今日已安排 ${plan.ids.length} 个词">${Array.from({length:5},(_,i)=>`<i class="${i<plan.ids.length?'filled':''}"></i>`).join('')}</div></div>${btn(guide.title+icon('arrow'),guide.kind,'primary hero-cta')}<span class="hero-footnote">每天一点就好，随时可以回来继续。</span></div><div class="lesson-art" aria-hidden="true"><span class="art-orbit"></span><span class="art-spark">✦</span><div class="lesson-art-card art-apple">${img(wordMap.get('apple'))}<strong>apple</strong><small>苹果</small></div><div class="lesson-art-card art-butterfly">${img(wordMap.get('butterfly'))}<strong>butterfly</strong><small>蝴蝶</small></div><span class="art-caption">Little steps, big discoveries.</span></div></section>
+  <div class="home-support-grid"><section class="child-review panel"><div class="support-top"><span class="feature-icon mint">${icon('refresh')}</span><span class="mini-label">温故知新</span></div><h2>和旧朋友，再见一面</h2><p>${due?'有 '+due+' 个词等你复习，熟悉的声音会越来越亲切。':'暂时没有待复习的词，去发现一点新鲜的吧。'}</p><div class="button-row">${btn(due?'复习 '+due+' 个词':reviewAction==='lesson-resume'?'继续小课堂':plan.remaining?'认识今天的词':'自由认识单词',reviewAction,'secondary')}${btn('收藏与复习 '+icon('arrow'),'nav:review','text-button')}</div></section><section class="sticker-entry panel"><div class="support-top"><span class="feature-icon honey">${icon('star')}</span><span class="mini-label">每次努力，都算数</span></div><div class="sticker-copy"><div><h2>收集你的小动物朋友</h2><p>${rewards.today>=3?'今天的星星已点亮，小伙伴为你鼓掌！':'今天认真练习 '+rewards.today+' / 3 次，点亮一颗星。'}</p></div><span class="sticker-preview" aria-hidden="true">🐰</span></div><div class="button-row">${btn('打开贴纸册 '+icon('arrow'),'nav:rewards','secondary')}<span class="reward-counter">${rewards.stars} 颗星 · 慢慢积累</span></div></section></div>
+  <div class="section-title section-editorial"><div><p class="eyebrow">ENGLISH, EVERYWHERE</p><h2>把英语，放进生活里</h2></div>${btn('全部场景 '+icon('arrow'),'scene-list','text-button')}</div><div class="scene-catalog home-scenes">${scenes.filter(s=>['clothes','supermarket','zoo','mealtime'].includes(s.id)).map(sceneCover).join('')}</div>
+  <section class="explore-strip"><div><span class="feature-icon lilac">${icon('sound')}</span><div><h2>今天，试着聊两句？</h2><p>买水果、点午餐，在小对话里学会表达。</p></div></div>${btn('生活对话 '+icon('arrow'),'nav:dialogues','secondary')}${btn('探索全部主题','theme-list','text-button')}</section>`;
 }
 function parentView(){
- if(!parentOpen)return `<section class="panel parent-gate"><span class="intro-emoji">🌿</span><h1>家长中心</h1><p>这里可以查看学习记录、调整语速、备份进度和开启进阶练习。</p><p class="small muted">这只是防误触提示，不是密码或身份认证。</p><div class="button-row">${btn('我是家长，继续','parent-unlock','primary')}${btn('返回学习','home','secondary')}</div></section>`;
- return `${heading('GROW TOGETHER','陪孩子，一点点长大','不必追求全对，每一次认真练习都值得鼓励。')}${stageSummary()}<section class="panel"><h2>学习记录与设置</h2><p>今天练习 ${today()} 次 · ${learningRewards(state).stars} 颗学习星星</p><div class="button-row">${btn('查看详细记录','nav:progress','secondary')}${btn('学习设置、备份与离线','settings','primary')}${btn('小动物贴纸册','nav:rewards','secondary')}</div></section><section class="panel"><h2>进阶练习</h2><p>开启后可使用拼写和例句填空，仅本次打开期间有效。</p>${btn(advancedPractice?'关闭进阶练习':'开启进阶练习','advanced-toggle','secondary','aria-pressed="'+advancedPractice+'"')}${savedSpelling?btn('继续未完成的拼写','resume-spelling','text-button',advancedPractice?'':'disabled'):''}</section><p class="small muted">数据保存在当前浏览器，不自动同步；换设备前请导出备份。</p>`;
+ const r=learningRewards(state);
+ return `${heading('GROW TOGETHER','陪伴，是最好的养分','看看孩子的每一步，也找到适合自己的学习节奏。')}<section class="parent-overview"><div class="parent-overview-title"><span class="feature-icon mint">${icon('chart')}</span><div><h2>一点一滴，都有记录</h2><p>今天练习 <strong>${today()}</strong> 次 · 已收集 <strong>${r.stars}</strong> 颗星</p></div><span class="overview-tag">学习足迹</span></div>${stageSummary()}</section><div class="parent-grid"><section class="panel parent-tools"><div class="card-eyebrow"><span class="feature-icon mint">${icon('settings')}</span><span>学习管理</span></div><h2>找到合适的节奏</h2><p>语速、离线内容和进度备份，集中在这里。</p><div class="parent-actions">${btn('<span>'+icon('chart')+'查看详细学习记录</span>'+icon('arrow'),'nav:progress','parent-action')}${btn('<span>'+icon('settings')+'学习设置、备份与离线</span>'+icon('arrow'),'settings','parent-action')}${btn('<span>'+icon('star')+'看看小动物贴纸册</span>'+icon('arrow'),'nav:rewards','parent-action')}</div></section><section class="panel parent-advanced"><div class="card-eyebrow"><span class="feature-icon lilac">${icon('grid')}</span><span>进阶探索</span></div><div class="advanced-heading"><h2>准备好，再多学一点</h2><span class="status-tag ${advancedPractice?'enabled':''}">${advancedPractice?'已开启':'按需开启'}</span></div><p>为想挑战的孩子，增加拼写与例句填空。开启仅在本次使用中有效。</p><div class="advanced-preview"><span>Aa <small>看图拼写</small></span><span>___ <small>例句填空</small></span></div><div class="button-row">${btn(advancedPractice?'关闭进阶练习':'开启进阶练习','advanced-toggle',advancedPractice?'secondary':'primary','aria-pressed="'+advancedPractice+'"')}${savedSpelling?btn('继续未完成的拼写','resume-spelling','text-button',advancedPractice?'':'disabled'):''}</div></section></div><div class="local-data-note">${icon('leaf')}<span>成长留在这里。进度保存在当前浏览器，换设备前记得导出一份备份。</span></div>`;
 }
 function rewardsView(){
  const r=learningRewards(state),next=r.stickers.find(s=>!s.unlocked);
@@ -365,7 +362,7 @@ function renderCategory(){
   return `<div class="study-heading">${btn(icon('back')+(category.sceneId?'返回场景列表':'返回主题'),category.sceneId?'scene-list':'nav:themes','text-button')}
     <span class="eyebrow">${esc(category.en)}</span><h1>${esc(category.name)}</h1><p class="muted">${esc(category.description)}</p></div>
     <div class="study-toolbar">${modeTabs()}${mode==='cards'?`<label class="search">${icon('search')}<input id="search" type="search" placeholder="找一个单词…" aria-label="搜索单词" value="${esc(search)}"></label>`:''}</div>
-    ${mode==='scene'?sceneView():mode==='cards'?`<div class="lesson-banner"><div><strong>先认识一小组，再练这组词</strong><p>5 个词 · 最多 3 道找图题</p></div>${btn('开始小课堂','lesson-start','secondary')}</div>
+    ${mode==='scene'?sceneView():mode==='cards'?`<div class="lesson-banner"><div><strong>每天 5 词小课堂</strong><p>先听发音，再玩同组找图</p></div>${btn('开始小课堂','lesson-start','secondary')}</div>
     <div class="filter-row">${[['all','全部'],['new','未接触'],['learned','已巩固'],['favorites','已收藏']].map(([id,t])=>btn(t,`filter:${id}`,filter===id?'chip active':'chip')).join('')}
     <label class="check-label"><input id="chinese" type="checkbox" ${state.settings.showChinese?'checked':''}> 显示中文</label></div><div id="word-results" class="word-grid">${wordResults()}</div>`:mode==='sentences'?sentenceCard():quizView()}`;
 }
@@ -653,7 +650,6 @@ function submitAnswer(id, typed) {
     );
 }
 function settings() {
-  if(!parentOpen){nav('parent');return;}
   modal.classList.remove('word-detail-dialog');
   clearTimeout(autoNextTimer);
   stopMedia();
@@ -665,7 +661,7 @@ function settings() {
     .map(([v, t]) => `<option value="${v}" ${state.settings.rate === v ? 'selected' : ''}>${t}</option>`)
     .join(
       '',
-    )}</select></label><label class="setting-row"><span>答对后自动下一题<small>答对自动前进；答错停留；重听时等待播放结束</small></span><input id="auto-next" type="checkbox" ${state.settings.autoNext?'checked':''}></label><div class="settings-block"><h3>带着小叶子去旅行</h3><p>下载离线学习内容后，场景插图、单词、字母名和生活对话音频可断网使用；例句也使用预生成美音，可随完整离线内容下载。</p>${btn('下载 / 更新离线内容', 'offline', 'secondary', 'id="offline-btn"')}<p id="offline-status" role="status"></p><p class="small">手机浏览器菜单可尝试“添加到主屏幕”；安装支持由浏览器决定。</p></div><div class="settings-block"><h3>把成长好好收藏</h3><p>学习进度保存在当前浏览器，不会自动同步。建议定期备份，或用备份换设备。</p><div class="button-row">${btn('导出进度备份', 'export', 'secondary')}<label class="secondary import-label">合并导入备份<input id="import-file" type="file" accept="application/json,.json"></label></div><p class="small">导入按单词保留较新记录，每日次数取较大值，收藏合并。当前学习设置不变。</p></div><div class="settings-block attribution"><p>原创双语词库 · 插图：原创 SVG、<a href="https://github.com/microsoft/fluentui-emoji" target="_blank" rel="noopener">Fluent Emoji</a>（MIT）与 <a href="https://github.com/jdecked/twemoji" target="_blank" rel="noopener">Twemoji</a>（CC BY 4.0）<br>不含广告，无需账号。无需麦克风。<br>词库 ${words.length} 词 · ${categories.length} 主题 · 13 场景 · v3.0.0</p><a href="https://github.com/OylDeGit/little-leaf-english" target="_blank" rel="noopener">查看 GitHub 项目 ↗</a></div>`;
+    )}</select></label><label class="setting-row"><span>答对后自动下一题<small>答对自动前进；答错停留；重听时等待播放结束</small></span><input id="auto-next" type="checkbox" ${state.settings.autoNext?'checked':''}></label><div class="settings-block"><h3>带着小叶子去旅行</h3><p>下载离线学习内容后，场景插图、单词、字母名和生活对话音频可断网使用；例句也使用预生成美音，可随完整离线内容下载。</p>${btn('下载 / 更新离线内容', 'offline', 'secondary', 'id="offline-btn"')}<p id="offline-status" role="status"></p><p class="small">手机浏览器菜单可尝试“添加到主屏幕”；安装支持由浏览器决定。</p></div><div class="settings-block"><h3>把成长好好收藏</h3><p>学习进度保存在当前浏览器，不会自动同步。建议定期备份，或用备份换设备。</p><div class="button-row">${btn('导出进度备份', 'export', 'secondary')}<label class="secondary import-label">合并导入备份<input id="import-file" type="file" accept="application/json,.json"></label></div><p class="small">导入按单词保留较新记录，每日次数取较大值，收藏合并。当前学习设置不变。</p></div><div class="settings-block attribution"><p>原创双语词库 · 插图：原创 SVG、<a href="https://github.com/microsoft/fluentui-emoji" target="_blank" rel="noopener">Fluent Emoji</a>（MIT）与 <a href="https://github.com/jdecked/twemoji" target="_blank" rel="noopener">Twemoji</a>（CC BY 4.0）<br>不含广告，无需账号。无需麦克风。<br>词库 ${words.length} 词 · ${categories.length} 主题 · 13 场景 · v3.1.0</p><a href="https://github.com/OylDeGit/little-leaf-english" target="_blank" rel="noopener">查看 GitHub 项目 ↗</a></div>`;
   modal.showModal();
 }
 async function offlineDownload() {
@@ -708,7 +704,6 @@ document.addEventListener('click', (e) => {
   const navigating=['home','nav','scene-list','theme-list','theme-view','scene','category','mode','begin','daily','due','favorites','resume','back-study','scene-example','lesson-start','lesson-group','lesson-today','lesson-resume','lesson-practice','lesson-next','retry'].includes(a);
   if(navigating){rememberPractice();syncView(false);}
   switch (a) {
-    case 'parent-unlock': parentOpen=true;render();break;
     case 'advanced-toggle': advancedPractice=!advancedPractice;render();break;
     case 'keep-quiz': modal.close();pendingQuiz=null;resumeSession();break;
     case 'replace-quiz': {const start=pendingQuiz;pendingQuiz=null;modal.close();start?.();break;}
@@ -1290,7 +1285,7 @@ function restoreView(input){
   saveDialogueDraft();
   const view=validateView(input);if(!view) return;
   restoringView=true;stopMedia();
-  page=view.page;dialogueLesson=page==='dialogues'?dialogues.find(d=>d.id===view.dialogueId)||null:null;dialoguePractice=dialogueLesson?dialogueDrafts[dialogueLesson.id]||null:null;dialogueCorrection=false;if(!['parent','progress'].includes(page))parentOpen=false;themeView=view.themeView;mode=view.mode;search=view.search;allSearch=view.allSearch;
+  page=view.page;dialogueLesson=page==='dialogues'?dialogues.find(d=>d.id===view.dialogueId)||null:null;dialoguePractice=dialogueLesson?dialogueDrafts[dialogueLesson.id]||null:null;dialogueCorrection=false;themeView=view.themeView;mode=view.mode;search=view.search;allSearch=view.allSearch;
   filter=view.filter;shown=view.shown;selectedSceneWord=view.selectedSceneWord;
   if(view.lesson) activeLesson=view.lesson;
   if(mode==='spell'&&!advancedPractice)mode=view.sceneId?'scene':'cards';
