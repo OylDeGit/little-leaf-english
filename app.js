@@ -261,7 +261,7 @@ function stageSummary() {
   return `<section class="stage-summary" aria-label="学习足迹">${[['contacted','接触过'],['practiced','练习过'],['mastered','已巩固']].map(([key,label])=>`<div><strong data-stage-count="${key}">${stats[key]}</strong><span>${label}</span></div>`).join('')}</section>`;
 }
 function home() {
-  const guide=homeGuide(state,savedSession||savedSpelling,activeLesson,advancedPractice), rewards=learningRewards(state), plan=dailyPlan(state);
+  const guide=homeGuide(state,resumablePractice(),activeLesson,advancedPractice), rewards=learningRewards(state), plan=dailyPlan(state);
   return `${heading('HELLO, LITTLE EXPLORER','今天，玩一会儿英语吧 🌱','听一听 · 看一看 · 慢慢学')}
   <div class="child-summary">${btn('⭐ '+rewards.stars+' 颗星 · 贴纸册','nav:rewards','secondary')}${btn('家长中心','nav:parent','text-button')}</div>
   <section class="start-learning-card"><div><span class="pill">每天最多安排 5 个词</span><h2>${guide.title}</h2><p>${guide.note}</p><p class="small">今日已安排 ${plan.ids.length} / 5 个词，不必一次学完。</p>${btn(guide.title+' '+icon('arrow'),guide.kind,'primary')}</div><div class="start-learning-art" aria-hidden="true">${img(wordMap.get('apple'))}${img(wordMap.get('butterfly'))}</div></section>
@@ -378,7 +378,7 @@ function sentenceCard() {
 }
 let pendingQuiz=null;
 function startQuiz(pool, type = 'listen', source = 'theme', config = {}) {
-  if(!config.replace && savedSession && (savedSession.type!=='spell'||advancedPractice) && savedSession.position<savedSession.queue.length){
+  if(!config.replace && resumablePractice()){
     pendingQuiz=()=>startQuiz(pool,type,source,{...config,replace:true});
     modal.innerHTML=`<h2>上次练习还在</h2><p>继续上次，或换一组新的。已经记录的练习不会清除。</p><div class="button-row">${btn('继续上次','keep-quiz','primary')}${btn('开始新的','replace-quiz','secondary')}</div>`;modal.showModal();return;
   }
@@ -487,7 +487,14 @@ function persistSession(){
   } catch{toast('练习暂存失败，请检查浏览器存储');}
 }
 function rememberPractice(){saveDialogueDraft();if(session) persistSession();}
-function resumeSession(r=savedSession||savedSpelling){
+function resumablePractice(){
+  for(const raw of [savedSession,...[...drafts.values()].reverse(),savedSpelling]){
+    if(!raw||(raw.type==='spell'&&!advancedPractice)||raw.position>=raw.queue.length)continue;
+    try{return validateSession(raw);}catch{}
+  }
+  return null;
+}
+function resumeSession(r=resumablePractice()){
   if(!r) return;
   if(r.type==='spell'&&!advancedPractice){toast('请家长先开启进阶练习，再继续拼写。');nav('parent');return;}
   stopMedia();
