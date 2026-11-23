@@ -1,4 +1,4 @@
-import { dailyPlan, allocateLesson, homeGuide, learningRewards, lessonTopicPool, validateDialogueRound, DIALOGUE_DRAFT_KEY } from './learning.js';
+import { dailyPlan, allocateLesson, homeGuide, learningRewards, lessonTopicPool, validateDialogueRound, DIALOGUE_DRAFT_KEY, WORD_BATCH, wordWindow } from './learning.js';
 import { VIEW_KEY, DRAFT_KEY, LESSON_KEY, validateView, validateLesson, routeFor, parseRoute } from './navigation.js';
 import { scenes, sceneMap, alphabet } from './scenes.js';
 import { dialogues } from './dialogues.js';
@@ -60,7 +60,7 @@ try { const raw=JSON.parse(localStorage.getItem(DIALOGUE_DRAFT_KEY)||'{}');
   for(const d of dialogues){const round=validateDialogueRound(d.id,raw[d.id]);if(round)dialogueDrafts[d.id]=round;}
 } catch {}
 let themeView = 'topics', selectedSceneWord = null, sceneReturnScroll = 0;
-let shown = 8,
+let shown = WORD_BATCH,
   allSearch = '';
 let dialogueLesson = null,
   dialoguePractice = null,
@@ -79,6 +79,7 @@ let page = 'home',
   playToken = 0;
 let activeLesson=null, navigationReady=false, restoringView=false, viewTimer;
 const drafts=new Map(), browseViews=new Map(), audioCache=new Map();
+let wordFeedObserver=null;
 try {
   activeLesson=validateLesson(JSON.parse(localStorage.getItem(LESSON_KEY)||'null'));
   for (const [key,value] of JSON.parse(sessionStorage.getItem(DRAFT_KEY)||'[]')) drafts.set(key,value);
@@ -247,6 +248,7 @@ function render() {
   ]
     .map(([id, i, t]) => btn(icon(i) + `<span>${t}</span>`, `nav:${id}`, (page === id || id === 'parent' && page === 'progress' || id === 'themes' && page === 'dialogues') ? 'active' : ''))
     .join('')}</nav>`;
+  observeWordFeed();
   preloadNearby();
 }
 function heading(kicker, title, sub, right = '') {
@@ -291,19 +293,22 @@ function exploreTabs(active) {
 function themes() {
   const tabs=exploreTabs(themeView);
   if (themeView === 'scenes') return `${heading('WORDS COME TO LIFE', '走进生活的小世界', '13 个场景 · 轻点物品听发音 · 让英语与生活相遇')}${tabs}${sceneList()}`;
-  return `${heading('YOUR WORLD OF WORDS', '每一个主题，都是新发现', categories.length + ' 个生活主题 · ' + words.length + ' 个启蒙单词 · 随时点读')}${tabs}<label class="search global-search">${icon('search')}<input id="all-search" type="search" placeholder="搜索全部单词：中文 / English" aria-label="搜索全部单词" value="${esc(allSearch)}"></label><div id="all-results">${allSearch ? globalResults() : `<div class="category-grid">${categories.map(categoryCard).join('')}</div>`}</div>`;
+  return `${heading('YOUR WORLD OF WORDS', '每一个主题，都是新发现', categories.length + ' 个生活主题 · ' + words.length + ' 个启蒙单词 · 随时点读')}${tabs}<label class="search global-search">${icon('search')}<input id="all-search" type="search" placeholder="搜索全部单词：中文 / English" aria-label="搜索全部单词" value="${esc(allSearch)}"></label><div id="all-results">${allSearch.trim() ? globalResults() : `<div class="category-grid">${categories.map(categoryCard).join('')}</div>`}</div>`;
+}
+function globalWordMatches(){
+  const query=allSearch.trim().toLowerCase();
+  return words.filter(w=>(searchText(w)+' '+categoryMap.get(w.category).name).toLowerCase().includes(query));
+}
+function wordFeedEnd(total,global=false){
+  return total>shown?`<div class="word-load-sentinel" data-word-feed="${global?'global':'theme'}" aria-hidden="true"></div>`:'';
 }
 function globalResults() {
-  const list = words.filter((w) =>
-    (searchText(w) + ' ' + categoryMap.get(w.category).name)
-      .toLowerCase()
-      .includes(allSearch.trim().toLowerCase()),
-  );
-  return `<p class="search-count" role="status">找到 ${list.length} 个单词，显示 ${Math.min(shown, list.length)} 个</p><div class="word-grid">${list.slice(0, shown).map(wordCard).join('') || empty('🔎', '没有找到这个词', '试试英文、中文或主题名称。')}</div>${list.length > shown ? btn('再显示 8 个', 'more-global', 'secondary more-button') : ''}`;
+  const list=globalWordMatches();shown=wordWindow(list.length,shown);
+  return `<p class="search-count" role="status">找到 ${list.length} 个单词，显示 ${shown} 个</p><div class="word-grid">${list.slice(0,shown).map(wordCard).join('')||empty('🔎','没有找到这个词','试试英文、中文或主题名称。')}${wordFeedEnd(list.length,true)}</div>`;
 }
 function wordResults() {
-  const list = visibleWords();
-  return `${list.slice(0, shown).map(wordCard).join('') || empty('🔎', '还没有找到单词', '试试其他关键词或筛选条件。')}${list.length > shown ? btn('再显示 8 个', 'more', 'secondary more-button') : ''}`;
+  const list=visibleWords();shown=wordWindow(list.length,shown);
+  return `${list.slice(0,shown).map(wordCard).join('')||empty('🔎','还没有找到单词','试试其他关键词或筛选条件。')}${wordFeedEnd(list.length)}`;
 }
 function review() {
   const due = dueWords(state, words),
@@ -656,7 +661,7 @@ function settings() {
     .map(([v, t]) => `<option value="${v}" ${state.settings.rate === v ? 'selected' : ''}>${t}</option>`)
     .join(
       '',
-    )}</select></label><label class="setting-row"><span>答对后自动下一题<small>答对自动前进；答错停留；重听时等待播放结束</small></span><input id="auto-next" type="checkbox" ${state.settings.autoNext?'checked':''}></label><div class="settings-block"><h3>带着小叶子去旅行</h3><p>下载离线学习内容后，场景插图、单词、字母名和生活对话音频可断网使用；例句也使用预生成美音，可随完整离线内容下载。</p>${btn('下载 / 更新离线内容', 'offline', 'secondary', 'id="offline-btn"')}<p id="offline-status" role="status"></p><p class="small">手机浏览器菜单可尝试“添加到主屏幕”；安装支持由浏览器决定。</p></div><div class="settings-block"><h3>把成长好好收藏</h3><p>学习进度保存在当前浏览器，不会自动同步。建议定期备份，或用备份换设备。</p><div class="button-row">${btn('导出进度备份', 'export', 'secondary')}<label class="secondary import-label">合并导入备份<input id="import-file" type="file" accept="application/json,.json"></label></div><p class="small">导入按单词保留较新记录，每日次数取较大值，收藏合并。当前学习设置不变。</p></div><div class="settings-block attribution"><p>原创双语词库 · 插图：原创 SVG、<a href="https://github.com/microsoft/fluentui-emoji" target="_blank" rel="noopener">Fluent Emoji</a>（MIT）与 <a href="https://github.com/jdecked/twemoji" target="_blank" rel="noopener">Twemoji</a>（CC BY 4.0）<br>不含广告，无需账号。无需麦克风。<br>词库 ${words.length} 词 · ${categories.length} 主题 · 13 场景 · v3.2.0</p><a href="https://github.com/OylDeGit/little-leaf-english" target="_blank" rel="noopener">查看 GitHub 项目 ↗</a></div>`;
+    )}</select></label><label class="setting-row"><span>答对后自动下一题<small>答对自动前进；答错停留；重听时等待播放结束</small></span><input id="auto-next" type="checkbox" ${state.settings.autoNext?'checked':''}></label><div class="settings-block"><h3>带着小叶子去旅行</h3><p>下载离线学习内容后，场景插图、单词、字母名和生活对话音频可断网使用；例句也使用预生成美音，可随完整离线内容下载。</p>${btn('下载 / 更新离线内容', 'offline', 'secondary', 'id="offline-btn"')}<p id="offline-status" role="status"></p><p class="small">手机浏览器菜单可尝试“添加到主屏幕”；安装支持由浏览器决定。</p></div><div class="settings-block"><h3>把成长好好收藏</h3><p>学习进度保存在当前浏览器，不会自动同步。建议定期备份，或用备份换设备。</p><div class="button-row">${btn('导出进度备份', 'export', 'secondary')}<label class="secondary import-label">合并导入备份<input id="import-file" type="file" accept="application/json,.json"></label></div><p class="small">导入按单词保留较新记录，每日次数取较大值，收藏合并。当前学习设置不变。</p></div><div class="settings-block attribution"><p>原创双语词库 · 插图：原创 SVG、<a href="https://github.com/microsoft/fluentui-emoji" target="_blank" rel="noopener">Fluent Emoji</a>（MIT）与 <a href="https://github.com/jdecked/twemoji" target="_blank" rel="noopener">Twemoji</a>（CC BY 4.0）<br>不含广告，无需账号。无需麦克风。<br>词库 ${words.length} 词 · ${categories.length} 主题 · 13 场景 · v3.2.1</p><a href="https://github.com/OylDeGit/little-leaf-english" target="_blank" rel="noopener">查看 GitHub 项目 ↗</a></div>`;
   modal.showModal();
 }
 async function offlineDownload() {
@@ -769,12 +774,6 @@ document.addEventListener('click', (e) => {
     case 'resume':
       resumeSession();
       break;
-    case 'more':
-      appendWordResults(false);
-      break;
-    case 'more-global':
-      appendWordResults(true);
-      break;
     case 'retry': {
       const pool = session.results.filter((r) => !r.correct).map((r) => wordMap.get(r.id));
       const lessonIds=session.lessonIds;
@@ -854,7 +853,7 @@ document.addEventListener('click', (e) => {
     }
 
     case 'filter':
-      shown = 8;
+      shown = WORD_BATCH;
       filter = id;
       render();
       break;
@@ -945,16 +944,17 @@ document.addEventListener('input', (e) => {
   if(e.isComposing) return;
   if (e.target.id === 'all-search') {
     allSearch = e.target.value;
-    shown = 8;
+    shown = WORD_BATCH;
     $('#all-results').innerHTML = allSearch.trim()
       ? globalResults()
       : `<div class="category-grid">${categories.map(categoryCard).join('')}</div>`;
   }
   if (e.target.id === 'search') {
     search = e.target.value;
-    shown = 8;
+    shown = WORD_BATCH;
     $('#word-results').innerHTML = wordResults();
   }
+  if(['all-search','search'].includes(e.target.id))observeWordFeed();
   queueViewSave();
 });
 document.addEventListener('compositionend',e=>e.target.dispatchEvent(new Event('input',{bubbles:true})));
@@ -1133,7 +1133,7 @@ function openCategory(id){
   stopMedia();
   const bookmark=browseViews.get('theme:'+id);if(bookmark) return restoreView(bookmark);
   category=categoryMap.get(id);page='themes';mode='cards';session=null;
-  shown=8;index=0;search='';filter='all';selectedSceneWord=null;
+  shown=WORD_BATCH;index=0;search='';filter='all';selectedSceneWord=null;
   render();window.scrollTo(0,0);
 }
 function openScene(id,top=true){
@@ -1242,15 +1242,34 @@ function updateFavorite(id){
   if(!state.favorites.length) document.querySelectorAll('[data-action="favorites"]').forEach(n=>n.remove());
   const results=document.querySelector('#word-results');
   if(results&&filter==='favorites'&&!results.querySelector('.word-card')) results.innerHTML=empty('☆','这里还没有收藏','换个筛选，发现喜欢的单词。');
+  if(results)observeWordFeed();
 }
-function appendWordResults(global){
-  const oldShown=shown;shown+=8;
-  const list=global?words.filter(w=>(searchText(w)+' '+categoryMap.get(w.category).name).toLowerCase().includes(allSearch.trim().toLowerCase())):visibleWords();
-  const host=global?$('#all-results'):$('#word-results'),grid=global?host.querySelector('.word-grid'):host,more=host.querySelector('.more-button');
-  if(global) grid.insertAdjacentHTML('beforeend',list.slice(oldShown,shown).map(wordCard).join(''));
-  else if(more) more.insertAdjacentHTML('beforebegin',list.slice(oldShown,shown).map(wordCard).join(''));
-  if(shown>=list.length) more?.remove();
-  if(global) host.querySelector('.search-count').textContent=`找到 ${list.length} 个单词，显示 ${Math.min(shown,list.length)} 个`;
+function observeWordFeed(){
+  wordFeedObserver?.disconnect();wordFeedObserver=null;
+  const sentinel=document.querySelector('[data-word-feed]');
+  document.body.classList.toggle('browsing-words',!!document.querySelector('#word-results,#all-results .word-grid'));
+  if(!sentinel)return;
+  const global=sentinel.dataset.wordFeed==='global';
+  if(!('IntersectionObserver' in window)){appendWordResults(global,true);return;}
+  const observer=new IntersectionObserver(entries=>{
+    if(wordFeedObserver!==observer||restoringView||!sentinel.isConnected||!entries.some(e=>e.isIntersecting))return;
+    observer.disconnect();appendWordResults(global);
+  },{rootMargin:'0px 0px 160px 0px'});
+  wordFeedObserver=observer;observer.observe(sentinel);
+}
+function appendWordResults(global,all=false){
+  const host=global?$('#all-results'):$('#word-results');if(!host)return;
+  const grid=global?host.querySelector('.word-grid'):host,sentinel=grid?.querySelector('[data-word-feed]');
+  if(!grid||!sentinel)return;
+  const list=global?globalWordMatches():visibleWords();
+  const present=new Set([...grid.querySelectorAll('.word-card')].map(node=>node.dataset.wordId));
+  const remaining=list.filter(w=>!present.has(w.id)),matched=list.length-remaining.length;
+  shown=wordWindow(list.length,all?list.length:matched+WORD_BATCH);
+  const added=remaining.slice(0,shown-matched);
+  sentinel.insertAdjacentHTML('beforebegin',added.map(wordCard).join(''));
+  if(added.length>=remaining.length)sentinel.remove();
+  if(global)host.querySelector('.search-count').textContent=`找到 ${list.length} 个单词，显示 ${shown} 个`;
+  observeWordFeed();queueViewSave();
 }
 function captureView(){
   return validateView({page,categoryId:category?.id,sceneId:category?.sceneId,mode,themeView,search,allSearch,filter,shown,index,
@@ -1296,7 +1315,7 @@ function restoreView(input){
   if(!category&&mode!=='cards') mode='cards';
   index=Math.min(view.index,Math.max(0,(category?.words.length||1)-1));
   sentenceHidden=false;sentenceFeedback=null;sentenceRecorded=new Set();
-  render();requestAnimationFrame(()=>{window.scrollTo(0,view.scroll);restoringView=false;});
+  render();requestAnimationFrame(()=>{window.scrollTo(0,view.scroll);restoringView=false;observeWordFeed();});
 }
 function returnToBrowse(){
   stopMedia();

@@ -686,3 +686,19 @@ test('gentle correction rounds leave daily counts, first scores and review sched
  assert.equal(validateSession({...raw,source:'theme'}).retryOnly,false);
  recordPracticeAnswer(s,{retryOnly:false},'pear',true,now);assert.equal(s.records.pear.seen,1);
 });
+
+import { wordWindow, WORD_BATCH, SMALL_WORD_LIST } from './learning.js';
+test('small word lists display completely, including filtered results and the threshold boundary',()=>{
+ for(const count of [0,1,8,12,21,32])assert.equal(wordWindow(count),count);
+ assert.equal(SMALL_WORD_LIST,32);assert.equal(wordWindow(12,500),12);
+});
+test('large word lists load in bounded batches and preserve expanded bookmark counts',()=>{
+ assert.equal(wordWindow(85),WORD_BATCH);
+ assert.equal(wordWindow(85,WORD_BATCH*2),32);
+ assert.equal(wordWindow(85,80+WORD_BATCH),85);
+ assert.equal(wordWindow(526,64),64);
+ assert.equal(wordWindow(85,8),16);
+ assert.equal(wordWindow(85,NaN),16);
+ assert.equal(wordWindow(85,999),85);
+ assert.equal(wordWindow(-1),0);
+});

@@ -74,3 +74,12 @@ export function validateDialogueRound(id,raw){
 export function lessonTopicPool(state){
  return categories.find(c=>c.words.some(w=>!state.contacts?.[w.id]&&!state.records[w.id]))?.words||[];
 }
+
+// Small lists stay whole; larger lists grow in bounded batches while retaining bookmarks.
+export const WORD_BATCH=16;
+export const SMALL_WORD_LIST=32;
+export function wordWindow(total,shown=WORD_BATCH){
+ const size=Number.isSafeInteger(total)?Math.max(0,total):0;
+ const limit=Number.isSafeInteger(shown)?Math.max(WORD_BATCH,shown):WORD_BATCH;
+ return size<=SMALL_WORD_LIST?size:Math.min(size,limit);
+}

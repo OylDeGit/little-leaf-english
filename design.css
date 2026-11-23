@@ -217,3 +217,14 @@ footer { padding:30px 24px 34px;color:#6f7d65;font-size:11px;line-height:1.8; }
 @media(max-width:650px) { .quiz-intro>p { margin:12px 0 18px;font-size:14px;color:#6c7c5f; }.quiz-intro .round-summary { padding:16px;gap:10px;margin-top:17px; }.quiz-intro .result-actions { margin-top:18px;padding-top:18px; }.round-reward { gap:8px; }.round-reward>span { font-size:12px; }.round-reward>.text-button { font-size:12px;gap:4px; } }
 .quiz-intro .result-actions>button { margin:0; }
 .growth-extra>div { justify-content:flex-start;gap:18px; }
+/* Automatic word feeds have no visible load-more row. */
+.word-load-sentinel { grid-column:1/-1;height:1px;width:100%;pointer-events:none; }
+.browsing-words #word-results,.browsing-words #all-results .word-grid { margin-bottom:8px; }
+.browsing-words main { padding-bottom:4px; }
+.browsing-words footer { padding-top:16px;padding-bottom:20px; }
+/* Word cards use a quieter type scale than page and exercise titles. */
+.word-card .word-play>strong { font-size:22px;line-height:1.4; }
+.word-card [data-translation] { font-size:13px; }
+.word-card .listen-label,.word-card .word-stage { font-size:11px; }
+@media(max-width:650px) { .word-card .word-play>strong { font-size:20px;line-height:1.4; }.word-card [data-translation] { font-size:13px; }.word-card .listen-label,.word-card .word-stage { font-size:11px; } }
+.word-card .word-play>[data-translation] { font-size:13px; }
