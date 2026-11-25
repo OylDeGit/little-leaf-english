@@ -804,3 +804,37 @@ test('standalone alphabet page supports validated navigation and existing letter
  assert.deepEqual(alphabet.map(l=>l.upper),Array.from('ABCDEFGHIJKLMNOPQRSTUVWXYZ'));
  for(const letter of alphabet) assert.ok(audioSources[letter.audioId]);
 });
+
+import {createLetterRound,validateLetterRound,answerLetter,advanceLetter} from './letter-quiz.js';
+test('letter rounds use ten distinct targets and four unique valid options including each target',()=>{
+ for(let n=0;n<30;n++){
+  const r=createLetterRound();assert.ok(validateLetterRound(r));assert.equal(new Set(r.queue).size,10);
+  for(let i=0;i<10;i++){assert.equal(new Set(r.options[i]).size,4);assert.ok(r.options[i].includes(r.queue[i]));}
+ }
+});
+test('letter answers keep the first score, wait on wrong answers, and validate through completion',()=>{
+ let r=createLetterRound();assert.equal(advanceLetter(r),false);assert.equal(answerLetter(r,'invalid'),false);
+ for(let i=0;i<10;i++){
+  const chosen=i===0?r.options[i].find(l=>l!==r.queue[i]):r.queue[i];
+  assert.equal(answerLetter(r,chosen),true);assert.equal(r.lastCorrect,i!==0);
+  assert.equal(answerLetter(r,r.queue[i]),false);assert.equal(r.results.length,i+1);
+  r=validateLetterRound(JSON.parse(JSON.stringify(r)));assert.ok(r);assert.equal(r.position,i);
+  assert.equal(advanceLetter(r),true);assert.ok(validateLetterRound(r));
+ }
+ assert.equal(r.results.filter(x=>x.correct).length,9);assert.equal(advanceLetter(r),false);assert.equal(answerLetter(r,'A'),false);
+});
+test('corrupt letter drafts cannot restore impossible scores, duplicate options or invalid positions',()=>{
+ const base=createLetterRound();answerLetter(base,base.queue[0]);
+ for(const mutate of [r=>r.position=20,r=>r.results[0].correct=false,r=>r.lastCorrect=false,r=>r.options[0].fill('A'),r=>r.queue[1]=r.queue[0],r=>r.results=[],r=>r.options=null]){
+  const r=structuredClone(base);mutate(r);assert.equal(validateLetterRound(r),null);
+ }
+});
+test('letter rounds share guarded auto-next while wrong answers and replay remain paused',()=>{
+ const r=createLetterRound();let playing=false,hidden=false,blocked=false,pending=null,advanced=0;
+ const control=createAutoAdvance({read:()=>({enabled:true,mode:'listen',session:r,playing,hidden,blocked}),advance:()=>{advanceLetter(r);advanced++;},setTimer:fn=>(pending=fn,1),clearTimer:()=>{pending=null;}});
+ answerLetter(r,r.options[0].find(l=>l!==r.queue[0]));control.schedule();assert.equal(pending,null);
+ advanceLetter(r);answerLetter(r,r.queue[1]);control.schedule();assert.ok(pending);
+ playing=true;const fired=pending;pending=null;fired();assert.equal(advanced,0);control.schedule();assert.equal(pending,null);
+ playing=false;control.schedule();const stale=pending;control.cancel();stale();assert.equal(advanced,0);
+ control.schedule();pending();assert.equal(r.position,2);assert.equal(advanced,1);
+});

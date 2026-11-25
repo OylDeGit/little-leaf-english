@@ -3,7 +3,7 @@ import { vocabulary } from './vocabulary.js';
 import { cp, mkdir, rm, readFile, writeFile, readdir } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 const hash = (bytes) => createHash('sha256').update(bytes).digest('hex').slice(0, 12);
-const modules = ['app.js', 'core.js', 'data.js', 'vocabulary.js', 'media.js', 'dialogues.js', 'scene-content.js', 'scenes.js', 'navigation.js', 'learning.js', 'auto-next.js'];
+const modules = ['app.js', 'core.js', 'data.js', 'vocabulary.js', 'media.js', 'dialogues.js', 'scene-content.js', 'scenes.js', 'navigation.js', 'learning.js', 'auto-next.js', 'letter-quiz.js'];
 const source = Object.fromEntries(
   await Promise.all(modules.map(async (f) => [f, await readFile(f, 'utf8')])),
 );

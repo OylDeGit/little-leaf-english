@@ -1,4 +1,5 @@
 import { createAutoAdvance } from './auto-next.js';
+import { LETTER_ROUND_KEY, createLetterRound, validateLetterRound, answerLetter, advanceLetter } from './letter-quiz.js';
 import { dailyPlan, allocateLesson, homeGuide, learningRewards, lessonTopicPool, validateDialogueRound, DIALOGUE_DRAFT_KEY, WORD_BATCH, wordWindow, lessonExploreAction } from './learning.js';
 import { VIEW_KEY, DRAFT_KEY, LESSON_KEY, validateView, validateLesson, routeFor, parseRoute } from './navigation.js';
 import { scenes, sceneMap, alphabet } from './scenes.js';
@@ -81,9 +82,11 @@ let page = 'home',
 let activeLesson=null, navigationReady=false, restoringView=false, viewTimer;
 const drafts=new Map(), browseViews=new Map(), audioCache=new Map();
 let wordFeedObserver=null;
+let letterRound=null, letterPracticing=false;
+try {const saved=JSON.parse(sessionStorage.getItem(LETTER_ROUND_KEY)||'null');letterRound=validateLetterRound(saved?.round);letterPracticing=!!letterRound&&saved?.practicing===true;}catch{}
 const autoAdvance=createAutoAdvance({
-  read:()=>({enabled:state.settings.autoNext,mode,session,playing:!!(audio&&!audio.paused),blocked:modal.open||restoringView,hidden:document.hidden}),
-  advance:()=>continueQuestion(),
+  read:()=>({enabled:page==='alphabet'?true:state.settings.autoNext,mode:page==='alphabet'?'listen':mode,session:page==='alphabet'?(letterPracticing?letterRound:null):session,playing:!!(audio&&!audio.paused),blocked:modal.open||restoringView,hidden:document.hidden}),
+  advance:()=>page==='alphabet'?nextLetterQuestion():continueQuestion(),
 });
 try {
   activeLesson=validateLesson(JSON.parse(localStorage.getItem(LESSON_KEY)||'null'));
@@ -168,6 +171,8 @@ function cachedAudio(id) {
   return clip;
 }
 function preloadNearby() {
+  if(page==='alphabet'&&letterPracticing&&letterRound)
+    letterRound.queue.slice(letterRound.position,letterRound.position+2).forEach(upper=>cachedAudio(alphabet.find(l=>l.upper===upper).audioId));
   if(session&&['listen','spell'].includes(mode))
     session.queue.slice(session.position,session.position+2).forEach(w=>cachedAudio(w.id));
   if(session?.type==='listen'&&session.queue.length===10&&session.position>=8)
@@ -295,8 +300,28 @@ function categoryCard(c) {
 function topicCatalogue() {
   return topicCategories.map((c,i)=>categoryCard(c)+(i===0?`<button class="category-card letter-theme-card" data-action="nav:alphabet" style="--tint:#edf1fb"><div class="category-pictures letter-cover" aria-hidden="true"><span>A<small>a</small></span><span>B<small>b</small></span><span>C<small>c</small></span><span class="category-go">${icon('arrow')}</span></div><div class="category-info"><h3>认识字母<small>Meet the alphabet</small></h3><span class="word-count">26 个字母</span></div><div class="category-foot"><span>认识大小写 · 点读字母名</span>${icon('sound')}</div></button>`:'')).join('');
 }
+function saveLetterRound(){
+  try{sessionStorage.setItem(LETTER_ROUND_KEY,JSON.stringify({round:letterRound,practicing:letterPracticing}));}catch{toast('字母练习暂存失败，请检查浏览器存储');}
+}
+function playLetterQuestion(){
+  const letter=alphabet.find(l=>l.upper===letterRound?.queue[letterRound.position]);
+  if(letter)speak(letter.audioId,true);
+}
+function nextLetterQuestion(){
+  if(!advanceLetter(letterRound))return;
+  stopMedia();saveLetterRound();render();playLetterQuestion();
+}
+function letterExercise(){
+  const r=letterRound;
+  if(r.position===r.queue.length)return `<section class="panel letter-quiz letter-result" aria-label="字母练习结果"><span class="eyebrow">WELL DONE</span><h2>这一轮字母，听完啦！</h2><p>首次答对 ${r.results.filter(result=>result.correct).length} / ${r.queue.length} 题</p><p class="muted">多听几次，慢慢熟悉每个字母。</p><div class="button-row">${btn('再练一轮','letters-new')}${btn('回到字母点读','letters-read','secondary')}</div></section>`;
+  const target=alphabet.find(l=>l.upper===r.queue[r.position]),chosen=r.results[r.position]?.chosen;
+  return `<section class="panel letter-quiz" aria-label="听音选字母练习"><div class="letter-quiz-meta"><span>第 ${r.position+1} / ${r.queue.length} 题</span><span>首次答对 ${r.results.filter(result=>result.correct).length} 题</span></div><progress max="${r.queue.length}" value="${r.position}" aria-label="字母练习进度"></progress><h2>听一听，选字母</h2>${btn(icon('sound')+'再听一遍',`speak:${target.audioId}`,'sound-button')}<div class="letter-options">${r.options[r.position].map(upper=>`<button class="letter-choice ${r.answered?(upper===target.upper?'correct':upper===chosen?'incorrect':''):''}" data-action="letters-answer:${upper}" data-audio-id="${alphabet.find(l=>l.upper===upper).audioId}" aria-label="字母 ${upper}${r.answered?'，点击听发音':''}"><span>${upper}</span><small>${upper.toLowerCase()}</small>${r.answered&&upper===target.upper?icon('check'):''}</button>`).join('')}</div><div class="letter-feedback ${r.answered?(r.lastCorrect?'correct':'incorrect'):''}" role="status">${!r.answered?'听清楚后，选出对应的字母。':r.lastCorrect?'✓ 答对了！马上进入下一题。':`再听听看，正确答案是 ${target.upper} ${target.lower}。点字母可以听它的发音。`}</div>${r.answered&&!r.lastCorrect?`<div class="card-actions">${btn(r.position===r.queue.length-1?'查看结果':'下一题 '+icon('arrow'),'letters-next')}</div>`:''}</section>`;
+}
 function lettersTheme() {
-  return `${btn(icon('back')+'返回主题','theme-list','text-button')}${heading('MEET THE ALPHABET','认识字母','从 A 到 Z，点一点，听听字母的名字。')}<div class="letters-only-grid" aria-label="26 个英文字母">${alphabet.map(l=>btn(`<span class="letter-pair"><strong>${l.upper}</strong><span>${l.lower}</span></span><span class="letter-listen">${icon('sound')} 听发音</span>`,`speak:${l.audioId}`,'letter-only',`aria-label="播放字母 ${l.upper} 的名称"`)).join('')}</div>`;
+  const tabs=`<div class="mode-tabs letter-mode-tabs" role="group" aria-label="字母学习模式">${btn('认识字母','letters-read',!letterPracticing?'selected':'',`aria-pressed="${!letterPracticing}"`)}${btn(icon('sound')+'听音选字母','letters-practice',letterPracticing?'selected':'',`aria-pressed="${letterPracticing}"`)}</div>`;
+  const header=btn(icon('back')+'返回主题','theme-list','text-button');
+  if(letterPracticing&&letterRound)return `${header}${heading('LISTEN AND FIND','字母听力小练习','每轮 10 题 · 答对自动继续，答错慢慢听。')}${tabs}${letterExercise()}`;
+  return `${header}${heading('MEET THE ALPHABET','认识字母','从 A 到 Z，点一点，听听字母的名字。')}${tabs}<div class="letters-only-grid" aria-label="26 个英文字母">${alphabet.map(l=>btn(`<span class="letter-pair"><strong>${l.upper}</strong><span>${l.lower}</span></span><span class="letter-listen">${icon('sound')} 听发音</span>`,`speak:${l.audioId}`,'letter-only',`aria-label="播放字母 ${l.upper} 的名称"`)).join('')}</div>`;
 }
 function exploreTabs(active) {
   return `<div class="explore-tabs mode-tabs" role="group" aria-label="探索方式">${[
@@ -647,7 +672,7 @@ function settings() {
     .map(([v, t]) => `<option value="${v}" ${state.settings.rate === v ? 'selected' : ''}>${t}</option>`)
     .join(
       '',
-    )}</select></label><label class="setting-row"><span>答对后自动下一题<small>答对自动前进；答错停留；重听时等待播放结束</small></span><input id="auto-next" type="checkbox" ${state.settings.autoNext?'checked':''}></label><div class="settings-block"><h3>带着小叶子去旅行</h3><p>下载离线学习内容后，场景插图、单词、字母名和生活对话音频可断网使用；例句也使用预生成美音，可随完整离线内容下载。</p>${btn('下载 / 更新离线内容', 'offline', 'secondary', 'id="offline-btn"')}<p id="offline-status" role="status"></p><p class="small">手机浏览器菜单可尝试“添加到主屏幕”；安装支持由浏览器决定。</p></div><div class="settings-block"><h3>把成长好好收藏</h3><p>学习进度保存在当前浏览器，不会自动同步。建议定期备份，或用备份换设备。</p><div class="button-row">${btn('导出进度备份', 'export', 'secondary')}<label class="secondary import-label">合并导入备份<input id="import-file" type="file" accept="application/json,.json"></label></div><p class="small">导入按单词保留较新记录，每日次数取较大值，收藏合并。当前学习设置不变。</p></div><div class="settings-block attribution"><p>原创双语词库 · 插图：原创 SVG、<a href="https://github.com/microsoft/fluentui-emoji" target="_blank" rel="noopener">Fluent Emoji</a>（MIT）与 <a href="https://github.com/jdecked/twemoji" target="_blank" rel="noopener">Twemoji</a>（CC BY 4.0）<br>不含广告，无需账号。无需麦克风。<br>词库 ${words.length} 词 · ${categories.length} 主题 · 13 场景 · v3.2.5</p><a href="https://github.com/OylDeGit/little-leaf-english" target="_blank" rel="noopener">查看 GitHub 项目 ↗</a></div>`;
+    )}</select></label><label class="setting-row"><span>答对后自动下一题<small>答对自动前进；答错停留；重听时等待播放结束</small></span><input id="auto-next" type="checkbox" ${state.settings.autoNext?'checked':''}></label><div class="settings-block"><h3>带着小叶子去旅行</h3><p>下载离线学习内容后，场景插图、单词、字母名和生活对话音频可断网使用；例句也使用预生成美音，可随完整离线内容下载。</p>${btn('下载 / 更新离线内容', 'offline', 'secondary', 'id="offline-btn"')}<p id="offline-status" role="status"></p><p class="small">手机浏览器菜单可尝试“添加到主屏幕”；安装支持由浏览器决定。</p></div><div class="settings-block"><h3>把成长好好收藏</h3><p>学习进度保存在当前浏览器，不会自动同步。建议定期备份，或用备份换设备。</p><div class="button-row">${btn('导出进度备份', 'export', 'secondary')}<label class="secondary import-label">合并导入备份<input id="import-file" type="file" accept="application/json,.json"></label></div><p class="small">导入按单词保留较新记录，每日次数取较大值，收藏合并。当前学习设置不变。</p></div><div class="settings-block attribution"><p>原创双语词库 · 插图：原创 SVG、<a href="https://github.com/microsoft/fluentui-emoji" target="_blank" rel="noopener">Fluent Emoji</a>（MIT）与 <a href="https://github.com/jdecked/twemoji" target="_blank" rel="noopener">Twemoji</a>（CC BY 4.0）<br>不含广告，无需账号。无需麦克风。<br>词库 ${words.length} 词 · ${categories.length} 主题 · 13 场景 · v3.2.6</p><a href="https://github.com/OylDeGit/little-leaf-english" target="_blank" rel="noopener">查看 GitHub 项目 ↗</a></div>`;
   modal.showModal();
 }
 async function offlineDownload() {
@@ -690,6 +715,17 @@ document.addEventListener('click', (e) => {
   const navigating=['home','nav','scene-list','theme-list','theme-view','scene','category','mode','begin','daily','due','favorites','resume','back-study','scene-example','lesson-start','lesson-group','lesson-today','lesson-resume','lesson-practice','lesson-next','retry'].includes(a);
   if(navigating){rememberPractice();syncView(false);}
   switch (a) {
+    case 'letters-read': stopMedia();letterPracticing=false;saveLetterRound();render();break;
+    case 'letters-practice':
+      stopMedia();if(!letterRound||letterRound.position===10)letterRound=createLetterRound();
+      letterPracticing=true;saveLetterRound();render();if(!letterRound.answered)playLetterQuestion();break;
+    case 'letters-new':
+      stopMedia();letterRound=createLetterRound();letterPracticing=true;saveLetterRound();render();playLetterQuestion();break;
+    case 'letters-answer':
+      if(page!=='alphabet'||!letterPracticing||!letterRound||letterRound.position===10)break;
+      if(letterRound.answered){const letter=alphabet.find(l=>l.upper===id);if(letter)speak(letter.audioId);break;}
+      if(answerLetter(letterRound,id)){stopMedia();saveLetterRound();render();if(letterRound.lastCorrect)toast('✓ 答对了，真棒！',1500);}break;
+    case 'letters-next': if(page==='alphabet'&&letterPracticing)nextLetterQuestion();break;
     case 'advanced-toggle': advancedPractice=!advancedPractice;render();break;
     case 'keep-quiz': modal.close();pendingQuiz=null;resumeSession();break;
     case 'replace-quiz': {const start=pendingQuiz;pendingQuiz=null;modal.close();start?.();break;}
