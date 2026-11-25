@@ -228,3 +228,22 @@ footer { padding:30px 24px 34px;color:#6f7d65;font-size:11px;line-height:1.8; }
 .word-card .listen-label,.word-card .word-stage { font-size:11px; }
 @media(max-width:650px) { .word-card .word-play>strong { font-size:20px;line-height:1.4; }.word-card [data-translation] { font-size:13px; }.word-card .listen-label,.word-card .word-stage { font-size:11px; } }
 .word-card .word-play>[data-translation] { font-size:13px; }
+
+/* A dedicated letter theme: compact pairs, no example-word cards. */
+.letter-cover { gap:12px; }
+.letter-cover > span:not(.category-go) { color:#52738a; font-size:38px; font-weight:700; line-height:1; }
+.letter-cover small { font-size:22px; font-weight:500; }
+.letter-cover > span:nth-child(2) { color:#9180ac; transform:translateY(-5px); }
+.letter-cover > span:nth-child(3) { color:#bf8a53; }
+.letter-theme-card .category-foot { margin-top:16px; }
+.letters-only-grid { display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:16px; }
+.letter-only { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; min-width:0; min-height:136px; padding:20px 10px; border:1px solid var(--line,#dfe5d9); border-radius:20px; background:#fffefa; color:#355448; cursor:pointer; }
+.letter-only:nth-child(3n+2) { background:#f0f4ec; }
+.letter-only:nth-child(3n) { background:#f4f0f8; }
+.letter-pair { display:flex; align-items:baseline; gap:6px; font-size:38px; line-height:1.15; }
+.letter-pair > span { font-weight:400; color:#7b8b76; }
+.letter-listen { display:flex; align-items:center; gap:5px; font-size:12px; color:#77856e; }
+.letter-listen svg { width:16px; height:16px; }
+.letter-only.speaking { border-color:#4a7d5c; box-shadow:0 0 0 2px #d9e7d5; }
+@media(max-width:900px) { .letters-only-grid { grid-template-columns:repeat(4,minmax(0,1fr)); } }
+@media(max-width:650px) { .letters-only-grid { grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; } .letter-only { min-height:112px; padding:16px 6px; border-radius:16px; gap:10px; } .letter-pair { font-size:30px; gap:4px; } .letter-listen { font-size:11px; } .letter-cover > span:not(.category-go) { font-size:30px; } .letter-cover small { font-size:18px; } .letter-cover { gap:8px; } }

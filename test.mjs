@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { words, categories, wordMap, imagePath } from './data.js';
+import { words, categories, topicCategories, wordMap, imagePath } from './data.js';
 import { audioSources } from './media.js';
 import {
   emptyState,
@@ -787,4 +787,20 @@ test('home exploration uses the same destination and describes it without changi
   const guide=homeGuide(state,null,lesson,false,date);assert.equal(guide.kind,`scene:${scene}`);assert.ok(guide.note.includes(sceneMap.get(scene).name));
   assert.equal(homeGuide(state,null,{...lesson,completed:false},false,date).kind,'lesson-resume');
  }
+});
+
+ test('topic display starts with numbers without changing vocabulary allocation order',()=>{
+ assert.equal(topicCategories[0].id,'numbers');
+ assert.equal(new Set(topicCategories.map(c=>c.id)).size,categories.length);
+ assert.deepEqual(topicCategories.slice(1),categories.filter(c=>c.id!=='numbers'));
+ assert.equal(categories[0].id,'fruit');
+});
+test('standalone alphabet page supports validated navigation and existing letter-name audio',()=>{
+ const view=validateView(parseRoute('#/alphabet'));
+ assert.equal(view.page,'alphabet');
+ assert.equal(routeFor(view),'#/alphabet');
+ assert.equal(view.categoryId,null);
+ assert.equal(alphabet.length,26);
+ assert.deepEqual(alphabet.map(l=>l.upper),Array.from('ABCDEFGHIJKLMNOPQRSTUVWXYZ'));
+ for(const letter of alphabet) assert.ok(audioSources[letter.audioId]);
 });

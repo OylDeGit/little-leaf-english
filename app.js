@@ -4,7 +4,7 @@ import { VIEW_KEY, DRAFT_KEY, LESSON_KEY, validateView, validateLesson, routeFor
 import { scenes, sceneMap, alphabet } from './scenes.js';
 import { dialogues } from './dialogues.js';
 import { audioSources, sentenceSources } from './media.js';
-import { categories, words, wordMap, categoryMap, imagePath } from './data.js';
+import { categories, topicCategories, words, wordMap, categoryMap, imagePath } from './data.js';
 import {
   KEY,
   contactWord,
@@ -241,18 +241,18 @@ function render() {
       btn(
         icon(i) + t,
         `nav:${id}`,
-        `nav-link ${(page === id || id === 'parent' && page === 'progress' || id === 'themes' && page === 'dialogues') ? 'active' : ''}`,
-        (page === id || id === 'parent' && page === 'progress' || id === 'themes' && page === 'dialogues') ? 'aria-current="page"' : '',
+        `nav-link ${(page === id || id === 'parent' && page === 'progress' || id === 'themes' && ['dialogues','alphabet'].includes(page)) ? 'active' : ''}`,
+        (page === id || id === 'parent' && page === 'progress' || id === 'themes' && ['dialogues','alphabet'].includes(page)) ? 'aria-current="page"' : '',
       ),
     )
     .join(
       '',
-    )}</nav><div class="sidebar-bottom"><div class="grow-note"><span>🌱</span><strong>每天一点，自然生长</strong><p>每一个新单词，<br>都是一片小小的新叶子。</p></div><small>给好奇心，一点生长的空间</small></div></aside><div class="workspace"><header class="topbar"><div class="breadcrumb">我的学习空间 <span>/</span> <strong>${category ? esc(category.name) : { home: '学习首页', themes: '探索主题', review: '我的复习', dialogues: '生活对话', parent: '家长中心', rewards: '小动物贴纸册', progress: '成长记录' }[page]}</strong></div><div class="top-meta">${page === 'dialogues' && dialoguePractice ? btn(icon('back'), 'nav:dialogues', 'icon-button study-exit', 'aria-label="退出对话练习"') : ''}${category && !['cards', 'scene'].includes(mode) ? btn(icon('back'), 'back-study', 'icon-button study-exit', 'aria-label="退出练习，返回学习内容"') : ''}<span class="streak">${icon('sun')} 连续学习 ${streak(state)} 天</span><button class="avatar parent-shortcut" data-action="nav:parent" aria-label="进入家长中心">家长</button></div></header><main id="main" tabindex="-1">${category ? renderCategory() : page === 'home' ? home() : page === 'themes' ? themes() : page === 'review' ? review() : page === 'dialogues' ? dialogueView() : page === 'rewards' ? rewardsView() : page === 'parent' ? parentView() : progress()}</main><footer>让英语，从看见、听见，到自然说出口。<span>Little steps. Big discoveries.</span></footer></div><nav class="mobile-nav" aria-label="主导航">${[
+    )}</nav><div class="sidebar-bottom"><div class="grow-note"><span>🌱</span><strong>每天一点，自然生长</strong><p>每一个新单词，<br>都是一片小小的新叶子。</p></div><small>给好奇心，一点生长的空间</small></div></aside><div class="workspace"><header class="topbar"><div class="breadcrumb">我的学习空间 <span>/</span> <strong>${category ? esc(category.name) : { home: '学习首页', themes: '探索主题', alphabet: '认识字母', review: '我的复习', dialogues: '生活对话', parent: '家长中心', rewards: '小动物贴纸册', progress: '成长记录' }[page]}</strong></div><div class="top-meta">${page === 'dialogues' && dialoguePractice ? btn(icon('back'), 'nav:dialogues', 'icon-button study-exit', 'aria-label="退出对话练习"') : ''}${category && !['cards', 'scene'].includes(mode) ? btn(icon('back'), 'back-study', 'icon-button study-exit', 'aria-label="退出练习，返回学习内容"') : ''}<span class="streak">${icon('sun')} 连续学习 ${streak(state)} 天</span><button class="avatar parent-shortcut" data-action="nav:parent" aria-label="进入家长中心">家长</button></div></header><main id="main" tabindex="-1">${category ? renderCategory() : page === 'home' ? home() : page === 'themes' ? themes() : page === 'alphabet' ? lettersTheme() : page === 'review' ? review() : page === 'dialogues' ? dialogueView() : page === 'rewards' ? rewardsView() : page === 'parent' ? parentView() : progress()}</main><footer>让英语，从看见、听见，到自然说出口。<span>Little steps. Big discoveries.</span></footer></div><nav class="mobile-nav" aria-label="主导航">${[
     ['home', 'home', '首页'],
     ['themes', 'grid', '发现'],
     ['parent', 'chart', '家长'],
   ]
-    .map(([id, i, t]) => btn(icon(i) + `<span>${t}</span>`, `nav:${id}`, (page === id || id === 'parent' && page === 'progress' || id === 'themes' && page === 'dialogues') ? 'active' : ''))
+    .map(([id, i, t]) => btn(icon(i) + `<span>${t}</span>`, `nav:${id}`, (page === id || id === 'parent' && page === 'progress' || id === 'themes' && ['dialogues','alphabet'].includes(page)) ? 'active' : ''))
     .join('')}</nav>`;
   observeWordFeed();
   preloadNearby();
@@ -292,6 +292,12 @@ function categoryCard(c) {
       '',
     )}<span class="category-go">${icon('arrow')}</span></div><div class="category-info"><h3>${c.name}<small>${c.en}</small></h3><span class="word-count">${c.words.length} 个单词</span></div><div class="category-progress"><span style="width:${(done / c.words.length) * 100}%"></span></div><div class="category-foot"><span>${done ? '接触过 ' + done + ' 个' : '等待你的第一个发现'}</span><span>${Math.round((done / c.words.length) * 100)}%</span></div></button>`;
 }
+function topicCatalogue() {
+  return topicCategories.map((c,i)=>categoryCard(c)+(i===0?`<button class="category-card letter-theme-card" data-action="nav:alphabet" style="--tint:#edf1fb"><div class="category-pictures letter-cover" aria-hidden="true"><span>A<small>a</small></span><span>B<small>b</small></span><span>C<small>c</small></span><span class="category-go">${icon('arrow')}</span></div><div class="category-info"><h3>认识字母<small>Meet the alphabet</small></h3><span class="word-count">26 个字母</span></div><div class="category-foot"><span>认识大小写 · 点读字母名</span>${icon('sound')}</div></button>`:'')).join('');
+}
+function lettersTheme() {
+  return `${btn(icon('back')+'返回主题','theme-list','text-button')}${heading('MEET THE ALPHABET','认识字母','从 A 到 Z，点一点，听听字母的名字。')}<div class="letters-only-grid" aria-label="26 个英文字母">${alphabet.map(l=>btn(`<span class="letter-pair"><strong>${l.upper}</strong><span>${l.lower}</span></span><span class="letter-listen">${icon('sound')} 听发音</span>`,`speak:${l.audioId}`,'letter-only',`aria-label="播放字母 ${l.upper} 的名称"`)).join('')}</div>`;
+}
 function exploreTabs(active) {
   return `<div class="explore-tabs mode-tabs" role="group" aria-label="探索方式">${[
     ['topics','主题词库','theme-list'],['scenes','场景学习','scene-list'],['dialogues','生活对话','nav:dialogues'],
@@ -300,7 +306,7 @@ function exploreTabs(active) {
 function themes() {
   const tabs=exploreTabs(themeView);
   if (themeView === 'scenes') return `${heading('WORDS COME TO LIFE', '走进生活的小世界', '13 个场景 · 轻点物品听发音 · 让英语与生活相遇')}${tabs}${sceneList()}`;
-  return `${heading('YOUR WORLD OF WORDS', '每一个主题，都是新发现', categories.length + ' 个生活主题 · ' + words.length + ' 个启蒙单词 · 随时点读')}${tabs}<label class="search global-search">${icon('search')}<input id="all-search" type="search" placeholder="搜索全部单词：中文 / English" aria-label="搜索全部单词" value="${esc(allSearch)}"></label><div id="all-results">${allSearch.trim() ? globalResults() : `<div class="category-grid">${categories.map(categoryCard).join('')}</div>`}</div>`;
+  return `${heading('YOUR WORLD OF WORDS', '每一个主题，都是新发现', categories.length + ' 个单词主题 + A–Z 字母 · ' + words.length + ' 个启蒙单词 · 随时点读')}${tabs}<label class="search global-search">${icon('search')}<input id="all-search" type="search" placeholder="搜索全部单词：中文 / English" aria-label="搜索全部单词" value="${esc(allSearch)}"></label><div id="all-results">${allSearch.trim() ? globalResults() : `<div class="category-grid">${topicCatalogue()}</div>`}</div>`;
 }
 function globalWordMatches(){
   const query=allSearch.trim().toLowerCase();
@@ -641,7 +647,7 @@ function settings() {
     .map(([v, t]) => `<option value="${v}" ${state.settings.rate === v ? 'selected' : ''}>${t}</option>`)
     .join(
       '',
-    )}</select></label><label class="setting-row"><span>答对后自动下一题<small>答对自动前进；答错停留；重听时等待播放结束</small></span><input id="auto-next" type="checkbox" ${state.settings.autoNext?'checked':''}></label><div class="settings-block"><h3>带着小叶子去旅行</h3><p>下载离线学习内容后，场景插图、单词、字母名和生活对话音频可断网使用；例句也使用预生成美音，可随完整离线内容下载。</p>${btn('下载 / 更新离线内容', 'offline', 'secondary', 'id="offline-btn"')}<p id="offline-status" role="status"></p><p class="small">手机浏览器菜单可尝试“添加到主屏幕”；安装支持由浏览器决定。</p></div><div class="settings-block"><h3>把成长好好收藏</h3><p>学习进度保存在当前浏览器，不会自动同步。建议定期备份，或用备份换设备。</p><div class="button-row">${btn('导出进度备份', 'export', 'secondary')}<label class="secondary import-label">合并导入备份<input id="import-file" type="file" accept="application/json,.json"></label></div><p class="small">导入按单词保留较新记录，每日次数取较大值，收藏合并。当前学习设置不变。</p></div><div class="settings-block attribution"><p>原创双语词库 · 插图：原创 SVG、<a href="https://github.com/microsoft/fluentui-emoji" target="_blank" rel="noopener">Fluent Emoji</a>（MIT）与 <a href="https://github.com/jdecked/twemoji" target="_blank" rel="noopener">Twemoji</a>（CC BY 4.0）<br>不含广告，无需账号。无需麦克风。<br>词库 ${words.length} 词 · ${categories.length} 主题 · 13 场景 · v3.2.4</p><a href="https://github.com/OylDeGit/little-leaf-english" target="_blank" rel="noopener">查看 GitHub 项目 ↗</a></div>`;
+    )}</select></label><label class="setting-row"><span>答对后自动下一题<small>答对自动前进；答错停留；重听时等待播放结束</small></span><input id="auto-next" type="checkbox" ${state.settings.autoNext?'checked':''}></label><div class="settings-block"><h3>带着小叶子去旅行</h3><p>下载离线学习内容后，场景插图、单词、字母名和生活对话音频可断网使用；例句也使用预生成美音，可随完整离线内容下载。</p>${btn('下载 / 更新离线内容', 'offline', 'secondary', 'id="offline-btn"')}<p id="offline-status" role="status"></p><p class="small">手机浏览器菜单可尝试“添加到主屏幕”；安装支持由浏览器决定。</p></div><div class="settings-block"><h3>把成长好好收藏</h3><p>学习进度保存在当前浏览器，不会自动同步。建议定期备份，或用备份换设备。</p><div class="button-row">${btn('导出进度备份', 'export', 'secondary')}<label class="secondary import-label">合并导入备份<input id="import-file" type="file" accept="application/json,.json"></label></div><p class="small">导入按单词保留较新记录，每日次数取较大值，收藏合并。当前学习设置不变。</p></div><div class="settings-block attribution"><p>原创双语词库 · 插图：原创 SVG、<a href="https://github.com/microsoft/fluentui-emoji" target="_blank" rel="noopener">Fluent Emoji</a>（MIT）与 <a href="https://github.com/jdecked/twemoji" target="_blank" rel="noopener">Twemoji</a>（CC BY 4.0）<br>不含广告，无需账号。无需麦克风。<br>词库 ${words.length} 词 · ${categories.length} 主题 · 13 场景 · v3.2.5</p><a href="https://github.com/OylDeGit/little-leaf-english" target="_blank" rel="noopener">查看 GitHub 项目 ↗</a></div>`;
   modal.showModal();
 }
 async function offlineDownload() {
@@ -927,7 +933,7 @@ document.addEventListener('input', (e) => {
     shown = WORD_BATCH;
     $('#all-results').innerHTML = allSearch.trim()
       ? globalResults()
-      : `<div class="category-grid">${categories.map(categoryCard).join('')}</div>`;
+      : `<div class="category-grid">${topicCatalogue()}</div>`;
   }
   if (e.target.id === 'search') {
     search = e.target.value;

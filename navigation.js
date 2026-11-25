@@ -4,7 +4,7 @@ import { sceneMap } from './scenes.js';
 export const VIEW_KEY = 'little-leaf:view:v1';
 export const DRAFT_KEY = 'little-leaf:drafts:v1';
 export const LESSON_KEY = 'little-leaf:lesson:v1';
-const pages = ['home', 'themes', 'review', 'progress', 'dialogues', 'parent', 'rewards'];
+const pages = ['home', 'themes', 'review', 'progress', 'dialogues', 'parent', 'rewards', 'alphabet'];
 const modes = ['cards', 'scene', 'listen', 'sentences', 'lesson', 'spell'];
 export function validateLesson(raw) {
   if (!raw || !Array.isArray(raw.ids) || !raw.ids.length || raw.ids.length > 5 ||
