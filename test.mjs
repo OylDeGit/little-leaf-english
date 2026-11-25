@@ -744,3 +744,15 @@ test('timer completion rechecks settings, playback, visibility, mode and session
  const changes=[c=>c.enabled=false,c=>c.playing=true,c=>c.hidden=true,c=>c.blocked=true,c=>c.mode='cards',c=>c.session={...c.session},c=>c.session=null];
  for(const change of changes){const h=autoNextHarness();h.control.schedule();change(h.context);h.tick(1500);assert.deepEqual(h.advances,[]);}
 });
+
+import { lessonExploreAction } from './learning.js';
+test('fruit lessons route directly to the supermarket from completion and the home guide',()=>{
+ const lesson={ids:['apple','banana','grape','pear','orange'],categoryId:'fruit',completed:true};
+ assert.equal(lessonExploreAction(lesson),'scene:supermarket');
+ assert.equal(lessonExploreAction({ids:lesson.ids}),'scene:supermarket');
+ assert.equal(lessonExploreAction({ids:['apple','car']}),'scene-list');
+ assert.equal(lessonExploreAction(null),'scene-list');
+ const state=emptyState(),date=new Date(2026,10,25);state.dailyLessonWords={'2026-11-25':lesson.ids};
+ assert.equal(homeGuide(state,null,lesson,false,date).kind,'scene:supermarket');
+ assert.equal(homeGuide(state,null,{...lesson,completed:false},false,date).kind,'lesson-resume');
+});

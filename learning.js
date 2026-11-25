@@ -43,6 +43,11 @@ export function allocateLesson(state,pool,date=new Date()){
  if(chosen.length){state.dailyLessonWords||={};state.dailyLessonWords[plan.day]=[...plan.ids,...chosen.map(w=>w.id)];state.updatedAt=date.getTime();}
  return chosen;
 }
+export function lessonExploreAction(lesson){
+ const ids=lesson?.ids||[];
+ const fruit=lesson?.categoryId==='fruit'||(ids.length>0&&ids.every(id=>wordMap.get(id)?.category==='fruit'));
+ return fruit?'scene:supermarket':'scene-list';
+}
 export function homeGuide(state,saved,lesson,advanced=false,now=new Date()){
  if(saved&&(saved.type!=='spell'||advanced))return{kind:'resume',title:'继续刚才的练习',note:`上次到第 ${saved.position+1} / ${saved.queue.length} 题`};
  if(lesson&&!lesson.completed)return{kind:'lesson-resume',title:`继续这 ${lesson.ids.length} 个词`,note:'今天的小课堂还在，不必一次学完'};
@@ -51,7 +56,8 @@ export function homeGuide(state,saved,lesson,advanced=false,now=new Date()){
  const remaining=dailyPlan(state,now).remaining;
  const fresh=[...wordMap.values()].some(w=>!state.contacts?.[w.id]&&!state.records[w.id]);
  if(remaining&&fresh)return{kind:'lesson-today',title:`开始今天的 ${remaining} 词小课堂`,note:'先听发音，再一起找图片'};
- return{kind:'scene-list',title:'去生活里找一找',note:'今天的词安排好啦，自由探索也很棒'};
+ const action=lessonExploreAction(lesson);
+ return{kind:action,title:'去生活里找一找',note:action==='scene:supermarket'?'去超市里找找刚认识的水果吧。':'今天的词安排好啦，自由探索也很棒'};
 }
 export const animals=[['🐰','小兔',1],['🐻','小熊',3],['🦊','小狐狸',5],['🐼','小熊猫',7],['🐱','小猫',10]];
 export function learningRewards(state,now=new Date()){
