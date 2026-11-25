@@ -1,6 +1,7 @@
 // Web-only learning state: no account, cloud SDK, or private service configuration.
 import { wordMap, categories } from './data.js';
 import { dialogues } from './dialogues.js';
+import { scenes, sceneMap } from './scenes.js';
 const lessonById=new Map(dialogues.map(d=>[d.id,d]));
 const object=v=>v&&typeof v==='object'&&!Array.isArray(v);
 const time=v=>Number.isSafeInteger(v)&&v>0&&v<=4102444800000;
@@ -43,10 +44,28 @@ export function allocateLesson(state,pool,date=new Date()){
  if(chosen.length){state.dailyLessonWords||={};state.dailyLessonWords[plan.day]=[...plan.ids,...chosen.map(w=>w.id)];state.updatedAt=date.getTime();}
  return chosen;
 }
+const topicScenes={
+ fruit:'supermarket',vegetables:'supermarket',farm:'farm',wild:'zoo',food:'mealtime',drinks:'mealtime',
+ transport:'vehicles',clothes:'clothes',home:'living-room',places:'city',family:'family','alphabet-words':'alphabet',
+};
+const homeRooms=new Set(['living-room','bathroom','bedroom','kitchen','mealtime']);
+function matchingScene(ids,allowed){
+ if(!ids.length)return null;
+ let best=null,matches=0;
+ for(const scene of scenes){
+  if(scene.id==='alphabet'||(allowed&&!allowed.has(scene.id)))continue;
+  const count=ids.filter(id=>scene.wordIds.includes(id)).length;
+  if(count>matches){best=scene.id;matches=count;}
+ }
+ return matches>=Math.ceil(ids.length*.6)?best:null;
+}
 export function lessonExploreAction(lesson){
- const ids=lesson?.ids||[];
- const fruit=lesson?.categoryId==='fruit'||(ids.length>0&&ids.every(id=>wordMap.get(id)?.category==='fruit'));
- return fruit?'scene:supermarket':'scene-list';
+ if(sceneMap.has(lesson?.sceneId))return 'scene:'+lesson.sceneId;
+ const ids=[...new Set(Array.isArray(lesson?.ids)?lesson.ids:[])].filter(id=>wordMap.has(id));
+ const wordTopics=[...new Set(ids.map(id=>wordMap.get(id).category))];
+ const topic=categories.some(c=>c.id===lesson?.categoryId)?lesson.categoryId:wordTopics.length===1?wordTopics[0]:null;
+ const scene=topic==='home'?(matchingScene(ids,homeRooms)||topicScenes.home):topicScenes[topic]||matchingScene(ids);
+ return scene?'scene:'+scene:'scene-list';
 }
 export function homeGuide(state,saved,lesson,advanced=false,now=new Date()){
  if(saved&&(saved.type!=='spell'||advanced))return{kind:'resume',title:'继续刚才的练习',note:`上次到第 ${saved.position+1} / ${saved.queue.length} 题`};
@@ -57,7 +76,8 @@ export function homeGuide(state,saved,lesson,advanced=false,now=new Date()){
  const fresh=[...wordMap.values()].some(w=>!state.contacts?.[w.id]&&!state.records[w.id]);
  if(remaining&&fresh)return{kind:'lesson-today',title:`开始今天的 ${remaining} 词小课堂`,note:'先听发音，再一起找图片'};
  const action=lessonExploreAction(lesson);
- return{kind:action,title:'去生活里找一找',note:action==='scene:supermarket'?'去超市里找找刚认识的水果吧。':'今天的词安排好啦，自由探索也很棒'};
+ const scene=sceneMap.get(action.split(':')[1]);
+ return{kind:action,title:'去生活里找一找',note:scene?'去'+scene.name+'找找刚认识的词吧。':'今天的词安排好啦，自由探索也很棒'};
 }
 export const animals=[['🐰','小兔',1],['🐻','小熊',3],['🦊','小狐狸',5],['🐼','小熊猫',7],['🐱','小猫',10]];
 export function learningRewards(state,now=new Date()){

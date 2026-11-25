@@ -756,3 +756,35 @@ test('fruit lessons route directly to the supermarket from completion and the ho
  assert.equal(homeGuide(state,null,lesson,false,date).kind,'scene:supermarket');
  assert.equal(homeGuide(state,null,{...lesson,completed:false},false,date).kind,'lesson-resume');
 });
+
+test('learning topics route to appropriate existing scenes',()=>{
+ const cases={fruit:'supermarket',vegetables:'supermarket',wild:'zoo',farm:'farm',food:'mealtime',drinks:'mealtime',clothes:'clothes',transport:'vehicles',places:'city',family:'family','alphabet-words':'alphabet'};
+ for(const [topic,scene] of Object.entries(cases)){
+  const ids=categories.find(c=>c.id===topic).words.slice(0,5).map(w=>w.id);
+  assert.ok(sceneMap.has(scene));
+  assert.equal(lessonExploreAction({categoryId:topic,ids}),`scene:${scene}`,topic);
+  assert.equal(lessonExploreAction({ids}),`scene:${scene}`,topic+' inferred from saved words');
+ }
+});
+test('home lessons choose the matching room and scene-based lessons keep their original context',()=>{
+ const cases={bedroom:['bed','pillow','quilt'],bathroom:['soap','toothbrush','toothpaste'],kitchen:['pan','spatula','kettle'],'living-room':['sofa','television','remote-control'],mealtime:['spoon','plate','fork']};
+ for(const [scene,ids] of Object.entries(cases))assert.equal(lessonExploreAction({categoryId:'home',ids}),`scene:${scene}`);
+ assert.equal(lessonExploreAction({categoryId:'home',ids:['house']}),'scene:living-room');
+ assert.equal(lessonExploreAction({sceneId:'farm',categoryId:'wild',ids:['rabbit']}),'scene:farm');
+});
+test('unrelated lessons retain scene selection and mixed relevant words can share a real scene',()=>{
+ for(const topic of ['music','shapes','colors','numbers','body']){
+  const ids=categories.find(c=>c.id===topic).words.slice(0,5).map(w=>w.id);
+  assert.equal(lessonExploreAction({categoryId:topic,ids}),'scene-list',topic);
+ }
+ assert.equal(lessonExploreAction({ids:['apple','tomato','banana']}),'scene:supermarket');
+ assert.equal(lessonExploreAction({ids:['apple','car']}),'scene-list');
+});
+test('home exploration uses the same destination and describes it without changing resume priority',()=>{
+ for(const [topic,scene] of [['wild','zoo'],['food','mealtime'],['clothes','clothes']]){
+  const ids=categories.find(c=>c.id===topic).words.slice(0,5).map(w=>w.id),lesson={ids,categoryId:topic,completed:true},state=emptyState(),date=new Date(2026,10,25);
+  state.dailyLessonWords={'2026-11-25':ids};
+  const guide=homeGuide(state,null,lesson,false,date);assert.equal(guide.kind,`scene:${scene}`);assert.ok(guide.note.includes(sceneMap.get(scene).name));
+  assert.equal(homeGuide(state,null,{...lesson,completed:false},false,date).kind,'lesson-resume');
+ }
+});
