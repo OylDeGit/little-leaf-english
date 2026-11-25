@@ -14,7 +14,7 @@ for (const word of vocabulary.flatMap((c) => c.words))
     assert.ok(files.includes(file), word.id);
     assert.match(file, /assets\/(images|audio)\/[a-f0-9]{12}\.(svg|m4a)$/);
   }
-for (const file of ['app.js', 'core.js', 'data.js', 'vocabulary.js', 'media.js', 'dialogues.js', 'scene-content.js', 'scenes.js', 'navigation.js', 'learning.js']) {
+for (const file of ['app.js', 'core.js', 'data.js', 'vocabulary.js', 'media.js', 'dialogues.js', 'scene-content.js', 'scenes.js', 'navigation.js', 'learning.js', 'auto-next.js']) {
   const text = await readFile(new URL(file, root), 'utf8');
   for (const m of text.matchAll(/from ['"](.+?)['"]/g)) {
     assert.ok(m[1].endsWith(`?v=${release.version}`), m[1]);

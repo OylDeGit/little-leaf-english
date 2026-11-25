@@ -1,3 +1,4 @@
+import { createAutoAdvance } from './auto-next.js';
 import { dailyPlan, allocateLesson, homeGuide, learningRewards, lessonTopicPool, validateDialogueRound, DIALOGUE_DRAFT_KEY, WORD_BATCH, wordWindow } from './learning.js';
 import { VIEW_KEY, DRAFT_KEY, LESSON_KEY, validateView, validateLesson, routeFor, parseRoute } from './navigation.js';
 import { scenes, sceneMap, alphabet } from './scenes.js';
@@ -80,6 +81,10 @@ let page = 'home',
 let activeLesson=null, navigationReady=false, restoringView=false, viewTimer;
 const drafts=new Map(), browseViews=new Map(), audioCache=new Map();
 let wordFeedObserver=null;
+const autoAdvance=createAutoAdvance({
+  read:()=>({enabled:state.settings.autoNext,mode,session,playing:!!(audio&&!audio.paused),blocked:modal.open||restoringView,hidden:document.hidden}),
+  advance:()=>continueQuestion(),
+});
 try {
   activeLesson=validateLesson(JSON.parse(localStorage.getItem(LESSON_KEY)||'null'));
   for (const [key,value] of JSON.parse(sessionStorage.getItem(DRAFT_KEY)||'[]')) drafts.set(key,value);
@@ -126,7 +131,7 @@ function save() {
     return false;
   }
 }
-let toastTimer, autoNextTimer, fireworksTimer;
+let toastTimer, fireworksTimer;
 function toast(t, duration = 4000) {
   $('#toast').textContent = t;
   $('#toast').classList.add('visible');
@@ -142,12 +147,12 @@ function setPlaying(id,playing) {
 }
 function stopMedia() {
   stopFireworkSound();
-  clearTimeout(autoNextTimer); playToken++;
+  autoAdvance.cancel(); playToken++;
   document.querySelectorAll('.speaking').forEach(node=>{
     node.classList.remove('speaking');node.setAttribute('aria-busy','false');
     if(node.classList.contains('sound-button')) node.innerHTML=icon('sound')+'再听一遍';
   });
-  if(audio){audio.onended=null;audio.pause();audio.currentTime=0;audio=null;}
+  if(audio){audio.onended=null;audio.onerror=null;audio.pause();audio.currentTime=0;audio=null;}
 }
 function cachedAudio(id) {
   const source=id.startsWith('sentence-')?sentenceSources[id.slice(9)]:audioSources[id];
@@ -178,24 +183,25 @@ function recordContact(id) {
   if(mode==='lesson'&&$('#lesson-contact-count')) $('#lesson-contact-count').textContent=lessonContactCount();
 }
 async function speak(id,automatic=false) {
-  stopMedia();
-  const token=playToken;
+  stopMedia();const token=playToken;
   const text=wordMap.get(id)?.word||alphabet.find(l=>l.audioId===id)?.upper;
-  if(!text) return toast('这个发音暂不可用，请换一个再试。');
-  setPlaying(id,true);
-  const ended=()=>{if(token===playToken){setPlaying(id,false);audio=null;scheduleAutoNext();}};
+  if(!text){scheduleAutoNext();return toast('这个发音暂不可用，请换一个再试。');}
+  setPlaying(id,true);let failed=false;
+  const fail=error=>{
+    if(token!==playToken||failed)return;
+    failed=true;
+    if(audio){audio.onended=null;audio.onerror=null;audio.pause();audio=null;}
+    setPlaying(id,false);
+    toast(automatic&&error?.name==='NotAllowedError'?'点一下播放按钮，就能听到声音。':'音频暂时没加载好，点一下重试，或请家长下载离线内容。');
+    scheduleAutoNext();
+  };
   try {
-    const clip=cachedAudio(id);if(!clip) throw Error('Missing audio');
-    audio=clip;clip.currentTime=0;clip.playbackRate=state.settings.rate;clip.preservesPitch=true;clip.onended=ended;
-    await clip.play();if(token===playToken) recordContact(id);
-  } catch(error) {
-    if(token!==playToken||error.name==='AbortError') return;
-    if(audio) audio.onended=null;audio=null;
-    if(automatic&&error.name==='NotAllowedError'){
-      setPlaying(id,false);toast('点一下播放按钮，就能听到声音。');return;
-    }
-    setPlaying(id,false);toast('音频暂时没加载好，点一下重试，或请家长下载离线内容。');
-  }
+    const clip=cachedAudio(id);if(!clip)throw Error('Missing audio');
+    audio=clip;clip.currentTime=0;clip.playbackRate=state.settings.rate;clip.preservesPitch=true;
+    clip.onended=()=>{if(token===playToken){clip.onended=null;clip.onerror=null;setPlaying(id,false);audio=null;scheduleAutoNext();}};
+    clip.onerror=()=>fail(Error('Audio playback failed'));
+    await clip.play();if(token===playToken)recordContact(id);
+  }catch(error){fail(error);}
 }
 
 function currentPool() {
@@ -250,6 +256,7 @@ function render() {
     .join('')}</nav>`;
   observeWordFeed();
   preloadNearby();
+  scheduleAutoNext();
 }
 function heading(kicker, title, sub, right = '') {
   return `<div class="heading"><div><p class="eyebrow">${kicker}</p><h1>${title}</h1><p class="muted">${sub}</p></div>${right}</div>`;
@@ -530,7 +537,7 @@ function quizView() {
 
 function listeningQuestion(w){
   const answered=session.answered, final=session.position+1===session.queue.length, correcting=correction&&!correction.solved;
-  const feedback=answered?`<div class="listening-answer"><strong>${correction?.solved?'这次找对啦！':session.lastCorrect?'答对啦！':correcting?'再听一遍，试试看':'正确答案'}</strong><p>${correcting?'这次不计分，听清楚再选。':esc(w.word)+' · '+esc(w.zh)}</p></div><div class="answer-actions">${!session.lastCorrect&&!correction?.solved?btn('再试一次','retry-word','secondary'):''}${btn(final?'看结果':'下一题 '+icon('arrow'),'continue','primary')}</div>`:'<span class="listening-hint">点图选答案，没听清可以重听。</span>';
+  const feedback=answered?`<div class="listening-answer"><strong>${correction?.solved?'这次找对啦！':session.lastCorrect?(state.settings.autoNext?(final?'答对啦，即将看结果':'答对啦，即将下一题'):'答对啦，点下一题继续'):correcting?'再听一遍，试试看':'正确答案'}</strong><p>${correcting?'这次不计分，听清楚再选。':esc(w.word)+' · '+esc(w.zh)}</p></div><div class="answer-actions">${!session.lastCorrect&&!correction?.solved?btn('再试一次','retry-word','secondary'):''}${btn(final?'看结果':'下一题 '+icon('arrow'),'continue','primary')}</div>`:'<span class="listening-hint">点图选答案，没听清可以重听。</span>';
   return `<section class="quiz panel listening-quiz" aria-label="听音选图练习"><div class="quiz-top"><span>第 ${session.position+1} / ${session.queue.length} 题</span><span>首次答对 ${session.correct} 题</span></div><div class="category-progress"><span style="width:${session.position/session.queue.length*100}%"></span></div><div class="listening-prompt"><h2>听一听，选图片</h2>${btn(icon('sound')+'再听一遍','speak:'+w.id,'sound-button')}</div><div class="quiz-options">${session.options.map((o,i)=>`<button data-action="${correcting?'correction-answer':answered?'speak':'answer'}:${o.id}" aria-label="${answered&&!correcting?'播放 '+esc(o.word):'选项 '+(i+1)}" class="quiz-option ${correcting?(o.id===correction.chosen?'incorrect':''):answered?(o.id===w.id?'correct':o.id===session.chosen?'incorrect':''):''}">${img(o,'',o.zh)}<span class="quiz-option-label" ${answered&&!correcting?'':'aria-hidden="true"'}>${esc(o.word)} · ${esc(o.zh)} ${icon('sound')}</span></button>`).join('')}</div><div class="feedback listening-feedback ${answered?(session.lastCorrect||correction?.solved?'good':'retry'):''}" role="status">${feedback}</div></section>`;
 }
 function updateQuiz(){
@@ -592,34 +599,7 @@ function celebratePerfectRound(){
   document.body.append(layer);
 }
 
-function scheduleAutoNext() {
-  clearTimeout(autoNextTimer);
-  if (
-    !state.settings.autoNext ||
-    mode !== 'listen' ||
-    (audio && !audio.paused) ||
-    !session?.answered ||
-    !session.lastCorrect ||
-    session.position >= session.queue.length ||
-    modal.open ||
-    document.hidden
-  )
-    return;
-  const current = session,
-    position = session.position;
-  autoNextTimer = setTimeout(() => {
-    if (
-      session === current &&
-      session.position === position &&
-      mode === 'listen' &&
-      session.answered &&
-      session.lastCorrect &&
-      !modal.open &&
-      !document.hidden
-    )
-      continueQuestion();
-  }, 1500);
-}
+function scheduleAutoNext(){autoAdvance.schedule();}
 modal.addEventListener('close', scheduleAutoNext);
 document.addEventListener('visibilitychange',()=>{if(document.hidden){stopMedia();clearFireworks();}else scheduleAutoNext();});
 function submitAnswer(id, typed) {
@@ -651,7 +631,7 @@ function submitAnswer(id, typed) {
 }
 function settings() {
   modal.classList.remove('word-detail-dialog');
-  clearTimeout(autoNextTimer);
+  autoAdvance.cancel();
   stopMedia();
   modal.innerHTML = `<div class="modal-title"><div><span class="eyebrow">MAKE IT YOURS</span><h2>按照你的节奏来</h2></div>${btn(icon('close'), 'close', 'icon-button', 'aria-label="关闭设置"')}</div><label class="setting-row">每日练习目标<select id="goal">${[5, 10, 15, 20].map((n) => `<option ${state.settings.goal === n ? 'selected' : ''} value="${n}">${n} 次</option>`).join('')}</select></label><label class="setting-row">英语播放速度<select id="rate">${[
     [0.7, '慢一点'],
@@ -661,7 +641,7 @@ function settings() {
     .map(([v, t]) => `<option value="${v}" ${state.settings.rate === v ? 'selected' : ''}>${t}</option>`)
     .join(
       '',
-    )}</select></label><label class="setting-row"><span>答对后自动下一题<small>答对自动前进；答错停留；重听时等待播放结束</small></span><input id="auto-next" type="checkbox" ${state.settings.autoNext?'checked':''}></label><div class="settings-block"><h3>带着小叶子去旅行</h3><p>下载离线学习内容后，场景插图、单词、字母名和生活对话音频可断网使用；例句也使用预生成美音，可随完整离线内容下载。</p>${btn('下载 / 更新离线内容', 'offline', 'secondary', 'id="offline-btn"')}<p id="offline-status" role="status"></p><p class="small">手机浏览器菜单可尝试“添加到主屏幕”；安装支持由浏览器决定。</p></div><div class="settings-block"><h3>把成长好好收藏</h3><p>学习进度保存在当前浏览器，不会自动同步。建议定期备份，或用备份换设备。</p><div class="button-row">${btn('导出进度备份', 'export', 'secondary')}<label class="secondary import-label">合并导入备份<input id="import-file" type="file" accept="application/json,.json"></label></div><p class="small">导入按单词保留较新记录，每日次数取较大值，收藏合并。当前学习设置不变。</p></div><div class="settings-block attribution"><p>原创双语词库 · 插图：原创 SVG、<a href="https://github.com/microsoft/fluentui-emoji" target="_blank" rel="noopener">Fluent Emoji</a>（MIT）与 <a href="https://github.com/jdecked/twemoji" target="_blank" rel="noopener">Twemoji</a>（CC BY 4.0）<br>不含广告，无需账号。无需麦克风。<br>词库 ${words.length} 词 · ${categories.length} 主题 · 13 场景 · v3.2.1</p><a href="https://github.com/OylDeGit/little-leaf-english" target="_blank" rel="noopener">查看 GitHub 项目 ↗</a></div>`;
+    )}</select></label><label class="setting-row"><span>答对后自动下一题<small>答对自动前进；答错停留；重听时等待播放结束</small></span><input id="auto-next" type="checkbox" ${state.settings.autoNext?'checked':''}></label><div class="settings-block"><h3>带着小叶子去旅行</h3><p>下载离线学习内容后，场景插图、单词、字母名和生活对话音频可断网使用；例句也使用预生成美音，可随完整离线内容下载。</p>${btn('下载 / 更新离线内容', 'offline', 'secondary', 'id="offline-btn"')}<p id="offline-status" role="status"></p><p class="small">手机浏览器菜单可尝试“添加到主屏幕”；安装支持由浏览器决定。</p></div><div class="settings-block"><h3>把成长好好收藏</h3><p>学习进度保存在当前浏览器，不会自动同步。建议定期备份，或用备份换设备。</p><div class="button-row">${btn('导出进度备份', 'export', 'secondary')}<label class="secondary import-label">合并导入备份<input id="import-file" type="file" accept="application/json,.json"></label></div><p class="small">导入按单词保留较新记录，每日次数取较大值，收藏合并。当前学习设置不变。</p></div><div class="settings-block attribution"><p>原创双语词库 · 插图：原创 SVG、<a href="https://github.com/microsoft/fluentui-emoji" target="_blank" rel="noopener">Fluent Emoji</a>（MIT）与 <a href="https://github.com/jdecked/twemoji" target="_blank" rel="noopener">Twemoji</a>（CC BY 4.0）<br>不含广告，无需账号。无需麦克风。<br>词库 ${words.length} 词 · ${categories.length} 主题 · 13 场景 · v3.2.2</p><a href="https://github.com/OylDeGit/little-leaf-english" target="_blank" rel="noopener">查看 GitHub 项目 ↗</a></div>`;
   modal.showModal();
 }
 async function offlineDownload() {
@@ -1315,7 +1295,7 @@ function restoreView(input){
   if(!category&&mode!=='cards') mode='cards';
   index=Math.min(view.index,Math.max(0,(category?.words.length||1)-1));
   sentenceHidden=false;sentenceFeedback=null;sentenceRecorded=new Set();
-  render();requestAnimationFrame(()=>{window.scrollTo(0,view.scroll);restoringView=false;observeWordFeed();});
+  render();requestAnimationFrame(()=>{window.scrollTo(0,view.scroll);restoringView=false;observeWordFeed();scheduleAutoNext();});
 }
 function returnToBrowse(){
   stopMedia();

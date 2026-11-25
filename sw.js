@@ -20,6 +20,7 @@ async function coreFiles() {
       'scenes.js',
       'navigation.js',
       'learning.js',
+      'auto-next.js',
       'icon.svg',
       'manifest.webmanifest',
     ]

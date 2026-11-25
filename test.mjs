@@ -702,3 +702,45 @@ test('large word lists load in bounded batches and preserve expanded bookmark co
  assert.equal(wordWindow(85,999),85);
  assert.equal(wordWindow(-1),0);
 });
+
+import { createAutoAdvance } from './auto-next.js';
+function autoNextHarness(overrides={}){
+ let now=0,id=0;const timers=new Map(),callbacks=[],advances=[];
+ const context={enabled:true,mode:'listen',session:{type:'listen',queue:['apple','pear','banana'],position:0,answered:true,lastCorrect:true},playing:false,blocked:false,hidden:false,...overrides};
+ const control=createAutoAdvance({read:()=>context,advance:()=>{advances.push(context.session.position);context.session.position++;context.session.answered=false;},
+  setTimer:(fn,delay)=>{const key=++id;timers.set(key,{fn,at:now+delay});callbacks.push(fn);return key;},clearTimer:key=>timers.delete(key)});
+ return{context,control,advances,callbacks,tick(ms){const end=now+ms;for(;;){const next=[...timers].sort((a,b)=>a[1].at-b[1].at)[0];if(!next||next[1].at>end)break;now=next[1].at;timers.delete(next[0]);next[1].fn();}now=end;}};
+}
+test('correct listening answers advance once after 1500ms, never before or twice',()=>{
+ const h=autoNextHarness();h.control.schedule();h.tick(1499);assert.deepEqual(h.advances,[]);h.tick(1);assert.deepEqual(h.advances,[0]);h.tick(5000);assert.deepEqual(h.advances,[0]);
+});
+test('wrong answers, manual preference, spelling, and unanswered questions never auto-advance',()=>{
+ for(const change of [{enabled:false},{mode:'spell'},{session:{type:'listen',queue:['apple'],position:0,answered:true,lastCorrect:false}},{session:{type:'listen',queue:['apple'],position:0,answered:false,lastCorrect:true}}]){
+  const h=autoNextHarness(change);h.control.schedule();h.tick(10000);assert.deepEqual(h.advances,[]);
+ }
+});
+test('restored answered questions restart their countdown, including the last question',()=>{
+ const h=autoNextHarness({session:{type:'listen',queue:['apple','pear','banana'],position:2,answered:true,lastCorrect:true}});
+ h.control.schedule();h.tick(1500);assert.deepEqual(h.advances,[2]);assert.equal(h.context.session.position,3);
+ h.control.schedule();h.tick(1500);assert.deepEqual(h.advances,[2]);
+});
+test('replay cancels the previous countdown and resumes only after audio ends or fails',()=>{
+ for(const completion of ['ended','failed']){
+  const h=autoNextHarness();h.control.schedule();h.tick(1000);h.control.cancel();h.context.playing=true;h.control.schedule();h.tick(5000);assert.deepEqual(h.advances,[],completion);
+  h.context.playing=false;h.control.schedule();h.tick(1499);assert.deepEqual(h.advances,[]);h.tick(1);assert.deepEqual(h.advances,[0],completion);
+ }
+});
+test('modal and hidden-page pauses resume with a fresh full countdown',()=>{
+ for(const flag of ['blocked','hidden']){
+  const h=autoNextHarness();h.control.schedule();h.tick(1200);h.context[flag]=true;h.control.cancel();h.control.schedule();h.tick(5000);assert.deepEqual(h.advances,[]);
+  h.context[flag]=false;h.control.schedule();h.tick(1499);assert.deepEqual(h.advances,[]);h.tick(1);assert.deepEqual(h.advances,[0]);
+ }
+});
+test('a stale queued timer cannot advance after cancellation, rescheduling or manual next',()=>{
+ const h=autoNextHarness();h.control.schedule();const stale=h.callbacks[0];h.control.cancel();h.control.schedule();stale();assert.deepEqual(h.advances,[]);h.tick(1500);assert.deepEqual(h.advances,[0]);
+ const moved=autoNextHarness();moved.control.schedule();moved.context.session.position=1;moved.tick(1500);assert.deepEqual(moved.advances,[]);
+});
+test('timer completion rechecks settings, playback, visibility, mode and session identity',()=>{
+ const changes=[c=>c.enabled=false,c=>c.playing=true,c=>c.hidden=true,c=>c.blocked=true,c=>c.mode='cards',c=>c.session={...c.session},c=>c.session=null];
+ for(const change of changes){const h=autoNextHarness();h.control.schedule();change(h.context);h.tick(1500);assert.deepEqual(h.advances,[]);}
+});
